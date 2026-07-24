@@ -39,6 +39,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     ]
 )]
 #[MeiliIndex(
+    autoIndex: false, // disabled 2026-07-24: per-transition flush → per-transition dispatch was flooding the meili doctrine:// transport at 15K+ assets; re-enable once dispatch is batched to terminal states only
     chats: ['meili_assistant'],
     sortable: ['createdAt', 'aiTokensTotal', 'size', 'width', 'height', 'faceCount'],
     filterable: ['provider', 'dataset', 'mime', 'clients', 'marking',
