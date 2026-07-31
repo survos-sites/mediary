@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "12d3cd133e2ea5d5cbb91b8b454d0923",
+    "content-hash": "1cd64fa1cf525df525fe57ca05f09e69",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -4805,12 +4805,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "de49a382fe8a4cf5dbdbb6465b98719b302ca14b"
+                "reference": "24d6d72a717d872aabbdd7d7c4a93eb804fc5d0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/de49a382fe8a4cf5dbdbb6465b98719b302ca14b",
-                "reference": "de49a382fe8a4cf5dbdbb6465b98719b302ca14b",
+                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/24d6d72a717d872aabbdd7d7c4a93eb804fc5d0c",
+                "reference": "24d6d72a717d872aabbdd7d7c4a93eb804fc5d0c",
                 "shasum": ""
             },
             "require": {
@@ -4880,7 +4880,7 @@
                 "issues": "https://github.com/meilisearch/meilisearch-php/issues",
                 "source": "https://github.com/meilisearch/meilisearch-php/tree/main"
             },
-            "time": "2026-07-22T07:05:12+00:00"
+            "time": "2026-07-29T11:07:01+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -8713,16 +8713,16 @@
         },
         {
             "name": "survos/meili-bundle",
-            "version": "2.16.2",
+            "version": "2.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "8cbac9ef5f7cc682ff7667807d3f27d5dc4e9604"
+                "reference": "e556e276bff6804a0b4a5fb952f102dcfea4b643"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/8cbac9ef5f7cc682ff7667807d3f27d5dc4e9604",
-                "reference": "8cbac9ef5f7cc682ff7667807d3f27d5dc4e9604",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/e556e276bff6804a0b4a5fb952f102dcfea4b643",
+                "reference": "e556e276bff6804a0b4a5fb952f102dcfea4b643",
                 "shasum": ""
             },
             "require": {
@@ -8793,7 +8793,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.16.2"
+                "source": "https://github.com/survos/meili-bundle/tree/2.18.1"
             },
             "funding": [
                 {
@@ -8801,7 +8801,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-22T12:27:27+00:00"
+            "time": "2026-07-31T14:44:49+00:00"
         },
         {
             "name": "survos/search-bundle",

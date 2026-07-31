@@ -64,7 +64,7 @@
         "survos/imgproxy-bundle": "^2.10.24",
         "survos/js-twig-bundle": "^2.10.19",
         "survos/media-bundle": "^2.11.4",
-        "survos/meili-bundle": "^2.16.2",
+        "survos/meili-bundle": "^2.18.1",
         "survos/search-bundle": "^2.10.27",
         "survos/simple-datatables-bundle": "^2.10.19",
         "survos/state-bundle": "^2.11.4",
