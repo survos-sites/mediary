@@ -35,6 +35,7 @@ final class AssetController extends AbstractController
         private readonly AsyncQueueLocator $asyncQueueLocator,
         private readonly \Symfony\Component\Messenger\MessageBusInterface $bus,
         private readonly AssetAiExecutor $executor,
+        private readonly \Symfony\Contracts\HttpClient\HttpClientInterface $httpClient,
     ) {
     }
 
@@ -299,6 +300,14 @@ final class AssetController extends AbstractController
             }
         }
 
+        // Optional webhook: fired in addition to the synchronous response
+        // below, not instead of it -- this is the callback path's first
+        // real test (see mediary-scope-boundary memory / today's session),
+        // proven over the actual cloudflared tunnels rather than guessed at.
+        // A later fully-async version would dispatch the task and return
+        // immediately instead of also blocking on executor->run().
+        $callbackUrl = trim((string) ($request->query->get('callbackUrl') ?? $request->request->get('callbackUrl') ?? ''));
+
         try {
             // Ensure (or find) the Asset for this URL — the original binary need not
             // live on our S3; the AI result will, as a sidecar keyed by the Asset id.
@@ -312,13 +321,24 @@ final class AssetController extends AbstractController
             return new JsonResponse(['error' => "Task {$task}: {$outcome['reason']}", 'id' => $asset->id, 'task' => $task], 422);
         }
 
-        return new JsonResponse([
+        $payload = [
             'id' => $asset->id,
             'url' => $url,
             'task' => $task,
             'cached' => $outcome['cached'],
             'result' => $outcome['response'],
-        ]);
+        ];
+
+        if ($callbackUrl !== '') {
+            try {
+                $this->httpClient->request('POST', $callbackUrl, ['json' => $payload, 'timeout' => 10]);
+            } catch (\Throwable) {
+                // Best-effort -- the synchronous response above is still the
+                // authoritative result; a failed callback isn't fatal here.
+            }
+        }
+
+        return new JsonResponse($payload);
     }
 
     private function applyTaskOverrideFromRequest(Asset $asset, string $taskName, Request $request): void

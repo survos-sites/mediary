@@ -32,6 +32,15 @@ ai:
         # and OUTPUT_STRUCTURED. Used for handwriting transcription and layout
         # analysis where Mistral's document understanding outperforms GPT-4o.
         # Use the documented mistral-ocr-2512 model for production. ??
+        #
+        # KNOWN BROKEN as of 2026-07-31: Mistral's API now 500s with "Invalid
+        # model" for "pixtral-large-latest" (no -latest alias anymore), but
+        # symfony/ai-mistral-platform's ModelCatalog only recognizes this
+        # exact string (and pixtral-12b/-latest) -- "pixtral-large-2411", the
+        # dated id Mistral's own docs point to, isn't in the catalog at all
+        # ("No provider found for model"). Neither string works; needs a
+        # symfony/ai-mistral-platform upgrade or a ModelCatalog patch, not a
+        # config tweak. htr/mistral_vision tasks are unusable until then.
         mistral_vision:
             platform: 'ai.platform.mistral'
             model: 'pixtral-large-latest'
