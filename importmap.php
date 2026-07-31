@@ -219,7 +219,7 @@ return [
     'markdown-to-jsx/entities' => ['version' => '9.7.13'],
     'zod' => ['version' => '4.3.6'],
     'fos-routing' => ['version' => '0.0.6'],
-    'marked' => ['version' => '17.0.5'],
+    'marked' => ['version' => '18.0.7'],
     '@swc/helpers/esm/_sliced_to_array.js' => ['version' => '0.5.18'],
     '@swc/helpers/esm/_to_consumable_array.js' => ['version' => '0.5.18'],
     '@swc/helpers/esm/_define_property.js' => ['version' => '0.5.18'],
