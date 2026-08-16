@@ -109,7 +109,7 @@ final class AssetRegistry
     private function populateAsset(?Asset $asset, string $originalUrl, ?string $client, array $contextHints): Asset
     {
         if (!$asset instanceof Asset) {
-            $asset = new Asset($originalUrl);
+            $asset = Asset::fromOriginalUrl($originalUrl);
             $this->entityManager->persist($asset);
         }
 

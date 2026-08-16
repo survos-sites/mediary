@@ -37,14 +37,14 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [
         new GetCollection()
     ],
-    // NOT exposed over MCP yet. API Platform 4.3's experimental `mcp:` support does
-    // register the tool and route tools/call to it, but its ObjectMapper path tries to
-    // *instantiate* this entity to build the schema, and Asset::__construct requires
-    // $originalUrl -- so every call fails with:
-    //   "Argument #1 ($originalUrl) must be of type string, null given"
-    // Verified against a live /_mcp session on 2026-08-16. Declaring a tool that always
-    // errors is worse than declaring none, so this waits for either a read-only output
-    // DTO or a fix upstream. The endpoint itself works; see config/packages/mcp.yaml.
+    // No `mcp:` here yet -- API Platform 4.3's experimental MCP support cannot serve a
+    // read tool for this resource. Tested end to end against a live /_mcp session
+    // 2026-08-16; see doc/JSONRPC.md for the full write-up. In short: McpTool extends
+    // HttpOperation but does not implement CollectionOperationInterface, so a listing
+    // cannot be expressed at all, and an item tool never runs a state provider -- it
+    // deserializes the arguments into a fresh entity and serializes that straight back,
+    // so `get_asset` returned the id it was given with every other field empty. A wrong
+    // answer, not an error. meili_search_index already covers asset lookup over MCP.
 )]
 #[MeiliIndex(
     autoIndex: false, // disabled 2026-07-24: per-transition flush → per-transition dispatch was flooding the meili doctrine:// transport at 15K+ assets; re-enable once dispatch is batched to terminal states only
@@ -459,15 +459,37 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
     public string $path { get => $this->id . "." . $this->ext; }
 
 
-    public function __construct(
-        /** Source/original URL (for provenance / retries). */
-        #[ORM\Column(type: Types::TEXT, nullable: false)]
-        public string $originalUrl
-    )
+    /**
+     * Source/original URL (for provenance / retries). Also the seed for the primary key.
+     *
+     * Deliberately NOT a constructor argument, and deliberately left uninitialized rather
+     * than defaulted to '': tooling that reflects over this entity has to be able to
+     * `new Asset()` it. API Platform's experimental MCP support does exactly that via
+     * symfony/object-mapper when building a tool schema, and a required constructor
+     * argument made every tools/call fail with "Argument #1 ($originalUrl) must be of type
+     * string, null given". A '' default would trade that for a silently-empty asset, so
+     * an untouched instance throws on access instead. Use {@see fromOriginalUrl()}.
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: false)]
+    public string $originalUrl;
+
+    public function __construct()
     {
-        $this->id          = MediaIdentity::idFromOriginalUrl($this->originalUrl);
-        $this->createdAt   = new \DateTimeImmutable();
-        $this->marking     = WF::PLACE_NEW; // seed initial marking via workflow constant
+        $this->createdAt = new \DateTimeImmutable();
+        $this->marking   = WF::PLACE_NEW; // seed initial marking via workflow constant
+    }
+
+    /**
+     * The only supported way to create an Asset: the id is xxh3(originalUrl), so the two
+     * must be set together or the entity is incoherent.
+     */
+    public static function fromOriginalUrl(string $originalUrl): self
+    {
+        $asset = new self();
+        $asset->originalUrl = $originalUrl;
+        $asset->id          = MediaIdentity::idFromOriginalUrl($originalUrl);
+
+        return $asset;
     }
 
 

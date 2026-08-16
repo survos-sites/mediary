@@ -133,7 +133,7 @@ final class MediaFixtureCommand extends Command
             $asset = $this->assetRepository->findOneBy(['originalUrl' => $f['url']]);
 
             if ($asset === null) {
-                $asset       = new Asset($f['url']);
+                $asset       = Asset::fromOriginalUrl($f['url']);
                 $asset->mime = $f['mime'] ?? null;
                 $this->em->persist($asset);
                 $this->em->flush();

@@ -57,17 +57,31 @@ same pattern ssai uses — see `ssai/src/Entity/Acc.php`:
 )]
 ```
 
-**Known limitation.** This does not currently work for `App\Entity\Asset`. The tool
-registers and `tools/call` routes to it, but API Platform's ObjectMapper path tries to
-*instantiate* the entity to build the schema, and `Asset::__construct` requires
-`$originalUrl`:
+**Known limitation: read tools do not work for `App\Entity\Asset`.** Tested end to end
+against a live `/_mcp` session on 2026-08-16, in three steps:
 
-```
-Argument #1 ($originalUrl) must be of type string, null given,
-called in vendor/symfony/object-mapper/ObjectMapper.php on line 237
-```
+1. `Asset::__construct(string $originalUrl)` was required, so every `tools/call` failed with
+   `Argument #1 ($originalUrl) must be of type string, null given` — API Platform builds the
+   entity through `symfony/object-mapper`. Fixed properly: `$originalUrl` moved off the
+   constructor and `Asset::fromOriginalUrl()` is now the only supported way to create one
+   (id and url must be set together, since the id is `xxh3(originalUrl)`).
+2. The call then failed reading the still-uninitialized property. Defaulting it to `''`
+   made the call *succeed* — and return a freshly constructed empty entity
+   (`originalUrl: ""`, `createdAt` = now, `marking: "new"`) instead of the query results.
+   A silently wrong answer is worse than the crash, so that default was reverted; a bare
+   `new Asset()` still throws.
+3. Retried as an item tool (`uriTemplate: '/assets/{id}'`). Same shape: the response echoed
+   the `id` that was passed in with every other field empty. No state provider ever runs.
 
-Exposing Asset needs a read-only output DTO (or an upstream fix). meili-bundle's five
-tools (`meili_search_index`, `meili_get_document`, `meili_similar_documents`,
-`meili_search_facets`, `meili_describe_collection`) register fine and were already there —
-they had simply never been reachable while `/tools` was the only route.
+Root cause for the listing half: `McpTool extends HttpOperation` but does **not** implement
+`CollectionOperationInterface` (which `GetCollection` does), so a collection tool cannot be
+expressed at all. The item half appears to be a straight round-trip of the tool arguments.
+
+So Asset ships with no `mcp:` block. `meili_search_index` already covers asset lookup over
+MCP and works. The `fromOriginalUrl()` factory is worth keeping regardless — it makes the
+id/url coherence un-bypassable.
+
+meili-bundle's five tools (`meili_search_index`, `meili_get_document`,
+`meili_similar_documents`, `meili_search_facets`, `meili_describe_collection`) register fine
+and were already there — they had simply never been reachable while `/tools` was the only
+route.
