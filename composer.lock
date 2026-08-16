@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "794aaa32eb28994b56640b0d23a7830c",
+    "content-hash": "59a563453c736c3a5d4354bd16779b1a",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7114,16 +7114,16 @@
         },
         {
             "name": "survos/claims-bundle",
-            "version": "2.15.20",
+            "version": "2.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/claims-bundle.git",
-                "reference": "a4097b76e95f1cd31bb16f26b859b3a32edb1043"
+                "reference": "a0071005e5de570dfef9c2a9a481eca2a87568ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/claims-bundle/zipball/a4097b76e95f1cd31bb16f26b859b3a32edb1043",
-                "reference": "a4097b76e95f1cd31bb16f26b859b3a32edb1043",
+                "url": "https://api.github.com/repos/survos/claims-bundle/zipball/a0071005e5de570dfef9c2a9a481eca2a87568ce",
+                "reference": "a0071005e5de570dfef9c2a9a481eca2a87568ce",
                 "shasum": ""
             },
             "require": {
@@ -7171,7 +7171,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/claims-bundle/issues",
-                "source": "https://github.com/survos/claims-bundle/tree/2.15.20"
+                "source": "https://github.com/survos/claims-bundle/tree/2.24.8"
             },
             "funding": [
                 {
@@ -7179,7 +7179,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-20T14:46:21+00:00"
+            "time": "2026-08-16T18:25:01+00:00"
         },
         {
             "name": "survos/command-bundle",
@@ -8200,16 +8200,16 @@
         },
         {
             "name": "survos/kit-bundle",
-            "version": "2.24.6",
+            "version": "2.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/kit-bundle.git",
-                "reference": "5910b8e82ba5a00b1c14f84e04b6b6939635e1f9"
+                "reference": "e27bc177594a7bd23b3a969343a17f2389b6d05b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/5910b8e82ba5a00b1c14f84e04b6b6939635e1f9",
-                "reference": "5910b8e82ba5a00b1c14f84e04b6b6939635e1f9",
+                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/e27bc177594a7bd23b3a969343a17f2389b6d05b",
+                "reference": "e27bc177594a7bd23b3a969343a17f2389b6d05b",
                 "shasum": ""
             },
             "require": {
@@ -8247,7 +8247,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/kit-bundle/issues",
-                "source": "https://github.com/survos/kit-bundle/tree/2.24.6"
+                "source": "https://github.com/survos/kit-bundle/tree/2.24.8"
             },
             "funding": [
                 {
@@ -8255,20 +8255,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T11:08:59+00:00"
+            "time": "2026-08-16T18:53:26+00:00"
         },
         {
             "name": "survos/lingua-contracts",
-            "version": "2.10.19",
+            "version": "2.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/lingua-contracts.git",
-                "reference": "1eb696d760847ff93d1d36d2b1ba480e31166581"
+                "reference": "107ad8038dda23261035eac6ffe29272f5458303"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/1eb696d760847ff93d1d36d2b1ba480e31166581",
-                "reference": "1eb696d760847ff93d1d36d2b1ba480e31166581",
+                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/107ad8038dda23261035eac6ffe29272f5458303",
+                "reference": "107ad8038dda23261035eac6ffe29272f5458303",
                 "shasum": ""
             },
             "require": {
@@ -8291,7 +8291,7 @@
             "description": "Shared DTOs and API surface (routes/headers) for Survos Lingua client/server interoperability.",
             "support": {
                 "issues": "https://github.com/survos/lingua-contracts/issues",
-                "source": "https://github.com/survos/lingua-contracts/tree/2.10.19"
+                "source": "https://github.com/survos/lingua-contracts/tree/2.24.8"
             },
             "funding": [
                 {
@@ -8299,7 +8299,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-06-09T21:17:06+00:00"
+            "time": "2026-08-16T18:53:15+00:00"
         },
         {
             "name": "survos/lingua-core",
@@ -8515,16 +8515,16 @@
         },
         {
             "name": "survos/search-bundle",
-            "version": "2.24.7",
+            "version": "2.24.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/search-bundle.git",
-                "reference": "94e7191acd7123823a92f0d9aa6e86a699a590cc"
+                "reference": "4cc31ceadf3d4538115dca6d5571ef8c85241ea8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/search-bundle/zipball/94e7191acd7123823a92f0d9aa6e86a699a590cc",
-                "reference": "94e7191acd7123823a92f0d9aa6e86a699a590cc",
+                "url": "https://api.github.com/repos/survos/search-bundle/zipball/4cc31ceadf3d4538115dca6d5571ef8c85241ea8",
+                "reference": "4cc31ceadf3d4538115dca6d5571ef8c85241ea8",
                 "shasum": ""
             },
             "require": {
@@ -8602,7 +8602,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/search-bundle/issues",
-                "source": "https://github.com/survos/search-bundle/tree/2.24.7"
+                "source": "https://github.com/survos/search-bundle/tree/2.24.9"
             },
             "funding": [
                 {
@@ -8610,7 +8610,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T15:16:31+00:00"
+            "time": "2026-08-16T19:09:49+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
@@ -19961,16 +19961,16 @@
         },
         {
             "name": "survos/deployment-bundle",
-            "version": "2.18.18",
+            "version": "2.24.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/deployment-bundle.git",
-                "reference": "a374abc2ab980329bd3e17841d0d814c8bc52a56"
+                "reference": "41935c82350f4ca218ba5496ed99581d1e7458b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/deployment-bundle/zipball/a374abc2ab980329bd3e17841d0d814c8bc52a56",
-                "reference": "a374abc2ab980329bd3e17841d0d814c8bc52a56",
+                "url": "https://api.github.com/repos/survos/deployment-bundle/zipball/41935c82350f4ca218ba5496ed99581d1e7458b3",
+                "reference": "41935c82350f4ca218ba5496ed99581d1e7458b3",
                 "shasum": ""
             },
             "require": {
@@ -20010,7 +20010,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/deployment-bundle/issues",
-                "source": "https://github.com/survos/deployment-bundle/tree/2.18.18"
+                "source": "https://github.com/survos/deployment-bundle/tree/2.24.8"
             },
             "funding": [
                 {
@@ -20018,7 +20018,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-06T14:12:27+00:00"
+            "time": "2026-08-16T17:12:47+00:00"
         },
         {
             "name": "symfony/debug-bundle",
