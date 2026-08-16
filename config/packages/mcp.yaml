@@ -1,0 +1,29 @@
+# Scoped to dev/test to match config/bundles.php -- this config is loaded
+# unconditionally otherwise and breaks the prod build ("no extension able to load
+# the configuration for mcp").
+#
+# Both client transports default to false, and with neither enabled RouteLoader
+# registers no route at all -- which is why debug:router can show nothing even
+# though the bundle is installed. http is what a local agent/MCP client needs;
+# stdio is for a CLI-spawned server, which we don't use.
+when@dev:
+    mcp:
+        app: mediary
+        client_transports:
+            http: true
+        http:
+            # DNS-rebinding protection defaults to localhost only, so every request
+            # through the symfony proxy (https://mediary.wip/_mcp) came back
+            # "403 Forbidden: Invalid Host header". Allow the dev hostname too.
+            allowed_hosts: ['mediary.wip', 'localhost', '127.0.0.1']
+
+when@test:
+    mcp:
+        app: mediary
+        client_transports:
+            http: true
+        http:
+            # DNS-rebinding protection defaults to localhost only, so every request
+            # through the symfony proxy (https://mediary.wip/_mcp) came back
+            # "403 Forbidden: Invalid Host header". Allow the dev hostname too.
+            allowed_hosts: ['mediary.wip', 'localhost', '127.0.0.1']

@@ -20,21 +20,24 @@ There are some tools for working directly with the server, but most of the time 
 
 ![Database Diagram](assets/docs/database.svg)
 
-## JSON-RPC
+## JSON-RPC / MCP
 
-curl -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0", "method":"tools/list"}' -x 127.0.0.1:7080 https://sais.wip/tools | jq
+mediary speaks MCP (which is JSON-RPC 2.0) at **`/_mcp`**, dev/test only. The old `/tools`
+route belonged to a package that is no longer installed and 500'd on every request.
 
-curl -H 'Content-Type: application/json' \
-   -d '{"jsonrpc":"2.0","method":"tools/create_account","id": "unique", "params":{"root": "rpc", "estimated":100}}' -x 127.0.0.1:7080 https://sais.wip/tools | jq
+```bash
+SID=$(curl -s -D /tmp/h -o /dev/null -X POST \
+  -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl","version":"1"}}}' \
+  https://mediary.wip/_mcp; grep -i '^mcp-session-id' /tmp/h | tr -d '\r' | cut -d' ' -f2)
 
-curl -H 'Content-Type: application/json' \
--d '{"jsonrpc":"2.0","method":"tools/list","id": "unique", "params":{"root": "rpc", "estimated":100}}'  https://127.0.0.1:8018/mcp | jq
+curl -s -X POST -H 'Content-Type: application/json' \
+  -H 'Accept: application/json, text/event-stream' -H "Mcp-Session-Id: $SID" \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' https://mediary.wip/_mcp | jq
+```
 
-
-curl -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0", "method":"tools/list"}' https://127.0.0.1:8018/mcp | jq
-
-curl -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0", "method":"tools/sum_numbers"}' https://127.0.0.1:8018/mcp | jq
-
+Full detail, including how to add a tool and the current Asset limitation:
+[doc/JSONRPC.md](doc/JSONRPC.md).
 
 ## Developers
 

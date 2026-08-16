@@ -1,8 +1,0 @@
-# curl -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0", "method":"tools/list"}' -x 127.0.0.1:7080 https://sais.wip/tools | jq
-
-
-mcp_controller:
-  path: /tools
-  controller: mcp_server.entrypoint_controller
-
-

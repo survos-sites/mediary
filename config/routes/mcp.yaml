@@ -1,0 +1,19 @@
+# McpBundle is registered for dev/test only (config/bundles.php) -- an unauthenticated
+# MCP endpoint over an app that can write assets and trigger paid AI tasks has no
+# business running in prod. The route loader is scoped to match; loading it in prod
+# would fail with "no extension able to load the configuration for mcp".
+#
+# The old `/tools` route pointed at ecourty/mcp-server-bundle's
+# `mcp_server.entrypoint_controller`, a package that is no longer installed -- it 500'd
+# on every request. symfony/mcp-bundle registers its own route (default path /_mcp)
+# through this loader, but only when a client transport is enabled; see
+# config/packages/mcp.yaml.
+when@dev:
+    mcp:
+        resource: mcp
+        type: mcp
+
+when@test:
+    mcp:
+        resource: mcp
+        type: mcp

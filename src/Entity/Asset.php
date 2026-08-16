@@ -36,7 +36,15 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     operations: [
         new GetCollection()
-    ]
+    ],
+    // NOT exposed over MCP yet. API Platform 4.3's experimental `mcp:` support does
+    // register the tool and route tools/call to it, but its ObjectMapper path tries to
+    // *instantiate* this entity to build the schema, and Asset::__construct requires
+    // $originalUrl -- so every call fails with:
+    //   "Argument #1 ($originalUrl) must be of type string, null given"
+    // Verified against a live /_mcp session on 2026-08-16. Declaring a tool that always
+    // errors is worse than declaring none, so this waits for either a read-only output
+    // DTO or a fix upstream. The endpoint itself works; see config/packages/mcp.yaml.
 )]
 #[MeiliIndex(
     autoIndex: false, // disabled 2026-07-24: per-transition flush → per-transition dispatch was flooding the meili doctrine:// transport at 15K+ assets; re-enable once dispatch is batched to terminal states only
@@ -688,12 +696,12 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
      * Get the enrich_from_thumbnail result as a typed DTO.
      * Returns null if that task hasn't run yet.
      */
-    public function getEnrichFromThumbnail(): ?\Survos\AiPipelineBundle\Result\EnrichFromThumbnailResult
+    public function getEnrichFromThumbnail(): ?\Survos\AiWorkflowBundle\Result\EnrichFromThumbnailResult
     {
         $data = $this->aiResults()['enrich_from_thumbnail'] ?? null;
         if (!is_array($data)) return null;
 
-        return new \Survos\AiPipelineBundle\Result\EnrichFromThumbnailResult(
+        return new \Survos\AiWorkflowBundle\Result\EnrichFromThumbnailResult(
             title:           $data['title']         ?? null,
             description:     $data['description']   ?? null,
             keywords:        $data['keywords']       ?? [],

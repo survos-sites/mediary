@@ -54,7 +54,7 @@ return [
     Survos\ImgproxyBundle\SurvosImgproxyBundle::class => ['all' => true],
     Survos\ClaimsBundle\SurvosClaimsBundle::class => ['all' => true],
     Symfony\AI\AiBundle\AiBundle::class => ['all' => true],
-    Symfony\AI\McpBundle\McpBundle::class => ['all' => true],
+    Symfony\AI\McpBundle\McpBundle::class => ['dev' => true, 'test' => true],
     Survos\AiWorkflowBundle\SurvosAiWorkflowBundle::class => ['all' => true],
     Survos\Kit\SurvosKitBundle::class => ['all' => true],
     Survos\ImportBundle\SurvosImportBundle::class => ['all' => true],
