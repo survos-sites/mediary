@@ -7,6 +7,7 @@ namespace App\Search;
 use App\Entity\Asset;
 use Survos\SearchBundle\Attribute\AsSearch;
 use Survos\SearchBundle\Search\AbstractSearch;
+use Survos\SearchBundle\Twig\Components\Facet\RangeSlider;
 
 #[AsSearch(Asset::class, name: 'asset', adapter: 'bm25')]
 final class AssetSearch extends AbstractSearch
@@ -49,6 +50,10 @@ final class AssetSearch extends AbstractSearch
                     'ext' => 'd.ext',
                     'aiDocumentType' => 'd.ai_document_type',
                     'localOcrPrimaryType' => 'd.local_ocr_primary_type',
+                    // Face-box count from imgproxy /info detect_objects. Ranged rather than
+                    // listed: the raw values are a long integer tail (1, 2, 3, … 11, 47),
+                    // and "photos with 2-5 people" is the useful question.
+                    'faceCount' => 'd.face_count',
                 ],
                 'sortColumns' => [
                     'a.createdAt' => 'd.created_at',
@@ -68,6 +73,8 @@ final class AssetSearch extends AbstractSearch
             ->addFacet('ext', 'Extension')
             ->addFacet('aiDocumentType', 'Document Type')
             ->addFacet('localOcrPrimaryType', 'OCR Type')
+            // 1 = portrait, 2 = couple, 3-5 = small group, 6+ = crowd.
+            ->addFacet('faceCount', 'Faces', RangeSlider::class)
             ->addAvailableSort('a.createdAt:desc', 'Newest')
             ->addAvailableSort('a.createdAt:asc', 'Oldest')
             ->addAvailableSort('a.size:desc', 'Largest')
