@@ -64,4 +64,5 @@ return [
     Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
     Tacman\AiBatch\TacmanAiBatchBundle::class => ['all' => true],
     Survos\FetchBundle\SurvosFetchBundle::class => ['all' => true],
+    OV\JsonRPCAPIBundle\OVJsonRPCAPIBundle::class => ['all' => true],
 ];

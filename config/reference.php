@@ -2995,6 +2995,61 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosFetchConfig = array{
  *     persistent_cache_path?: scalar|Param|null, // SQLite file backing PersistentFetcher -- an app-controlled-TTL cache independent of what (if anything) the origin sends as Cache-Control/Expires. Deliberately outside %kernel.cache_dir% so it survives cache:clear. // Default: "%kernel.project_dir%/var/data/fetch_cache.db"
  * }
+ * @psalm-type OvJsonRpcApiConfig = array{
+ *     strict_notifications?: bool|Param, // Default: true
+ *     allow_extra_fields?: bool|Param, // Default: false
+ *     expose_internal_errors?: bool|Param, // Default: false
+ *     max_payload_bytes?: int|Param, // Default: 1048576
+ *     max_json_depth?: int|Param, // Default: 64
+ *     max_batch_size?: int|Param, // Default: 50
+ *     max_dto_depth?: int|Param, // Default: 10
+ *     max_array_param_size?: int|Param, // Default: 1000
+ *     logging?: array{
+ *         enabled?: bool|Param, // Default: false
+ *         request_level?: scalar|Param|null, // Default: "info"
+ *         response_level?: scalar|Param|null, // Default: "info"
+ *         error_response_level?: scalar|Param|null, // Default: "warning"
+ *         max_body_length?: int|Param, // Default: 8192
+ *         skip_plain_responses?: bool|Param, // Default: true
+ *         logger_service?: scalar|Param|null, // Default: null
+ *         call_logger_service?: scalar|Param|null, // Default: null
+ *         masking?: array{
+ *             placeholder?: scalar|Param|null, // Default: "***"
+ *             key_patterns?: list<scalar|Param|null>,
+ *         },
+ *     },
+ *     access_control_allow_origin_list?: list<scalar|Param|null>,
+ *     cors_allowed_headers?: list<scalar|Param|null>,
+ *     swagger?: list<array{ // Default: []
+ *         api_version?: scalar|Param|null, // Default: "1"
+ *         base_path?: scalar|Param|null,
+ *         base_path_description?: scalar|Param|null, // Default: null
+ *         test_path?: scalar|Param|null, // Default: null
+ *         test_path_description?: scalar|Param|null, // Default: null
+ *         base_path_variables?: list<array{ // Default: []
+ *             name?: scalar|Param|null,
+ *             value?: scalar|Param|null,
+ *         }>,
+ *         test_path_variables?: list<array{ // Default: []
+ *             name?: scalar|Param|null,
+ *             value?: scalar|Param|null,
+ *         }>,
+ *         auth_token_name?: scalar|Param|null,
+ *         auth_token_test_value?: scalar|Param|null,
+ *         info?: array{
+ *             title?: scalar|Param|null, // Default: "title"
+ *             description?: scalar|Param|null, // Default: "description"
+ *             terms_of_service_url?: scalar|Param|null, // Default: "terms_of_service_url"
+ *             contact?: array{
+ *                 name?: scalar|Param|null, // Default: "name"
+ *                 url?: scalar|Param|null, // Default: "url"
+ *                 email?: scalar|Param|null, // Default: "email"
+ *             },
+ *             license?: scalar|Param|null, // Default: "license"
+ *             licenseUrl?: scalar|Param|null, // Default: "licenseUrl"
+ *         },
+ *     }>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -3046,6 +3101,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     live_component?: LiveComponentConfig,
  *     survos_search?: SurvosSearchConfig,
  *     survos_fetch?: SurvosFetchConfig,
+ *     ov_json_rpc_api?: OvJsonRpcApiConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -3103,6 +3159,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         live_component?: LiveComponentConfig,
  *         survos_search?: SurvosSearchConfig,
  *         survos_fetch?: SurvosFetchConfig,
+ *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -3155,6 +3212,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         live_component?: LiveComponentConfig,
  *         survos_search?: SurvosSearchConfig,
  *         survos_fetch?: SurvosFetchConfig,
+ *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -3210,6 +3268,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         live_component?: LiveComponentConfig,
  *         survos_search?: SurvosSearchConfig,
  *         survos_fetch?: SurvosFetchConfig,
+ *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

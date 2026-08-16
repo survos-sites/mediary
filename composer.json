@@ -39,6 +39,7 @@
         "nelmio/cors-bundle": "^2.6.1",
         "nyholm/psr7": "^1.8.2",
         "openai-php/client": "^0.20.1",
+        "otezvikentiy/json-rpc-api": "^5.1",
         "paragonie/sodium_compat": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6.7|^6.0",
         "phpstan/phpdoc-parser": "^2.3.2",
@@ -153,7 +154,8 @@
         "auto-scripts": {
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd",
-            "ux:icons:lock": "symfony-cmd"
+            "ux:icons:lock": "symfony-cmd",
+            "cache:clear": "symfony-cmd"
         },
         "post-install-cmd": [
             "php -d memory_limit=2G bin/console cache:clear",

@@ -161,6 +161,19 @@
             "config/packages/nelmio_cors.yaml"
         ]
     },
+    "otezvikentiy/json-rpc-api": {
+        "version": "5.1-stable",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "5.0",
+            "ref": "7991443b77b76ff0a9e72d6f4050c364041d317e"
+        },
+        "files": [
+            "config/packages/ov_json_rpc_api.yaml",
+            "config/routes/ov_json_rpc_api.yaml"
+        ]
+    },
     "php-http/discovery": {
         "version": "1.20",
         "recipe": {

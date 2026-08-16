@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Asset;
+use App\Service\AssetProbeService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,7 +21,10 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 final class ApiMediaController extends AbstractController
 {
-    public function __construct(public readonly EntityManagerInterface $em) {}
+    public function __construct(
+        public readonly EntityManagerInterface $em,
+        private readonly AssetProbeService $probeService,
+    ) {}
 
     #[Route('/fetch/media/{id}', name: 'api_media_probe_single', methods: ['GET'])]
     public function probeSingle(string $id): JsonResponse
@@ -31,7 +35,7 @@ final class ApiMediaController extends AbstractController
             throw new NotFoundHttpException(sprintf('Asset not found: %s', $id));
         }
 
-        return $this->json($this->probeAsset($asset));
+        return $this->json($this->probeService->probe($asset));
     }
 
     #[Route('/fetch/media/by-ids', name: 'api_media_by_ids_get', methods: ['GET'])]
@@ -60,77 +64,8 @@ final class ApiMediaController extends AbstractController
      */
     private function resolveToJson(array $ids): JsonResponse
     {
-        if ($ids === []) {
-            return $this->json([]);
-        }
-
-        // We treat provided identifiers as Media.code values (string codes).
-        // If you also want to accept numeric DB IDs, split the list and query both fields.
-        $qb = $this->em->createQueryBuilder()
-            ->select('m')
-            ->from(Asset::class, 'm')
-            ->andWhere('m.id IN (:ids)')
-            ->setParameter('ids', $ids)
-            ->orderBy('m.id', 'ASC');
-
-        /** @var list<Asset> $assets */
-        $assets = $qb->getQuery()->getResult();
-
-        $rows = array_map($this->probeAsset(...), $assets);
-
-        return $this->json($rows);
-    }
-
-    /**
-     * Returns the current known state for one asset, including variants and child derivatives.
-     * OCR/AI results are expected in context fields (either parent or children).
-     */
-    private function probeAsset(Asset $asset): array
-    {
-        /** @var list<Asset> $children */
-        $children = $this->em->getRepository(Asset::class)->findBy(['parentKey' => $asset->id], ['pageNumber' => 'ASC']);
-
-        $childRows = array_map(static fn (Asset $child): array => [
-            'id'         => $child->id,
-            'pageNumber' => $child->pageNumber,
-            'marking'    => $child->marking,
-            'mime'       => $child->mime,
-            'archiveUrl' => $child->archiveUrl,
-            'smallUrl'   => $child->smallUrl,
-            'context'    => $child->context,
-            'sourceMeta' => $child->sourceMeta,
-        ], $children);
-
-        $meta = [
-            'mimeType'    => $asset->mime,
-            'width'       => $asset->width,
-            'height'      => $asset->height,
-            'size'        => $asset->size,
-            'statusCode'  => $asset->statusCode,
-            'storageKey'  => $asset->storageKey,
-            'archiveUrl'  => $asset->archiveUrl,
-            'smallUrl'    => $asset->smallUrl,
-            'contentHash' => $asset->contentHash,
-            'childCount'  => $asset->childCount,
-            'hasOcr'      => $asset->hasOcr,
-        ];
-
-        return [
-            'id'         => $asset->id,
-            'source'     => (string) $asset->originalUrl,
-            'marking'    => $asset->marking,
-            'typeEstimate' => $asset->context['type_estimate'] ?? null,
-            'edgeAnalysis' => $asset->context['edge_analysis'] ?? null,
-            'hasTextLikely' => $asset->context['has_text_likely'] ?? null,
-            'typedLikely' => $asset->context['typed_likely'] ?? null,
-            'handwrittenLikely' => $asset->context['handwritten_likely'] ?? null,
-            // Resized derivatives are served on the fly by imgproxy; see meta.smallUrl.
-            'context'    => $asset->context,    // image-derived: OCR, thumbhash, colors, hash
-            'sourceMeta' => $asset->sourceMeta, // client-provided: dcterms:*, rights, ARK, IIIF
-            'meta'       => $meta,
-            'children'   => $childRows,
-            'ocr'        => $asset->context['ocr'] ?? null,
-            'ai'         => $asset->context['ai'] ?? null,
-        ];
+        // Identifiers are Asset ids (16-hex). Shaping lives in AssetProbeService so this
+        // and the JSON-RPC probeAssets method always return the same payload.
+        return $this->json($this->probeService->probeMany(array_values($ids)));
     }
 }

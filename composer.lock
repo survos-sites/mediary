@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73a047d651530809ac3eb490adc55b3c",
+    "content-hash": "fa2f193742b2fa03247475be589f3000",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -5356,6 +5356,81 @@
                 "source": "https://github.com/OskarStark/enum-helper/tree/1.8.4"
             },
             "time": "2026-02-05T08:59:09+00:00"
+        },
+        {
+            "name": "otezvikentiy/json-rpc-api",
+            "version": "5.1-stable",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OtezVikentiy/symfony-jsonrpc-api-bundle.git",
+                "reference": "f45cfd3903d2c1dfb8e59b90df547948263f50f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OtezVikentiy/symfony-jsonrpc-api-bundle/zipball/f45cfd3903d2c1dfb8e59b90df547948263f50f4",
+                "reference": "f45cfd3903d2c1dfb8e59b90df547948263f50f4",
+                "shasum": ""
+            },
+            "require": {
+                "php": "8.2.* || 8.3.* || 8.4.* || 8.5.*",
+                "psr/log": "^1.1 || ^2.0 || ^3.0",
+                "symfony/config": "^6.4 || ^7.0 || ^8.0",
+                "symfony/console": "^6.4 || ^7.0 || ^8.0",
+                "symfony/dependency-injection": "^6.4 || ^7.0 || ^8.0",
+                "symfony/framework-bundle": "^6.4 || ^7.0 || ^8.0",
+                "symfony/http-foundation": "^6.4 || ^7.0 || ^8.0",
+                "symfony/http-kernel": "^6.4 || ^7.0 || ^8.0",
+                "symfony/routing": "^6.4 || ^7.0 || ^8.0",
+                "symfony/security-bundle": "^6.4 || ^7.0 || ^8.0",
+                "symfony/serializer": "^6.4 || ^7.0 || ^8.0",
+                "symfony/string": "^6.4 || ^7.0 || ^8.0",
+                "symfony/validator": "^6.4 || ^7.0 || ^8.0",
+                "symfony/yaml": "^6.4 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95",
+                "infection/infection": "^0.32 || ^0.34",
+                "phpstan/phpstan": "^2.0",
+                "phpunit/phpunit": "11.*",
+                "symfony/property-access": "^6.4 || ^7.0 || ^8.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "OV\\JsonRPCAPIBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "l.groshev",
+                    "email": "OtezVikentiy@gmail.com",
+                    "homepage": "https://otezvikentiy.tech",
+                    "role": "Creator"
+                }
+            ],
+            "description": "Symfony bundle for building JSON-RPC 2.0 APIs: attribute-driven methods, DTO validation, batch requests, API versioning, OpenAPI/Swagger generation and hardened security defaults",
+            "keywords": [
+                "api",
+                "json-rpc",
+                "json-rpc-2.0",
+                "jsonrpc",
+                "openapi",
+                "rpc",
+                "swagger",
+                "symfony",
+                "symfony-bundle"
+            ],
+            "support": {
+                "docs": "https://github.com/OtezVikentiy/symfony-jsonrpc-api-bundle/tree/master/docs",
+                "issues": "https://github.com/OtezVikentiy/symfony-jsonrpc-api-bundle/issues",
+                "security": "https://github.com/OtezVikentiy/symfony-jsonrpc-api-bundle/security/policy",
+                "source": "https://github.com/OtezVikentiy/symfony-jsonrpc-api-bundle"
+            },
+            "time": "2026-08-10T15:53:25+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
