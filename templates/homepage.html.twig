@@ -87,7 +87,7 @@
             <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
                 {% for asset in featured %}
                     <div class="col">
-                        {{ include('components/Mezcalito/UxSearch/_hit_asset.html.twig', { asset: asset }) }}
+                        {{ include('asset/_hit_asset.html.twig', { asset: asset }) }}
                     </div>
                 {% endfor %}
             </div>

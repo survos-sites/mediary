@@ -265,6 +265,9 @@
     "survos/ez-bundle": {
         "version": "2.0.61"
     },
+    "survos/fetch-bundle": {
+        "version": "2.19.1"
+    },
     "survos/field-bundle": {
         "version": "2.0.217"
     },
@@ -753,9 +756,6 @@
     },
     "symfonycasts/verify-email-bundle": {
         "version": "v1.17.3"
-    },
-    "tacman/ux-search": {
-        "version": "0.6.1"
     },
     "twig/extra-bundle": {
         "version": "v3.16.0"

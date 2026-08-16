@@ -27,7 +27,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ORM\Index(name: 'idx_asset_created_at', columns: ['created_at'])]
 #[ORM\Index(name: 'idx_asset_backend', columns: ['storage_backend'])]
 #[ORM\Index(name: 'idx_asset_media_record', columns: ['media_record_id'])]
-// (facetColumn, id) covering indexes removed: tacman/ux-search now emits plain
+// (facetColumn, id) covering indexes removed: survos/search-bundle now emits plain
 // count(col) for base-entity facets (countDistinct:false) and facets run through
 // Meilisearch — so the PK-covering workaround for the old Mezcalito full-sort
 // (mezcalito/ux-search#46) is obsolete. Re-add a plain single-column index only

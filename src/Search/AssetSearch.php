@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Search;
 
 use App\Entity\Asset;
-use Mezcalito\UxSearchBundle\Attribute\AsSearch;
-use Mezcalito\UxSearchBundle\Search\AbstractSearch;
+use Survos\SearchBundle\Attribute\AsSearch;
+use Survos\SearchBundle\Search\AbstractSearch;
 
 #[AsSearch(Asset::class, name: 'asset', adapter: 'bm25')]
 final class AssetSearch extends AbstractSearch

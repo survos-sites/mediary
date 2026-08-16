@@ -783,8 +783,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 MultipleActiveResultSets?: bool|Param, // Configuring MultipleActiveResultSets for the pdo_sqlsrv driver
  *                 instancename?: scalar|Param|null, // Optional parameter, complete whether to add the INSTANCE_NAME parameter in the connection. It is generally used to connect to an Oracle RAC server to select the name of a particular instance.
  *                 connectstring?: scalar|Param|null, // Complete Easy Connect connection descriptor, see https://docs.oracle.com/database/121/NETAG/naming.htm.When using this option, you will still need to provide the user and password parameters, but the other parameters will no longer be used. Note that when using this parameter, the getHost and getPort methods from Doctrine\DBAL\Connection will no longer function as expected.
+ *                 ...<string, mixed>
  *             }>,
+ *             ...<string, mixed>
  *         }>,
+ *         ...<string, mixed>
  *     },
  *     orm?: array{
  *         default_entity_manager?: scalar|Param|null,
@@ -819,6 +822,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                         }>,
  *                     }>,
  *                 }>,
+ *                 ...<string, mixed>
  *             },
  *             connection?: scalar|Param|null,
  *             class_metadata_factory_name?: scalar|Param|null, // Default: "Doctrine\\ORM\\Mapping\\ClassMetadataFactory"
@@ -879,10 +883,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 class?: scalar|Param|null,
  *                 enabled?: bool|Param, // Default: false
  *                 parameters?: array<string, mixed>,
+ *                 ...<string, mixed>
  *             }>,
  *             identity_generation_preferences?: array<string, scalar|Param|null>,
  *         }>,
  *         resolve_target_entities?: array<string, scalar|Param|null>,
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type DoctrineMigrationsConfig = array{
@@ -922,6 +928,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         id?: scalar|Param|null,
  *         type?: scalar|Param|null,
  *         value?: mixed,
+ *         ...<string, mixed>
  *     }>,
  *     autoescape_service?: scalar|Param|null, // Default: null
  *     autoescape_service_method?: scalar|Param|null, // Default: null
@@ -1333,6 +1340,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             enabled?: bool|Param|null, // Default: null
  *             date_format?: scalar|Param|null,
  *             remove_used_context_fields?: bool|Param,
+ *             ...<string, mixed>
  *         },
  *         path?: scalar|Param|null, // Default: "%kernel.logs_dir%/%kernel.environment%.log"
  *         file_permission?: scalar|Param|null, // Default: null
@@ -1456,6 +1464,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         channels?: Param|string|array{
  *             type?: scalar|Param|null,
  *             elements?: list<scalar|Param|null>,
+ *             ...<string, mixed>
  *         },
  *     }>,
  * }
@@ -1496,7 +1505,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             timeout?: int|Param, // Connection timeout in seconds // Default: 90
  *             ignore_passive_address?: scalar|Param|null, // Ignore passive address // Default: null
  *             utf8?: bool|Param, // Enable UTF8 mode // Default: false
- *             transfer_mode?: scalar|Param|null, // Transfer mode (FTP_ASCII or FTP_BINARY constante on ftp extension) // Default: null
+ *             transfer_mode?: scalar|Param|null, // Transfer mode (FTP_ASCII or FTP_BINARY constant on ftp extension) // Default: null
  *             system_type?: null|"windows"|"unix"|Param, // FTP system type // Default: null
  *             timestamps_on_unix_listings_enabled?: bool|Param, // Enable timestamps on Unix listings // Default: false
  *             recurse_manually?: bool|Param, // Recurse directories manually // Default: true
@@ -1591,8 +1600,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         disable_asserts?: bool|Param, // Deprecated: The "disable_asserts" option is deprecated and will be removed in 4.0. // Default: false
  *         public_url?: list<scalar|Param|null>,
  *         path_normalizer?: scalar|Param|null, // Path normalizer service name (should implement League\Flysystem\PathNormalizer) // Default: null
- *         public_url_generator?: scalar|Param|null, // For adapter that do not provide public URLs or override adapter capabilities and public_url option, a public URL generator service name can be configured in the main Filesystem configuration (should implement League\Flysystem\PublicUrlGenerator) // Default: null
- *         temporary_url_generator?: scalar|Param|null, // For adapter that do not provide public URLs or override adapter capabilities, a temporary URL generator service name can be configured in the main Filesystem configuration (should implement League\Flysystem\TemporaryUrlGenerator) // Default: null
+ *         public_url_generator?: scalar|Param|null, // For adapter that do not provide public URLs or override adapter capabilities and public_url option, a public URL generator service name can be configured in the main Filesystem configuration (should implement League\Flysystem\UrlGeneration\PublicUrlGenerator) // Default: null
+ *         temporary_url_generator?: scalar|Param|null, // For adapter that do not provide public URLs or override adapter capabilities, a temporary URL generator service name can be configured in the main Filesystem configuration (should implement League\Flysystem\UrlGeneration\TemporaryUrlGenerator) // Default: null
  *         read_only?: bool|Param, // Converts a file system to read-only // Default: false
  *     }>,
  * }
@@ -1634,6 +1643,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         name?: scalar|Param|null, // The name used for the VCS commit information, set to null to use the default VCS configuration. // Default: null
  *         email?: scalar|Param|null, // The email used for the VCS commit information, set to null to use the default VCS configuration. // Default: null
  *         path_to_executable?: scalar|Param|null, // The path to the VCS executable, set to null for autodiscovery. // Default: null
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type SurvosDeploymentConfig = array{
@@ -2067,6 +2077,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         item_uri_template?: mixed,
  *         ...<string, mixed>
  *     },
+ *     ...<string, mixed>
  * }
  * @psalm-type SurvosGoogleSheetsConfig = array{
  *     application_name?: scalar|Param|null,
@@ -2233,6 +2244,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         options?: list<mixed>,
  *     }>,
  * }
+ * @psalm-type SurvosIiifConfig = array{
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: false
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ * }
  * @psalm-type SurvosJsTwigConfig = array{
  *     debug?: bool|Param, // Default: false
  *     version?: scalar|Param|null, // Default: 1
@@ -2316,6 +2332,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 },
  *             },
  *         },
+ *     },
+ *     favicon?: array{
+ *         enabled?: bool|Param, // Serve a dynamic SVG favicon at /favicon.svg so apps get a useful icon without a favicon-generator workflow. // Default: true
+ *         text?: scalar|Param|null, // 1-2 characters shown on the icon. Defaults to initials derived from app.code. // Default: null
+ *         background?: scalar|Param|null, // Background fill, e.g. a distinct color per environment (prod/wip/dev/test). // Default: "#206bc4"
+ *         foreground?: scalar|Param|null, // Text color. // Default: "#ffffff"
+ *         shape?: "square"|"rounded"|"circle"|Param, // Default: "rounded"
  *     },
  *     routes?: array{
  *         home?: scalar|Param|null, // Default: "app_homepage"
@@ -2958,18 +2981,20 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     secret?: scalar|Param|null, // The secret used to compute fingerprints and checksums // Default: "%kernel.secret%"
  *     fetch_credentials?: "same-origin"|"include"|"omit"|Param, // The default fetch credentials mode for all Live Components ('same-origin', 'include', 'omit') // Default: "same-origin"
  * }
- * @psalm-type MezcalitoUxSearchConfig = array{
- *     default_adapter?: scalar|Param|null, // Default: "default"
- *     adapters?: array<string, Param|string|array{ // Default: []
- *         dsn?: scalar|Param|null,
- *     }>,
- * }
  * @psalm-type SurvosSearchConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ *     default_adapter?: scalar|Param|null, // Default: "default"
+ *     index_prefix?: scalar|Param|null, // Prefix applied to every Elasticsearch index name, once, by ElasticIndexNameResolver. Reuses MEILI_PREFIX so one app has one index namespace across both engines. Leaving it unset is an error the first time a name is resolved: bare index names share a flat cluster namespace with every other app on the node. Set it to an empty string to share deliberately. // Default: "%env(default::MEILI_PREFIX)%"
+ *     adapters?: array<string, Param|string|array{ // Default: {"default":{"dsn":"doctrine://default"}}
+ *         dsn?: scalar|Param|null,
+ *     }>,
  *     default_hits_per_page?: int|Param, // Default: 24
  *     default_hits_per_page_choices?: list<int|Param>,
+ * }
+ * @psalm-type SurvosFetchConfig = array{
+ *     persistent_cache_path?: scalar|Param|null, // SQLite file backing PersistentFetcher -- an app-controlled-TTL cache independent of what (if anything) the origin sends as Cache-Control/Expires. Deliberately outside %kernel.cache_dir% so it survives cache:clear. // Default: "%kernel.project_dir%/var/data/fetch_cache.db"
  * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
@@ -3004,6 +3029,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_ez?: SurvosEzConfig,
  *     survos_doc?: SurvosDocConfig,
  *     survos_media?: SurvosMediaConfig,
+ *     survos_iiif?: SurvosIiifConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
  *     survos_api_grid?: SurvosApiGridConfig,
  *     knp_menu?: KnpMenuConfig,
@@ -3020,8 +3046,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_import?: SurvosImportConfig,
  *     survos_dataset?: SurvosDatasetConfig,
  *     live_component?: LiveComponentConfig,
- *     mezcalito_ux_search?: MezcalitoUxSearchConfig,
  *     survos_search?: SurvosSearchConfig,
+ *     survos_fetch?: SurvosFetchConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -3060,6 +3086,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
  *         survos_media?: SurvosMediaConfig,
+ *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
  *         knp_menu?: KnpMenuConfig,
@@ -3076,8 +3103,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_import?: SurvosImportConfig,
  *         survos_dataset?: SurvosDatasetConfig,
  *         live_component?: LiveComponentConfig,
- *         mezcalito_ux_search?: MezcalitoUxSearchConfig,
  *         survos_search?: SurvosSearchConfig,
+ *         survos_fetch?: SurvosFetchConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -3112,6 +3139,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
  *         survos_media?: SurvosMediaConfig,
+ *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
  *         knp_menu?: KnpMenuConfig,
@@ -3128,8 +3156,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_import?: SurvosImportConfig,
  *         survos_dataset?: SurvosDatasetConfig,
  *         live_component?: LiveComponentConfig,
- *         mezcalito_ux_search?: MezcalitoUxSearchConfig,
  *         survos_search?: SurvosSearchConfig,
+ *         survos_fetch?: SurvosFetchConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -3166,6 +3194,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
  *         survos_media?: SurvosMediaConfig,
+ *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
  *         knp_menu?: KnpMenuConfig,
@@ -3182,8 +3211,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_import?: SurvosImportConfig,
  *         survos_dataset?: SurvosDatasetConfig,
  *         live_component?: LiveComponentConfig,
- *         mezcalito_ux_search?: MezcalitoUxSearchConfig,
  *         survos_search?: SurvosSearchConfig,
+ *         survos_fetch?: SurvosFetchConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

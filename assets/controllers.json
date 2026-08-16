@@ -95,6 +95,18 @@
             "search": {
                 "enabled": true,
                 "fetch": "lazy"
+            },
+            "clipboard": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "closeable": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "tooltip": {
+                "enabled": true,
+                "fetch": "lazy"
             }
         },
         "@survos/tree-bundle": {
@@ -122,12 +134,12 @@
                 }
             }
         },
-        "@tacman/ux-search": {
+        "@survos/search-bundle": {
             "ux-search": {
                 "enabled": true,
                 "fetch": "eager",
                 "autoimport": {
-                    "@tacman/ux-search/dist/default.min.css": true
+                    "@survos/search-bundle/styles/ux-search.css": true
                 }
             },
             "ux-search--refinement-list": {
