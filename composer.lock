@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa2f193742b2fa03247475be589f3000",
+    "content-hash": "794aaa32eb28994b56640b0d23a7830c",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7861,16 +7861,16 @@
         },
         {
             "name": "survos/iiif-bundle",
-            "version": "2.24.6",
+            "version": "2.24.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/iiif-bundle.git",
-                "reference": "953c1c1e2259bf7581ff471611e4947b387f3395"
+                "reference": "200a1e46123c30e2e5730decf1742f32f6a1f518"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/iiif-bundle/zipball/953c1c1e2259bf7581ff471611e4947b387f3395",
-                "reference": "953c1c1e2259bf7581ff471611e4947b387f3395",
+                "url": "https://api.github.com/repos/survos/iiif-bundle/zipball/200a1e46123c30e2e5730decf1742f32f6a1f518",
+                "reference": "200a1e46123c30e2e5730decf1742f32f6a1f518",
                 "shasum": ""
             },
             "require": {
@@ -7924,7 +7924,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/iiif-bundle/issues",
-                "source": "https://github.com/survos/iiif-bundle/tree/2.24.6"
+                "source": "https://github.com/survos/iiif-bundle/tree/2.24.7"
             },
             "funding": [
                 {
@@ -7932,7 +7932,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T11:09:00+00:00"
+            "time": "2026-08-16T12:08:15+00:00"
         },
         {
             "name": "survos/imgproxy-bundle",
@@ -8348,16 +8348,16 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.18.18",
+            "version": "2.24.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "ec9406043b998411a0455057d731edf2fc456c99"
+                "reference": "b88253f90f0a8ed7e03598c33d31fd525976f7e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/ec9406043b998411a0455057d731edf2fc456c99",
-                "reference": "ec9406043b998411a0455057d731edf2fc456c99",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/b88253f90f0a8ed7e03598c33d31fd525976f7e9",
+                "reference": "b88253f90f0a8ed7e03598c33d31fd525976f7e9",
                 "shasum": ""
             },
             "require": {
@@ -8410,7 +8410,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.18.18"
+                "source": "https://github.com/survos/media-bundle/tree/2.24.7"
             },
             "funding": [
                 {
@@ -8418,20 +8418,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-06T14:12:46+00:00"
+            "time": "2026-08-16T15:02:00+00:00"
         },
         {
             "name": "survos/meili-bundle",
-            "version": "2.20.0",
+            "version": "2.24.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "55cb92f18c04b9fe7bc778fc31200397e98470b8"
+                "reference": "562c776db9a9dffce07124f8011d09518df7f3fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/55cb92f18c04b9fe7bc778fc31200397e98470b8",
-                "reference": "55cb92f18c04b9fe7bc778fc31200397e98470b8",
+                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/562c776db9a9dffce07124f8011d09518df7f3fd",
+                "reference": "562c776db9a9dffce07124f8011d09518df7f3fd",
                 "shasum": ""
             },
             "require": {
@@ -8503,7 +8503,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.20.0"
+                "source": "https://github.com/survos/meili-bundle/tree/2.24.7"
             },
             "funding": [
                 {
@@ -8511,20 +8511,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-12T19:33:54+00:00"
+            "time": "2026-08-16T12:06:28+00:00"
         },
         {
             "name": "survos/search-bundle",
-            "version": "2.24.6",
+            "version": "2.24.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/search-bundle.git",
-                "reference": "4f8a9a8702930ea68cf07f3d3b2cd7d6e4a647b9"
+                "reference": "94e7191acd7123823a92f0d9aa6e86a699a590cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/search-bundle/zipball/4f8a9a8702930ea68cf07f3d3b2cd7d6e4a647b9",
-                "reference": "4f8a9a8702930ea68cf07f3d3b2cd7d6e4a647b9",
+                "url": "https://api.github.com/repos/survos/search-bundle/zipball/94e7191acd7123823a92f0d9aa6e86a699a590cc",
+                "reference": "94e7191acd7123823a92f0d9aa6e86a699a590cc",
                 "shasum": ""
             },
             "require": {
@@ -8591,9 +8591,18 @@
                 "MIT"
             ],
             "description": "First-party Symfony search kernel and faceted UX with field-driven Doctrine, Meilisearch, Algolia, SQLite FTS5, PostgreSQL BM25, and Elasticsearch adapters.",
+            "keywords": [
+                "elasticsearch",
+                "facets",
+                "meilisearch",
+                "search",
+                "symfony",
+                "symfony-ux",
+                "ux"
+            ],
             "support": {
                 "issues": "https://github.com/survos/search-bundle/issues",
-                "source": "https://github.com/survos/search-bundle/tree/2.24.6"
+                "source": "https://github.com/survos/search-bundle/tree/2.24.7"
             },
             "funding": [
                 {
@@ -8601,7 +8610,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T10:54:18+00:00"
+            "time": "2026-08-16T15:16:31+00:00"
         },
         {
             "name": "survos/simple-datatables-bundle",
