@@ -7,7 +7,6 @@ return [
     'AWS_S3_ACCESS_ID' => null,
     'AWS_S3_ACCESS_SECRET' => null,
     'CORS_ALLOW_ORIGIN' => null,
-    'DATABASE_URL' => null,
     'DOKKU_APP_RESTORE' => null,
     'GOOGLE_API_KEY' => null,
     'GOOGLE_AUTH_CONFIG' => null,
