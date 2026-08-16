@@ -86,6 +86,12 @@ final readonly class AssetProbeService
             // Resized derivatives are served on the fly by imgproxy; see meta.smallUrl.
             'context'           => $asset->context,    // image-derived: OCR, thumbhash, colors, hash
             'sourceMeta'        => $asset->sourceMeta, // client-provided: dcterms:*, rights, ARK, IIIF
+            // Promoted /info results. These live in context.info too, but a caller checking
+            // "did enrichment run, and what did it find" should not have to dig through the
+            // raw imgproxy payload -- faceCount in particular is the facet the UI uses.
+            'faceCount'         => $asset->faceCount,
+            'classification'    => $asset->classification,
+            'objectIdentifiers' => $asset->objectIdentifiers,
             'meta'              => [
                 'mimeType'    => $asset->mime,
                 'width'       => $asset->width,
