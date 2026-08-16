@@ -28,8 +28,6 @@ return [
     'OPENAI_API_KEY' => null,
     'REDIS' => null,
     'S3_STORAGE_PREFIX' => null,
-    'SAIS_API_KEY' => null,
-    'SAIS_ROOT' => null,
     'SHARED_MESSENGER_TRANSPORT_DSN' => null,
     'USE_MEILI' => null,
     'VAR_DUMPER_SERVER' => null,

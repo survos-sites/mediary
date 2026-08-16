@@ -2,7 +2,7 @@
 
 ## Context
 
-This repository provides a centralized media service used by multiple Symfony applications (clients) via `survos/sais-bundle`. Historically it supported **Image + Thumbnail** (uploaded originals, async resize jobs, locally stored derivatives). The refactor introduces **Media / Asset / Variant** to support non-image media (e.g., WAV → MP3 bitrates, “thumbnail” equivalents for audio).
+This repository provides a centralized media service used by multiple Symfony applications (clients) via `survos/media-bundle`. Historically it supported **Image + Thumbnail** (uploaded originals, async resize jobs, locally stored derivatives). The refactor introduces **Media / Asset / Variant** to support non-image media (e.g., WAV → MP3 bitrates, “thumbnail” equivalents for audio).
 
 Key goals:
 

@@ -8,9 +8,7 @@
 * Digital Humanities
 * https://medium.com/@robi.tomar72/deepseek-ocr-just-did-the-impossible-and-the-entire-ai-world-is-shook-4020afb28956
 
-# Survos Media Server -- formerly Survos Async Image Server (SAIS)
-
-
+# mediary -- the Survos Media Server
 
 Now uses Asset and Variant instead of Media and Thumbs
 
@@ -18,7 +16,7 @@ However, this wasn't finished, and we haven't integrated jolicode's media bundle
 
 This application is based on the LiipImagineBundle, but instead of dynamically creating images on the fly, it creates them asynchronously and sends a callback to the client when finished.   It uses [flysystem](https://github.com/thephpleague/flysystem-bundle) so the storage is flexible.  The main purpose is to NOT freeze the system if a thumbnail has not been generated, but also have a central repository for image analysis tools.
 
-There are some tools for working directly with the server, but most of the time images are loaded from a client application, like museado, via the survos/sais-bundle.  Each client has its own "key", which is used for authentication as the root of the source images (on S3) and resized images stored locally in the media cache.
+There are some tools for working directly with the server, but most of the time images are loaded from a client application, like museado, via survos/media-bundle (`bin/console media:sync`).  Each client has its own "key", which is used for authentication as the root of the source images (on S3) and resized images stored locally in the media cache.
 
 ![Database Diagram](assets/docs/database.svg)
 
@@ -40,42 +38,19 @@ curl -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0", "method":"tools/s
 
 ## Developers
 
-The survos/sais-bundle defines the _structures_ that are used by both the client and server.  So the setup.
+survos/media-bundle defines the _structures_ used by both the client and the server —
+`BatchPayloadDto` is the `media:sync` wire contract, so producer and consumer cannot drift.
 
 Note: see https://medium.com/@laurentmn/optimizing-image-handling-in-symfony-with-liipimaginebundle-pro-tips-use-cases-7f55819deb80 for configuring thumbnails to be on S3
 
 ```bash
-# the monorepo for the bundles
-git clone git@github.com:survos/survos.git
-git clone git@github.com:survos-sites/sais.git && cd sais
+git clone git@github.com:survos/mono.git
+git clone <mediary> && cd mediary
 composer install
-../survos/link .
-
-cd ..
-git clone git@github.com:survos-sites/dummy.git && cd dummy
-composer install
-../survos/link .
-# see the dummy readme to load it
+../mono/link .
 ```
 
 Each client, aka museado, pgsc, dummy, voxitour, etc. is registered as a User with a code (for eventual security).  The code is also the root path on the storage.
-
-The client registration endpoint is at https://sais.wip/ui/account_setup, it must be called at least once so that the files can be stored in the proper directory.
-
-This can be called from the client using sais-bundle
-
-```php
-$client->accountSetup(new AccountSetup('test', 5000));
-```
-
-or called via JSON RPC MCP (See bundle docs for more details):
-```php
-$arguments = (array) new AccountSetup('userRootName', 1400); // Adjust the parameters as needed , cast to array for JSON RPC
-$result = $client->execute('tools/call', [
-    'name' => 'create_account', // The name of the tool method to call (reference on the tool list)
-    'arguments' => $arguments,
-]);
-```
 
 ## Adding more JSON RPC MCP tools / endpoints can be found here [JSONRPC.md](doc/JSONRPC.md)
 
@@ -101,17 +76,14 @@ Now the client can upload urls to the server.
 [Media Workflow](doc/MediaWorkflow.md)
 
 ```php
- foreach ($products->products as $product) {
-            $payload = new \Survos\SaisBundle\Model\ProcessPayload(
-                $product->images,
-                ['small'],
-                $this->urlGenerator->generate('app_webhook')
-            );
-            $response = $this->saisService->dispatchProcess($payload);
-        }
+// survos/media-bundle, Survos\MediaBundle\Service\MediaBatchDispatcher
+$result = $this->mediaBatchDispatcher->dispatch($client, $urls, [
+    'context'      => $contextMap,   // per-URL hints, keyed by url
+    'callback_url' => $this->urlGenerator->generate('app_webhook'),
+]);
 ```
 
-This call _queues_ the images to be downloaded and resized, and then call the webhook upon completion (partially working).
+This call _queues_ the images to be downloaded and resized, and then calls the webhook upon completion (partially working).
 
 ## Workflow
 
@@ -120,13 +92,13 @@ This call _queues_ the images to be downloaded and resized, and then call the we
 
 ## Recap
 
-* Client (e.g museado, dt-demo) registers with sais and gets an API key and code
-* Via the client bundle, the client pushes urls to sais, which are queued for downloading and image creation.  A status list is returned, with codes for the URLs.
-* SAIS downloads the image to a cache directory.
+* Client (e.g museado, dt-demo) registers with mediary and gets an API key and code
+* Via the client bundle, the client pushes urls to mediary, which are queued for downloading and image creation.  A status list is returned, with codes for the URLs.
+* mediary downloads the image to a cache directory.
 * Then uploads the image to an archive (default.storage) and local storage.  The temp file can then be deleted
 * The thumbnail workflow creates the resized images from local storage (faster than remove). 
 * @todo:for each url calls a webhook so the client application can update the database and start using the images.
-* The client can also poll sais for a status, or request a single image on demand.  This is mostly for debugging, as if it's overused the server can become overwhelmed.
+* The client can also poll mediary for a status, or request a single image on demand.  This is mostly for debugging, as if it's overused the server can become overwhelmed.
 * When resized images are finished, the localstorage file can be deleted.  It will have to be re-downloaded if more filters are added.
 
 Applications are required to maintain a thumbnail status, which the image server gives to them in a callback. If the filter exists then the image can be called.
@@ -135,20 +107,20 @@ Also tests bad-bot, key-value.
 
 ## Probe API (polling fallback)
 
-If callbacks fail (e.g. local dev webhook endpoint is down), you can poll SAIS directly.
+If callbacks fail (e.g. local dev webhook endpoint is down), you can poll mediary directly.
 
 Single asset probe (recommended for debugging one image):
 
 ```bash
-curl -s "https://sais.wip/fetch/media/<asset_id>" | jq
+curl -s "https://mediary.wip/fetch/media/<asset_id>" | jq
 ```
 
 Batch probe by ids:
 
 ```bash
-curl -s "https://sais.wip/fetch/media/by-ids?id=<asset_id_1>,<asset_id_2>" | jq
+curl -s "https://mediary.wip/fetch/media/by-ids?id=<asset_id_1>,<asset_id_2>" | jq
 
-curl -s -X POST "https://sais.wip/fetch/media/by-ids" \
+curl -s -X POST "https://mediary.wip/fetch/media/by-ids" \
   -H 'Content-Type: application/json' \
   -d '{"ids": ["<asset_id_1>", "<asset_id_2>"]}' | jq
 ```
@@ -164,22 +136,11 @@ Probe response includes:
 
 ## Notes
 
-
-This has been partially implemented
-
 ```bash
-bin/console sais:queue --url=https://pictures.com/abc.jpg
-bin/console sais:queue --path=photos/def.jpg
-# response: /d4/a1/49244.jpg   size: ...
-
-bin/console dbal:run-sql "delete from messenger_messages where queue_name='failed'" 
-
-rabbitmqadmin purge queue name=download
-rabbitmqadmin purge queue name=resize
-rabbitmqadmin purge queue name=sais
-
-curl -i -u guest:guest -XDELETE http://localhost:15672/api/queues/vhost_name/queue_name/contents
-
+# every transport is doctrine:// today (see config/packages/messenger.yaml), so
+# the queue is a table -- there is no rabbitmq to purge.
+bin/console dbal:run-sql "delete from messenger_messages where queue_name='failed'"
+bin/console dbal:run-sql "delete from messenger_messages"
 ```
 
 Each "collection" has its own API key.  If the collection expects to have more than 1 million images, it will use a 8^3 high-level directory structure, otherwise 8^2, which will allow a complete fetch of the file metadata with just 64 API calls, as opposed to 512 calls.  
@@ -212,25 +173,16 @@ The image bundle can get the list of available filters, or configure only certai
 
 images are served from the imageserver
 
-curl \
---compressed \
---request CONNECT \
---url 'https://sais.wip/handle_media' \
---header 'Proxy-Connection: Keep-Alive' \
---data-raw '{"thumbData":{"tiny":{"url":"https:\/\/sais.wip\/media\/cache\/tiny\/test\/b5\/34\/70c4d6e0576d.png","size":1338}},"blur":"EgiCBQAiiHZ3mIqlCAeFhmA3CKd2iHGciA","code":"b53470c4d6e0576d","path":"test\/b5\/34\/70c4d6e0576d.png","originalUrl":"https:\/\/cdn.dummyjson.com\/products\/images\/beauty\/Powder%20Canister\/1.png","marking":"downloaded"}'
+```bash
+dokku storage:mount mediary /mnt/volume-1/project-data/mediary/public:/app/public
+chown -R 32767:32767 /mnt/volume-1/project-data/mediary
+```
 
-
-curl \
-
---compressed \
---request CONNECT \
---url 'https://sais.wip/handle_media' \
---header 'Proxy-Connection: Keep-Alive' \
---data-raw '{"thumbData":{"tiny":{"url":"https:\/\/sais.wip\/media\/cache\/tiny\/test\/b5\/34\/70c4d6e0576d.png","size":1338}},"blur":"EgiCBQAiiHZ3mIqlCAeFhmA3CKd2iHGciA","code":"b53470c4d6e0576d","path":"test\/b5\/34\/70c4d6e0576d.png","originalUrl":"https:\/\/cdn.dummyjson.com\/products\/images\/beauty\/Powder%20Canister\/1.png","marking":"downloaded"}'
-
-
-dokku storage:mount  /mnt/volume-1/project-data/sais/public:/app/public
-chown -R 32767:32767 /mnt/volume-1/project-data/sais
+> **Stale below/above this line.** Much of this README describes the pre-mediary
+> design (LiipImagineBundle thumbnails, a `/handle_media` callback endpoint, a
+> `/ui/account_setup` registration route, `sais:queue`). None of those routes or
+> commands exist any more — `debug:router` and `bin/console list` are the truth.
+> Left in place rather than renamed, so nobody mistakes it for current API docs.
 
 ## @todo
 

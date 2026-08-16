@@ -115,7 +115,7 @@ onResize()
         $this->entityManager->flush();
     }
 ```
-[View source](sais/blob/main/src/Workflow/ThumbWorkflow.php#L51-L148)
+[View source](mediary/blob/main/src/Workflow/ThumbWorkflow.php#L51-L148)
 
 ### resize.Completed
 
@@ -145,6 +145,6 @@ public function onCompletedResize(CompletedEvent $event): void
 
 }
 ```
-[View source](sais/blob/main/src/Workflow/ThumbWorkflow.php#L151-L169)
+[View source](mediary/blob/main/src/Workflow/ThumbWorkflow.php#L151-L169)
 
 

@@ -38,7 +38,6 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/verify/email', 200])]
 	#[TestWith(['', '/login', 200])]
 	#[TestWith(['', '/webhook', 200])]
-	#[TestWith(['', '/webhook/sais-webhook', 404])]
 	#[TestWith(['', '/workflow/workflow/MediaWorkflow', 200])]
 	#[TestWith(['', '/workflow/workflow/ThumbWorkflow', 200])]
 	#[TestWith(['', '/workflow/workflow/FileWorkflow', 200])]

@@ -2,7 +2,6 @@
 survos_media:
     default_locale:       en
     cache_ttl:            3600
-    sais_integration:     true
     media_server:
         host:                 'https://mediary.wip'
         apiKey:               null

@@ -34,7 +34,7 @@ onDownload()
         //dd($media,$user);
 
         assert($user, "missing user/client {$media->getRoot()}, all media must have a root");
-        $path = $media->getRoot() . '/' . SaisClientService::calculatePath($user->approxImageCount, $media->getCode());
+        $path = $media->getRoot() . '/' . MediaClientService::calculatePath($user->approxImageCount, $media->getCode());
         if (empty($ext)) {
             $ext = 'tmp'; // Will be corrected after download based on actual mime type
         }
@@ -115,7 +115,7 @@ onDownload()
         $this->entityManager->flush();
     }
 ```
-[View source](sais/blob/main/src/Workflow/MediaWorkflow.php#L95-L192)
+[View source](mediary/blob/main/src/Workflow/MediaWorkflow.php#L95-L192)
 
 ### download.Completed
 
@@ -185,7 +185,7 @@ onDownloadCompleted()
 //        return;
 //
 //        $callbackUrl = match ($media->getRoot()) {
-//            'test' => 'https://sais.wip/handle_media'
+//            'test' => 'https://mediary.wip/handle_media'
 //        };
 //        $envelope = $this->messageBus->dispatch(new SendWebhookMessage($callbackUrl,
 //            new DownloadPayload($media->getCode(), $media->getThumbData())
@@ -198,7 +198,7 @@ onDownloadCompleted()
         // dispatch the callback request
     }
 ```
-[View source](sais/blob/main/src/Workflow/MediaWorkflow.php#L195-L266)
+[View source](mediary/blob/main/src/Workflow/MediaWorkflow.php#L195-L266)
 
 
 
@@ -221,7 +221,7 @@ public function onResize(TransitionEvent $event): void
     $this->resizeMedia($media, Media::FILTERS, $context);
 }
 ```
-[View source](sais/blob/main/src/Workflow/MediaWorkflow.php#L508-L513)
+[View source](mediary/blob/main/src/Workflow/MediaWorkflow.php#L508-L513)
 
 
 
@@ -251,7 +251,7 @@ public function onArchive(TransitionEvent $event): void
     // @todo: on thumbnails complete, delete from local.storage?
 }
 ```
-[View source](sais/blob/main/src/Workflow/MediaWorkflow.php#L516-L528)
+[View source](mediary/blob/main/src/Workflow/MediaWorkflow.php#L516-L528)
 
 
 
@@ -278,6 +278,6 @@ public function onRefresh(TransitionEvent $event): void
     $media->resized = $thumbs;
 }
 ```
-[View source](sais/blob/main/src/Workflow/MediaWorkflow.php#L531-L540)
+[View source](mediary/blob/main/src/Workflow/MediaWorkflow.php#L531-L540)
 
 
