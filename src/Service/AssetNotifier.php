@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Asset;
 use Psr\Log\LoggerInterface;
+use Survos\FetchBundle\Http\WipProxy;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -131,17 +132,18 @@ final class AssetNotifier
     public function fire(Asset $asset, string $callbackUrl): bool
     {
         try {
-            $options = [
-                'json'    => $this->webhookPayload($asset),
-                'timeout' => 10,
-            ];
             // `.wip` isn't real DNS — it only resolves through Symfony CLI's
             // local proxy. Without this a local client's callback silently
             // fails every time, which is precisely the condition
             // ReplayWebhooksCommand was written to clean up after.
-            if (str_contains($callbackUrl, '.wip')) {
-                $options['proxy'] = 'http://127.0.0.1:7080';
-            }
+            //
+            // WipProxy rather than another inline str_contains: fetch-bundle
+            // exists because that check had been independently rewritten six
+            // times across ssai. AppController:106 still has its own copy.
+            $options = WipProxy::optionsFor($callbackUrl) + [
+                'json'    => $this->webhookPayload($asset),
+                'timeout' => 10,
+            ];
 
             $response = $this->httpClient->request('POST', $callbackUrl, $options);
             $status   = $response->getStatusCode();
