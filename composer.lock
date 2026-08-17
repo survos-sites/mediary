@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "219a847311e833f244273d6e660d49d1",
+    "content-hash": "30eef45d9611adea7e999070572b89e5",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7398,16 +7398,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.21.0",
+            "version": "2.24.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "21fe4987664191df79432d1f0dba33bd9203d9d0"
+                "reference": "cb52a02d13c6c0724f346a4be6a2340e8c13b77b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/21fe4987664191df79432d1f0dba33bd9203d9d0",
-                "reference": "21fe4987664191df79432d1f0dba33bd9203d9d0",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/cb52a02d13c6c0724f346a4be6a2340e8c13b77b",
+                "reference": "cb52a02d13c6c0724f346a4be6a2340e8c13b77b",
                 "shasum": ""
             },
             "require": {
@@ -7419,6 +7419,9 @@
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^13.0",
                 "symplify/easy-coding-standard": "^13.0"
+            },
+            "suggest": {
+                "survos/schema-org-bundle": "Reads the #[SchemaOrg]/#[SchemaProperty] attributes on these DTOs to emit JSON-LD. The attributes are inert without it."
             },
             "type": "library",
             "autoload": {
@@ -7433,7 +7436,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.21.0"
+                "source": "https://github.com/survos/data-contracts/tree/2.24.15"
             },
             "funding": [
                 {
@@ -7441,7 +7444,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-12T20:35:11+00:00"
+            "time": "2026-08-17T15:00:10+00:00"
         },
         {
             "name": "survos/dataset-bundle",
@@ -7656,16 +7659,16 @@
         },
         {
             "name": "survos/fetch-bundle",
-            "version": "2.19.2",
+            "version": "2.24.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/fetch-bundle.git",
-                "reference": "7f41c2f9be2b2d64c1cf876340724879ee72d51e"
+                "reference": "ee6099e249b7ea0c1ecaf01a0a09a73793fa6f48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/fetch-bundle/zipball/7f41c2f9be2b2d64c1cf876340724879ee72d51e",
-                "reference": "7f41c2f9be2b2d64c1cf876340724879ee72d51e",
+                "url": "https://api.github.com/repos/survos/fetch-bundle/zipball/ee6099e249b7ea0c1ecaf01a0a09a73793fa6f48",
+                "reference": "ee6099e249b7ea0c1ecaf01a0a09a73793fa6f48",
                 "shasum": ""
             },
             "require": {
@@ -7707,7 +7710,7 @@
             "description": "HTTP fetch utilities for Symfony: caching (RFC 9111 or app-controlled TTL), retry/backoff, bounded concurrency, and resumable downloads. Optional JSONL dataset-harvesting pagination on top if survos/jsonl-bundle is installed.",
             "support": {
                 "issues": "https://github.com/survos/fetch-bundle/issues",
-                "source": "https://github.com/survos/fetch-bundle/tree/2.19.2"
+                "source": "https://github.com/survos/fetch-bundle/tree/2.24.16"
             },
             "funding": [
                 {
@@ -7715,7 +7718,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-11T10:55:48+00:00"
+            "time": "2026-08-17T22:24:32+00:00"
         },
         {
             "name": "survos/field-bundle",
@@ -8200,16 +8203,16 @@
         },
         {
             "name": "survos/kit-bundle",
-            "version": "2.24.8",
+            "version": "2.24.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/kit-bundle.git",
-                "reference": "e27bc177594a7bd23b3a969343a17f2389b6d05b"
+                "reference": "c03f337b4d46683cda600ee66403e7b6da5ec048"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/e27bc177594a7bd23b3a969343a17f2389b6d05b",
-                "reference": "e27bc177594a7bd23b3a969343a17f2389b6d05b",
+                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/c03f337b4d46683cda600ee66403e7b6da5ec048",
+                "reference": "c03f337b4d46683cda600ee66403e7b6da5ec048",
                 "shasum": ""
             },
             "require": {
@@ -8221,7 +8224,15 @@
                 "doctrine/orm": "^3.0",
                 "symfony/asset-mapper": "^8.1",
                 "symfony/framework-bundle": "^8.1",
-                "symfony/twig-bundle": "^8.1"
+                "symfony/messenger": "^8.1",
+                "symfony/remote-event": "^8.1",
+                "symfony/twig-bundle": "^8.1",
+                "symfony/webhook": "^8.1"
+            },
+            "suggest": {
+                "symfony/messenger": "For Survos\\Kit\\Webhook\\RemoteEventTransportMiddleware — per-webhook Messenger transports.",
+                "symfony/remote-event": "For Survos\\Kit\\Webhook — RemoteEvent consumers behind the webhook endpoint.",
+                "symfony/webhook": "For Survos\\Kit\\Webhook — the shared inbound-webhook convention (signature verification, /webhook/{name} matching)."
             },
             "type": "symfony-bundle",
             "extra": {
@@ -8247,7 +8258,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/kit-bundle/issues",
-                "source": "https://github.com/survos/kit-bundle/tree/2.24.8"
+                "source": "https://github.com/survos/kit-bundle/tree/2.24.16"
             },
             "funding": [
                 {
@@ -8255,20 +8266,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T18:53:26+00:00"
+            "time": "2026-08-17T22:24:28+00:00"
         },
         {
             "name": "survos/lingua-contracts",
-            "version": "2.24.8",
+            "version": "2.24.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/lingua-contracts.git",
-                "reference": "107ad8038dda23261035eac6ffe29272f5458303"
+                "reference": "fb19cd61e13796bc9439b6616e09963702fe1475"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/107ad8038dda23261035eac6ffe29272f5458303",
-                "reference": "107ad8038dda23261035eac6ffe29272f5458303",
+                "url": "https://api.github.com/repos/survos/lingua-contracts/zipball/fb19cd61e13796bc9439b6616e09963702fe1475",
+                "reference": "fb19cd61e13796bc9439b6616e09963702fe1475",
                 "shasum": ""
             },
             "require": {
@@ -8291,7 +8302,7 @@
             "description": "Shared DTOs and API surface (routes/headers) for Survos Lingua client/server interoperability.",
             "support": {
                 "issues": "https://github.com/survos/lingua-contracts/issues",
-                "source": "https://github.com/survos/lingua-contracts/tree/2.24.8"
+                "source": "https://github.com/survos/lingua-contracts/tree/2.24.16"
             },
             "funding": [
                 {
@@ -8299,7 +8310,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T18:53:15+00:00"
+            "time": "2026-08-17T22:24:51+00:00"
         },
         {
             "name": "survos/lingua-core",
@@ -8348,16 +8359,16 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.24.15",
+            "version": "2.24.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "eaacf836ac3144b4c6a7b2840dff806500447f2e"
+                "reference": "4761b43033fcd2fd109de3481e8545583098b227"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/eaacf836ac3144b4c6a7b2840dff806500447f2e",
-                "reference": "eaacf836ac3144b4c6a7b2840dff806500447f2e",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/4761b43033fcd2fd109de3481e8545583098b227",
+                "reference": "4761b43033fcd2fd109de3481e8545583098b227",
                 "shasum": ""
             },
             "require": {
@@ -8374,7 +8385,10 @@
                 "symfony/config": "^8.1",
                 "symfony/dependency-injection": "^8.1",
                 "symfony/http-kernel": "^8.1",
+                "symfony/messenger": "^8.1",
+                "symfony/remote-event": "^8.1",
                 "symfony/ux-twig-component": "^3.0",
+                "symfony/webhook": "^8.1",
                 "twig/twig": "^3.4|^4.0"
             },
             "require-dev": {
@@ -8410,7 +8424,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.24.15"
+                "source": "https://github.com/survos/media-bundle/tree/2.24.16"
             },
             "funding": [
                 {
@@ -8418,7 +8432,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-17T18:03:18+00:00"
+            "time": "2026-08-17T22:24:30+00:00"
         },
         {
             "name": "survos/meili-bundle",
@@ -8690,16 +8704,16 @@
         },
         {
             "name": "survos/state-bundle",
-            "version": "2.23.1",
+            "version": "2.24.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/state-bundle.git",
-                "reference": "bdc3f8e91364b41aa33c29b994ed823abc5f0a8d"
+                "reference": "0c64829d844e4d9d886fac10a926d484ed09761f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/bdc3f8e91364b41aa33c29b994ed823abc5f0a8d",
-                "reference": "bdc3f8e91364b41aa33c29b994ed823abc5f0a8d",
+                "url": "https://api.github.com/repos/survos/state-bundle/zipball/0c64829d844e4d9d886fac10a926d484ed09761f",
+                "reference": "0c64829d844e4d9d886fac10a926d484ed09761f",
                 "shasum": ""
             },
             "require": {
@@ -8765,7 +8779,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/state-bundle/issues",
-                "source": "https://github.com/survos/state-bundle/tree/2.23.1"
+                "source": "https://github.com/survos/state-bundle/tree/2.24.16"
             },
             "funding": [
                 {
@@ -8773,7 +8787,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-14T14:19:20+00:00"
+            "time": "2026-08-17T22:25:19+00:00"
         },
         {
             "name": "survos/storage-bundle",
@@ -8854,16 +8868,16 @@
         },
         {
             "name": "survos/tabler-bundle",
-            "version": "2.24.0",
+            "version": "2.24.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/tabler-bundle.git",
-                "reference": "88009357c3fd0d6c2921689793bf6c5a56954133"
+                "reference": "26cdd7bf3266da9e5600398c17dbb1bbbe27263d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/88009357c3fd0d6c2921689793bf6c5a56954133",
-                "reference": "88009357c3fd0d6c2921689793bf6c5a56954133",
+                "url": "https://api.github.com/repos/survos/tabler-bundle/zipball/26cdd7bf3266da9e5600398c17dbb1bbbe27263d",
+                "reference": "26cdd7bf3266da9e5600398c17dbb1bbbe27263d",
                 "shasum": ""
             },
             "require": {
@@ -8946,7 +8960,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/tabler-bundle/issues",
-                "source": "https://github.com/survos/tabler-bundle/tree/2.24.0"
+                "source": "https://github.com/survos/tabler-bundle/tree/2.24.14"
             },
             "funding": [
                 {
@@ -8954,7 +8968,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-15T11:41:45+00:00"
+            "time": "2026-08-17T13:22:17+00:00"
         },
         {
             "name": "survos/thumb-hash-bundle",
@@ -18726,6 +18740,78 @@
             "time": "2026-08-13T13:14:23+00:00"
         },
         {
+            "name": "revolt/event-loop",
+            "version": "v1.0.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/revoltphp/event-loop.git",
+                "reference": "44061cf513e53c6200372fc935ac42271566295d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/revoltphp/event-loop/zipball/44061cf513e53c6200372fc935ac42271566295d",
+                "reference": "44061cf513e53c6200372fc935ac42271566295d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "jetbrains/phpstorm-stubs": "^2019.3",
+                "phpunit/phpunit": "^9",
+                "psalm/phar": "6.16.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Revolt\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Piotrowski",
+                    "email": "aaron@trowski.com"
+                },
+                {
+                    "name": "Cees-Jan Kiewiet",
+                    "email": "ceesjank@gmail.com"
+                },
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@clue.engineering"
+                },
+                {
+                    "name": "Niklas Keller",
+                    "email": "me@kelunik.com"
+                }
+            ],
+            "description": "Rock-solid event loop for concurrent PHP applications.",
+            "keywords": [
+                "async",
+                "asynchronous",
+                "concurrency",
+                "event",
+                "event-loop",
+                "non-blocking",
+                "scheduler"
+            ],
+            "support": {
+                "issues": "https://github.com/revoltphp/event-loop/issues",
+                "source": "https://github.com/revoltphp/event-loop/tree/v1.0.9"
+            },
+            "time": "2026-05-16T17:55:38+00:00"
+        },
+        {
             "name": "sebastian/cli-parser",
             "version": "5.0.1",
             "source": {
@@ -20021,6 +20107,53 @@
             "time": "2026-08-16T17:12:47+00:00"
         },
         {
+            "name": "survos/supervisor-bundle",
+            "version": "2.24.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/supervisor-bundle.git",
+                "reference": "2d02545fc564238c5f7d3e952ba79bceb391d1c0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/supervisor-bundle/zipball/2d02545fc564238c5f7d3e952ba79bceb391d1c0",
+                "reference": "2d02545fc564238c5f7d3e952ba79bceb391d1c0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4",
+                "symfony/config": "^8.1",
+                "symfony/console": "^8.1",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/http-kernel": "^8.1",
+                "symfony/process": "^8.1",
+                "symfony/tui": "^8.1",
+                "symfony/yaml": "^8.1"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Survos\\SupervisorBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Supervises a configured set of long-running processes and presents them in a multi-pane TUI.",
+            "support": {
+                "issues": "https://github.com/survos/supervisor-bundle/issues",
+                "source": "https://github.com/survos/supervisor-bundle/tree/2.24.16"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-08-17T21:25:29+00:00"
+        },
+        {
             "name": "symfony/debug-bundle",
             "version": "v8.1.0",
             "source": {
@@ -20278,6 +20411,84 @@
                 }
             ],
             "time": "2026-08-07T15:02:39+00:00"
+        },
+        {
+            "name": "symfony/tui",
+            "version": "v8.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/tui.git",
+                "reference": "415460523c893f526d799db2e57f3d535ff3e395"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/tui/zipball/415460523c893f526d799db2e57f3d535ff3e395",
+                "reference": "415460523c893f526d799db2e57f3d535ff3e395",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1",
+                "revolt/event-loop": "^1.0",
+                "symfony/event-dispatcher": "^8.0",
+                "symfony/string": "^8.0"
+            },
+            "require-dev": {
+                "league/commonmark": "^2.9",
+                "tempest/highlight": "^2.16"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Tui\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Provides a terminal UI framework for building rich, interactive CLI applications in PHP",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "cli",
+                "console",
+                "terminal",
+                "tui"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/tui/tree/v8.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-08-07T03:42:45+00:00"
         },
         {
             "name": "symfony/web-profiler-bundle",

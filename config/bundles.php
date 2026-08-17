@@ -65,4 +65,5 @@ return [
     Tacman\AiBatch\TacmanAiBatchBundle::class => ['all' => true],
     Survos\FetchBundle\SurvosFetchBundle::class => ['all' => true],
     OV\JsonRPCAPIBundle\OVJsonRPCAPIBundle::class => ['all' => true],
+    Survos\SupervisorBundle\SurvosSupervisorBundle::class => ['dev' => true, 'test' => true],
 ];
