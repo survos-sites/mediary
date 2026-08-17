@@ -49,15 +49,44 @@ final class AssetAiExecutor
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'not supported for this asset'];
         }
 
-        if (!$force && null !== ($cached = $this->sidecar->read($asset->id, $task))) {
-            return ['ok' => true, 'cached' => true, 'response' => $cached];
+        // A cache-aside miss and a cache-aside ERROR must behave the same: run the
+        // task. The sidecar is a cache (see the note below) and object storage is
+        // allowed to have a bad minute — on 2026-08-17, 8 supervised workers
+        // hitting Hetzner at once produced a burst of Flysystem
+        // "Unable to check existence for: o/…/{id}.observe.json", and every one
+        // killed its AI task outright. Nothing was wrong: the same
+        // archive.storage archived 66 masters in that same window, and a HEAD on
+        // those exact missing keys returns a clean 404 from the CLI.
+        if (!$force) {
+            try {
+                if (null !== ($cached = $this->sidecar->read($asset->id, $task))) {
+                    return ['ok' => true, 'cached' => true, 'response' => $cached];
+                }
+            } catch (\Throwable $e) {
+                $this->logger->warning('sidecar read failed for {id}/{task}, treating as a miss: {err}', [
+                    'id' => $asset->id,
+                    'task' => $task,
+                    'err' => $e->getMessage(),
+                ]);
+            }
         }
 
         $result = $taskObj->run($subject);
         $response = (array) ($result->meta?->response ?? []);
 
         if ($this->sidecar->isAvailable()) {
-            $this->sidecar->remember($asset->id, $task, static fn (): array => $response, force: true);
+            // Likewise on the way out. The paid call has already happened and the
+            // claims below are the durable record; losing the cache write costs a
+            // re-run later, losing the claims costs the data.
+            try {
+                $this->sidecar->remember($asset->id, $task, static fn (): array => $response, force: true);
+            } catch (\Throwable $e) {
+                $this->logger->warning('sidecar write failed for {id}/{task}: {err}', [
+                    'id' => $asset->id,
+                    'task' => $task,
+                    'err' => $e->getMessage(),
+                ]);
+            }
         }
         // Claims are the durable authority (DB index + claims.jsonl in the vault); the
         // S3 sidecar is just a cache-aside. ClaimIngestor persists but does not flush —

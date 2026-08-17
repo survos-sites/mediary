@@ -884,9 +884,23 @@ class AssetWorkflow
             }
         }
 
-        // Fire webhook back to any registered callback URL once analysis is done
+        // Publish to the client's callback once there is archived state to report.
+        //
+        // The gate was `marking === PLACE_ANALYZED`, which assumes assets COME TO
+        // REST there. They don't — analyzed is a waypoint on the way to complete,
+        // and a worker that runs the chain through in one pass leaves the asset in
+        // complete without any completed-event ever seeing it in analyzed. So the
+        // notification silently never fired for exactly the assets that succeeded
+        // fastest. Measured 2026-08-17 after loading 7 datasets: 66 assets archived
+        // and 63 /info-probed in mediary, and the client (musdig) still saw 11 —
+        // the same "mediary holds state the app can't see" gap as mediary#7 itself,
+        // reintroduced one place further along.
+        //
+        // archiveUrl is the real precondition: it means there IS something worth
+        // telling the client. Same rule ReplayWebhooksCommand selects on, so a live
+        // delivery and a replay now agree about which assets qualify.
         $callbackUrl = $asset->context['callback_url'] ?? null;
-        if ($callbackUrl && $asset->marking === WF::PLACE_ANALYZED) {
+        if ($callbackUrl && $asset->archiveUrl) {
             $this->fireWebhook($asset, (string) $callbackUrl);
         }
 
