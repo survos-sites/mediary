@@ -146,7 +146,13 @@ class AssetFlow
         info: 'Fetch IIIF manifest',
         description: 'Fetch IIIF metadata, then archive the selected source master to S3',
         async: true,
-        next: [self::TRANSITION_ARCHIVE]
+        // `next` lives on PLACE_IIIF, NOT here — the same rule TRANSITION_ARCHIVE
+        // documents above. Declaring it in both places dispatched archive TWICE
+        // per asset: measured 2026-08-17, 85 assets through this transition
+        // produced 170 asset.archive messages. onArchive() dedups the UPLOAD on
+        // content hash, so the second one is invisible in S3 — but it still
+        // streams the whole master from the origin to compute that hash, which
+        // is exactly the redundant origin traffic mediary#7 exists to stop.
     )]
     public const TRANSITION_FETCH_IIIF = 'iiif';
 
