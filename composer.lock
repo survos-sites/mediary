@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "59a563453c736c3a5d4354bd16779b1a",
+    "content-hash": "219a847311e833f244273d6e660d49d1",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8348,16 +8348,16 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.24.7",
+            "version": "2.24.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "b88253f90f0a8ed7e03598c33d31fd525976f7e9"
+                "reference": "eaacf836ac3144b4c6a7b2840dff806500447f2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/b88253f90f0a8ed7e03598c33d31fd525976f7e9",
-                "reference": "b88253f90f0a8ed7e03598c33d31fd525976f7e9",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/eaacf836ac3144b4c6a7b2840dff806500447f2e",
+                "reference": "eaacf836ac3144b4c6a7b2840dff806500447f2e",
                 "shasum": ""
             },
             "require": {
@@ -8368,6 +8368,7 @@
                 "survos/data-contracts": "^2.5",
                 "survos/field-bundle": "^2.5",
                 "survos/iiif-bundle": "^2.7",
+                "survos/imgproxy-bundle": "^2.7",
                 "survos/kit-bundle": "^2.5",
                 "survos/tabler-bundle": "^2.5",
                 "symfony/config": "^8.1",
@@ -8388,7 +8389,6 @@
                 "symfony/var-dumper": "^8.1"
             },
             "suggest": {
-                "survos/imgproxy-bundle": "Signed imgproxy URL generation + PRO /info (dimensions, classification, blurhash) without downloading the original",
                 "survos/state-bundle": "Drives the media probe lifecycle as an async Symfony workflow (imgproxy /info enrichment)",
                 "symfony/ai-platform": "Required for #[With] JSON Schema constraints on MediaSyncItem properties"
             },
@@ -8410,7 +8410,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.24.7"
+                "source": "https://github.com/survos/media-bundle/tree/2.24.15"
             },
             "funding": [
                 {
@@ -8418,7 +8418,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T15:02:00+00:00"
+            "time": "2026-08-17T18:03:18+00:00"
         },
         {
             "name": "survos/meili-bundle",
