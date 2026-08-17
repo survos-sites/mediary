@@ -17,9 +17,25 @@ framework:
             failed: 'doctrine://default?queue_name=failed'
             sync: 'sync://'
             cache_warm: 'doctrine://default?queue_name=cache_warm'
+            # Outbound asset.analyzed notifications. Its own queue for two reasons: a
+            # `media:replay-webhooks` backfill enqueues hundreds of thousands of these and must
+            # not bury the meili or cache_warm queues behind them, and delivery is the one kind
+            # of work here that depends on someone else's uptime — so it is the one that will
+            # sit in retry, and that has to be drainable (and pausable) on its own.
+            webhook:
+                dsn: 'doctrine://default?queue_name=webhook'
+                retry_strategy:
+                    # A subscriber restarting during a deploy is the common failure; give it
+                    # minutes, not seconds. 4xx never gets here — VerifyingWebhookTransport
+                    # raises those as unrecoverable so they go straight to `failed`.
+                    max_retries: 5
+                    delay: 5000
+                    multiplier: 4
+                    max_delay: 3600000
 
         routing:
-#            App\Message\SendWebhookMessage: webhook
 #            Survos\StorageBundle\Message\DirectoryListingMessage: listing
             Survos\MeiliBundle\Message\BatchIndexEntitiesMessage: meili
             App\Message\WarmImgproxyCacheMessage: cache_warm
+            # Symfony's own message, dispatched by App\Service\AssetNotifier::notify().
+            Symfony\Component\Webhook\Messenger\SendWebhookMessage: webhook

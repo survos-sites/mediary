@@ -2030,11 +2030,12 @@ class AssetWorkflow
      * Payload construction AND delivery both live in AssetNotifier now — this
      * method's private copy of the body had already drifted from
      * ReplayWebhooksCommand's, and neither sent storageKey or the /info blob.
-     * It also never proxied `.wip` callbacks, so every local client's webhook
-     * failed silently, which is how ReplayWebhooksCommand came to exist.
+     *
+     * Delivery is asynchronous: this only puts a SendWebhookMessage on the bus, so a
+     * subscriber that is slow or down no longer holds up the transition that called it.
      */
     private function fireWebhook(Asset $asset, string $callbackUrl): void
     {
-        $this->assetNotifier->fire($asset, $callbackUrl);
+        $this->assetNotifier->notify($asset, $callbackUrl);
     }
 }

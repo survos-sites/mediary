@@ -8,3 +8,4 @@ analyze: php -d memory_limit=768M bin/console messenger:consume asset.analyze --
 download: php -d memory_limit=768M bin/console messenger:consume asset.download --time-limit=3600 --memory-limit=640M
 delete: php -d memory_limit=768M bin/console messenger:consume asset.delete --time-limit=3600 --memory-limit=640M
 scheduler: php -d memory_limit=768M bin/console messenger:consume scheduler_default --time-limit=3600 --memory-limit=640M
+webhook: php bin/console messenger:consume webhook --time-limit=3600 --memory-limit=256M

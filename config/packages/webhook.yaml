@@ -1,0 +1,15 @@
+framework:
+    # mediary is a webhook SENDER only. Enabling the component here registers webhook.transport,
+    # webhook.signer and friends, which App\Service\AssetNotifier dispatches through; there is
+    # deliberately no `routing:` block, because mediary receives no webhooks and the
+    # /webhook/{name} route is therefore not imported (see config/routes.yaml).
+    #
+    # The header and algorithm defaults are spelled out because the RECEIVING side verifies
+    # against them — Survos\Kit\Webhook\WebhookSignature hardcodes the same three names, and a
+    # change here without a matching change there rejects every delivery. See docs/webhooks.md.
+    webhook:
+        enabled: true
+        event_header_name: 'Webhook-Event'
+        id_header_name: 'Webhook-Id'
+        signature_header_name: 'Webhook-Signature'
+        signing_algorithm: 'sha256'

@@ -83,10 +83,20 @@ final class ReplayWebhooksCommand extends Command
 
             // Same payload the live webhook sends — AssetNotifier owns both, so
             // a replay can no longer deliver a different body than the original.
-            $this->assetNotifier->fire($asset, (string) $callbackUrl) ? $fired++ : $failed++;
+            //
+            // This QUEUES rather than delivers, which is what makes a 608k-asset backfill
+            // survivable: the command finishes at the speed of the bus, and the worker drains
+            // it with per-message retries instead of the command dying two hours in on one
+            // subscriber's timeout. `Queued` below is therefore not a euphemism for `Fired`
+            // — nothing here knows whether delivery succeeded. Watch the worker for that.
+            $this->assetNotifier->notify($asset, (string) $callbackUrl) ? $fired++ : $failed++;
         }
 
-        $io->success(sprintf('Fired: %d  Failed: %d  Skipped: %d', $fired, $failed, $skipped));
+        $io->success(sprintf('Queued: %d  Rejected: %d  Skipped: %d', $fired, $failed, $skipped));
+
+        if ($fired > 0) {
+            $io->note('Queued only. Run the webhook worker to deliver: bin/console messenger:consume webhook -v');
+        }
 
         return $failed === 0 ? Command::SUCCESS : Command::FAILURE;
     }

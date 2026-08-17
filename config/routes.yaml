@@ -3,6 +3,13 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
-sais_webhook::
-    path: /webhook/sais-webhook
-    controller: Symfony\Bundle\WebhookBundle\Controller\WebhookController
+
+# NOTE: a `sais_webhook::` entry used to live here (note the stray second colon), pointing at
+# Symfony\Bundle\WebhookBundle\Controller\WebhookController — a class that does not exist; the
+# real one is Symfony\Component\Webhook\Controller\WebhookController, and it is already routed
+# by config/routes/webhook.yaml. It came in with the `initial version (was sais)` commit as
+# unfinished `make:webhook` scaffolding, along with a parser that deserialized into a
+# non-existent App\Entity\Media and a consumer that only logged. Nothing configured
+# framework.webhook.routing, so none of it was ever reachable. Removed in survos-sites/mediary#8.
+#
+# mediary SENDS webhooks (see App\Service\AssetNotifier); it does not receive any.

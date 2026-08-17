@@ -20,3 +20,26 @@ services:
         arguments:
             $storage: '@?archive.storage'
 
+    # --- Outbound webhook delivery (see docs/webhooks.md) ---
+
+    # http_client, but routing `.wip` subscribers through the Symfony CLI proxy. Every local
+    # client's callback URL is a `.wip` host that resolves nowhere else, so without this the
+    # entire local end-to-end path fails — which is the condition media:replay-webhooks was
+    # written to clean up after. No $baseUri: one client posts to many different subscribers,
+    # so the decision is per request URL.
+    survos.webhook.http_client:
+        class: Survos\FetchBundle\Http\WipProxyHttpClient
+        arguments:
+            $client: '@http_client'
+
+    # Symfony's webhook.transport discards the response, so a failed delivery looks identical
+    # to a successful one and Messenger never retries. This one reads the status code.
+    Survos\Kit\Webhook\VerifyingWebhookTransport:
+        decorates: 'webhook.transport'
+        arguments:
+            $client: '@survos.webhook.http_client'
+            $headers: '@webhook.headers_configurator'
+            $body: '@webhook.body_configurator.json'
+            $signer: '@webhook.signer'
+            $logger: '@logger'
+
