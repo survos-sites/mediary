@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Asset;
 use App\Entity\MediaRecord;
+use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
 use App\Workflow\AssetFlow;
 use Psr\Log\LoggerAwareInterface;
@@ -26,6 +27,7 @@ final class BatchController implements LoggerAwareInterface
         private readonly AssetRegistry     $assetRegistry,
         private readonly AsyncQueueLocator $asyncQueueLocator,
         private readonly ClaimIngestor     $claimIngestor,
+        private readonly AssetNotifier     $assetNotifier,
     ) {
     }
 
@@ -62,15 +64,18 @@ final class BatchController implements LoggerAwareInterface
 
         // Precompute context hints per URL once — reused for the batched asset
         // lookup below and the per-item loop, instead of recomputing per item.
+        //
+        // callback_url deliberately does NOT go in here. It used to, and the
+        // comment claimed it was landing "in context so the workflow can fire
+        // it after analysis" — but populateAsset() merges contextHints into
+        // Asset::$sourceMeta, while every reader (AssetWorkflow::onCompleted,
+        // ReplayWebhooksCommand) looks in Asset::$context. So the URL was
+        // recorded as a piece of the record's SOURCE METADATA and the webhook
+        // never fired, even for a client that sent one. See mediary#7; it is
+        // applied against $asset->context explicitly below.
         $contextHintsByUrl = [];
         foreach ($urls as $url) {
-            $item         = $payload->itemFor($url);
-            $contextHints = $item->toArray();
-            // Store callback URL in context so the workflow can fire it after analysis
-            if ($payload->callbackUrl) {
-                $contextHints['callback_url'] = $payload->callbackUrl;
-            }
-            $contextHintsByUrl[$url] = $contextHints;
+            $contextHintsByUrl[$url] = $payload->itemFor($url)->toArray();
         }
 
         // One preload query for existing Assets + one for existing MediaRecords,
@@ -98,23 +103,30 @@ final class BatchController implements LoggerAwareInterface
         foreach ($urls as $url) {
             $asset = $assets[$url];
 
+            // Where to publish completion. Last writer wins — unlike source
+            // metadata, this is not provenance, it is a live routing decision
+            // and the client asking now is the one to believe. Re-registering
+            // an already-archived asset is therefore the supported way to
+            // attach a callback to the ~608k assets registered before any
+            // client sent one.
+            //
+            // KNOWN LIMIT: one slot. mediary broadcasts to many clients, so two
+            // clients syncing the same URL overwrite each other and only the
+            // most recent is notified. Fine today (musdig is the only client
+            // with a callback), wrong the moment a second one appears — that
+            // needs a per-client map, not a scalar.
+            if ($payload->callbackUrl) {
+                $asset->context ??= [];
+                $asset->context['callback_url'] = $payload->callbackUrl;
+            }
+
             if ($asset->marking === AssetFlow::PLACE_NEW) {
                 $queue[$asset->originalUrl] = $asset;
             }
-            $media[] = [
-                'originalUrl' => $url,
-                'mediaKey'    => $asset->id,
-                'status'      => $asset->marking,
-                'storageKey'  => $asset->storageKey,
-                's3Url'       => $asset->archiveUrl,
-                'smallUrl'    => $asset->smallUrl,
-                'iiifManifestId' => $asset->iiifManifestEntity?->id,
-                'iiifManifest'   => $asset->iiifManifestEntity?->manifestUrl ?? ($asset->sourceMeta['iiif_manifest'] ?? null),
-                'iiifBase'       => $asset->iiifManifestEntity?->imageBase ?? ($asset->sourceMeta['iiif_base'] ?? null),
-                'iiifThumb'      => $asset->iiifManifestEntity?->thumbnailUrl ?? ($asset->sourceMeta['iiif_thumbnail_url'] ?? null),
-                'clients'     => $asset->clients,
-                'dispatched'  => array_key_exists($url, $queue) ? 'yes' : 'no',
-            ];
+            // Same builder the asset.analyzed webhook uses, so what a client
+            // learns from /batch and what it learns from the callback differ
+            // only in timing — not in which fields exist. See AssetNotifier.
+            $media[] = $this->assetNotifier->batchRow($asset, array_key_exists($url, $queue));
         }
         $this->assetRegistry->flush();
 

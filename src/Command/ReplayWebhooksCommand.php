@@ -4,33 +4,39 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\Asset;
 use App\Repository\AssetRepository;
-use App\Workflow\AssetFlow as WF;
-use Psr\Log\LoggerInterface;
+use App\Service\AssetNotifier;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
- * Replays webhook callbacks for assets that are already analyzed but whose
- * callback_url was unreachable (e.g. localhost) when they originally completed.
+ * Re-delivers asset.analyzed for assets whose state a client never received —
+ * because the callback_url was unreachable at the time, or (mediary#7) because
+ * no client had ever sent one.
+ *
+ * Selection is "has an archiveUrl", NOT "marking = analyzed". Assets do not
+ * stop at PLACE_ANALYZED; they go on to PLACE_COMPLETE, so filtering on the
+ * live event's place would skip everything that actually finished. What makes
+ * an asset worth replaying is that mediary holds S3 state the client doesn't.
  *
  * Usage:
- *   php bin/console media:replay-webhooks
  *   php bin/console media:replay-webhooks --dry-run
+ *   php bin/console media:replay-webhooks --client=harvest --limit=100
  *   php bin/console media:replay-webhooks --id=fd1230ed5a6267c0
  */
-#[AsCommand(name: 'media:replay-webhooks', description: 'Replay webhook callbacks for analyzed assets')]
+#[AsCommand(name: 'media:replay-webhooks', description: 'Re-deliver asset.analyzed to clients that never got it')]
 final class ReplayWebhooksCommand extends Command
 {
     public function __construct(
         private readonly AssetRepository $assetRepository,
-        private readonly HttpClientInterface $httpClient,
-        private readonly LoggerInterface $logger,
+        private readonly AssetNotifier $assetNotifier,
+        private readonly EntityManagerInterface $em,
     ) {
         parent::__construct();
     }
@@ -39,52 +45,34 @@ final class ReplayWebhooksCommand extends Command
     {
         $this
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show what would be sent without firing')
-            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Replay a single asset by ID');
+            ->addOption('id', null, InputOption::VALUE_REQUIRED, 'Replay a single asset by ID')
+            ->addOption('client', null, InputOption::VALUE_REQUIRED, 'Only assets registered to this client')
+            ->addOption('marking', null, InputOption::VALUE_REQUIRED, 'Only assets in this place (default: any archived asset)')
+            ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Stop after this many assets');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $dryRun = (bool) $input->getOption('dry-run');
+        $io       = new SymfonyStyle($input, $output);
+        $dryRun   = (bool) $input->getOption('dry-run');
         $singleId = $input->getOption('id');
+        $client   = $input->getOption('client');
+        $marking  = $input->getOption('marking');
+        $limit    = $input->getOption('limit');
+        $limit    = $limit === null ? null : (int) $limit;
 
-        $assets = $singleId
-            ? array_filter([$this->assetRepository->find($singleId)])
-            : $this->assetRepository->findBy(['marking' => WF::PLACE_ANALYZED]);
+        $fired = $failed = $skipped = 0;
 
-        $fired = 0;
-        $skipped = 0;
-
-        foreach ($assets as $asset) {
+        foreach ($this->assets($singleId, $client, $marking, $limit) as $asset) {
             $callbackUrl = $asset->context['callback_url'] ?? null;
             if (!$callbackUrl) {
-                $io->comment(sprintf('  skip %s — no callback_url', $asset->id));
+                // The overwhelmingly common case for the 2026-08 backfill: these
+                // assets were registered before any client sent a callback_url,
+                // so there is nowhere to replay TO. Only counted, not printed —
+                // at 608k assets the log would be the output.
                 $skipped++;
                 continue;
             }
-
-            $payload = [
-                'event'       => 'asset.analyzed',
-                'assetId'     => $asset->id,
-                'originalUrl' => $asset->originalUrl,
-                'clients'     => $asset->clients,
-                'marking'     => $asset->marking,
-                'mime'        => $asset->mime,
-                'width'       => $asset->width,
-                'height'      => $asset->height,
-                'archiveUrl'  => $asset->archiveUrl,
-                'smallUrl'    => $asset->smallUrl,
-                'context'     => [
-                    'ocr'       => $asset->context['ocr']       ?? null,
-                    'ocr_chars' => $asset->context['ocr_chars'] ?? null,
-                    'thumbhash' => $asset->context['thumbhash'] ?? null,
-                    'colors'    => $asset->context['colors']    ?? null,
-                    'phash'     => $asset->context['phash']     ?? null,
-                    'path'      => $asset->context['path']      ?? null,
-                    'tenant'    => $asset->context['tenant']    ?? null,
-                    'image_id'  => $asset->context['image_id']  ?? null,
-                ],
-            ];
 
             $io->text(sprintf('  %s → %s (image_id=%s)', $asset->id, $callbackUrl, $asset->context['image_id'] ?? '?'));
 
@@ -93,21 +81,65 @@ final class ReplayWebhooksCommand extends Command
                 continue;
             }
 
-            try {
-                $options = ['json' => $payload, 'timeout' => 10];
-                if (str_contains($callbackUrl, '.wip')) {
-                    $options['proxy'] = 'http://127.0.0.1:7080';
-                }
-                $response = $this->httpClient->request('POST', $callbackUrl, $options);
-                $status = $response->getStatusCode();
-                $io->text(sprintf('    → HTTP %d', $status));
-                $fired++;
-            } catch (\Throwable $e) {
-                $io->error(sprintf('    failed: %s', $e->getMessage()));
-            }
+            // Same payload the live webhook sends — AssetNotifier owns both, so
+            // a replay can no longer deliver a different body than the original.
+            $this->assetNotifier->fire($asset, (string) $callbackUrl) ? $fired++ : $failed++;
         }
 
-        $io->success(sprintf('Fired: %d  Skipped: %d', $fired, $skipped));
-        return Command::SUCCESS;
+        $io->success(sprintf('Fired: %d  Failed: %d  Skipped: %d', $fired, $failed, $skipped));
+
+        return $failed === 0 ? Command::SUCCESS : Command::FAILURE;
+    }
+
+    /**
+     * Stream assets rather than findBy()-ing them.
+     *
+     * The backfill this command exists for is ~608k archived assets; hydrating
+     * that as one array is an out-of-memory crash, not a slow run.
+     *
+     * @return iterable<Asset>
+     */
+    private function assets(?string $singleId, ?string $client, ?string $marking, ?int $limit): iterable
+    {
+        if ($singleId) {
+            $asset = $this->assetRepository->find($singleId);
+            if ($asset) {
+                yield $asset;
+            }
+
+            return;
+        }
+
+        // "There is S3 state to report", not "is sitting in the analyzed place".
+        // Assets pass through PLACE_ANALYZED on their way to PLACE_COMPLETE, so
+        // the old marking filter matched only the handful caught mid-flight.
+        $qb = $this->assetRepository->createQueryBuilder('a')
+            ->where('a.archiveUrl IS NOT NULL');
+
+        if ($marking !== null) {
+            $qb->andWhere('a.marking = :marking')->setParameter('marking', $marking);
+        }
+
+        $query = $qb->getQuery();
+
+        $seen = 0;
+        foreach ($query->toIterable() as $asset) {
+            // clients is a JSON array and mediary has no DQL function to search
+            // one, so this filters in PHP. Fine for a backfill: the query is
+            // already streaming and the alternative is a bespoke DQL extension
+            // for a maintenance command.
+            if ($client !== null && !in_array($client, $asset->clients, true)) {
+                continue;
+            }
+
+            yield $asset;
+
+            if (++$seen % 200 === 0) {
+                $this->em->clear();
+            }
+            if ($limit !== null && $seen >= $limit) {
+                return;
+            }
+        }
     }
 }

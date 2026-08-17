@@ -6,6 +6,7 @@ namespace App\Workflow;
 use App\Ai\AssetAiTask;
 use App\Message\WarmImgproxyCacheMessage;
 use Survos\MediaBundle\Dto\MediaEnrichment;
+use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
 use App\Service\ClaimSearchSync;
 use App\Service\EdgeAnalysisService;
@@ -111,6 +112,7 @@ class AssetWorkflow
         private readonly AiToolsObserveService $aiToolsObserveService,
         private readonly ClaimIngestor $claimIngestor,
         private readonly ClaimSearchSync $claimSearchSync,
+        private readonly AssetNotifier $assetNotifier,
         private readonly TwigEnvironment $twig,
         #[Target('archive.storage')]  private readonly ?FilesystemOperator $archiveStorage = null,
         private ?GoogleDriveService $driveService = null,
@@ -2010,45 +2012,15 @@ class AssetWorkflow
         return [$width, $height, $pixels];
     }
 
+    /**
+     * Payload construction AND delivery both live in AssetNotifier now — this
+     * method's private copy of the body had already drifted from
+     * ReplayWebhooksCommand's, and neither sent storageKey or the /info blob.
+     * It also never proxied `.wip` callbacks, so every local client's webhook
+     * failed silently, which is how ReplayWebhooksCommand came to exist.
+     */
     private function fireWebhook(Asset $asset, string $callbackUrl): void
     {
-        $payload = [
-            'event'       => 'asset.analyzed',
-            'assetId'     => $asset->id,
-            'originalUrl' => $asset->originalUrl,
-            'clients'     => $asset->clients,
-            'marking'     => $asset->marking,
-            'mime'        => $asset->mime,
-            'width'       => $asset->width,
-            'height'      => $asset->height,
-            'archiveUrl'  => $asset->archiveUrl,
-            'smallUrl'    => $asset->smallUrl,
-            'context'     => [
-                'ocr'          => $asset->context['ocr']          ?? null,
-                'ocr_chars'    => $asset->context['ocr_chars']    ?? null,
-                'thumbhash'    => $asset->context['thumbhash']    ?? null,
-                'colors'       => $asset->context['colors']       ?? null,
-                'phash'        => $asset->context['phash']        ?? null,
-                'path'         => $asset->context['path']         ?? null,
-                'tenant'       => $asset->context['tenant']       ?? null,
-                'image_id'     => $asset->context['image_id']     ?? null,
-            ],
-        ];
-
-        try {
-            $this->httpClient->request('POST', $callbackUrl, [
-                'json'    => $payload,
-                'timeout' => 10,
-            ]);
-            $this->logger->info('Webhook fired to {url} for asset {id}', [
-                'url' => $callbackUrl,
-                'id'  => $asset->id,
-            ]);
-        } catch (\Throwable $e) {
-            $this->logger->error('Webhook failed for {id}: {err}', [
-                'id'  => $asset->id,
-                'err' => $e->getMessage(),
-            ]);
-        }
+        $this->assetNotifier->fire($asset, $callbackUrl);
     }
 }
