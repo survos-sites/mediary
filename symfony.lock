@@ -332,6 +332,9 @@
     "survos/storage-bundle": {
         "version": "1.5.418"
     },
+    "survos/supervisor-bundle": {
+        "version": "2.10.20"
+    },
     "survos/tabler-bundle": {
         "version": "2.0.117"
     },

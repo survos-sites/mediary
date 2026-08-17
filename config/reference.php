@@ -2223,9 +2223,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  * }
  * @psalm-type SurvosMediaConfig = array{
- *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
- *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
- *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  *     default_locale?: scalar|Param|null, // Default: "en"
  *     cache_ttl?: scalar|Param|null, // Default: 3600
  *     media_server?: array{
@@ -3053,6 +3050,22 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         },
  *     }>,
  * }
+ * @psalm-type SurvosSupervisorConfig = array{
+ *     ring_buffer_lines?: int|Param, // Default: 5000
+ *     follow_by_default?: bool|Param, // Default: true
+ *     processes?: array<string, array{ // Default: []
+ *         cmd?: list<scalar|Param|null>,
+ *         cwd?: scalar|Param|null, // Default: null
+ *         env?: list<scalar|Param|null>,
+ *         restart?: "never"|"on-failure"|"always"|Param, // Default: "never"
+ *         backoff?: array{
+ *             initial?: float|Param, // Default: 1.0
+ *             max?: float|Param, // Default: 30.0
+ *             multiplier?: float|Param, // Default: 2.0
+ *         },
+ *         autostart?: bool|Param, // Default: true
+ *     }>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -3163,6 +3176,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_search?: SurvosSearchConfig,
  *         survos_fetch?: SurvosFetchConfig,
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
+ *         survos_supervisor?: SurvosSupervisorConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -3272,6 +3286,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_search?: SurvosSearchConfig,
  *         survos_fetch?: SurvosFetchConfig,
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
+ *         survos_supervisor?: SurvosSupervisorConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

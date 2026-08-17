@@ -136,7 +136,22 @@ final class BatchController implements LoggerAwareInterface
         }
         $this->assetRegistry->flush();
 
-        return new JsonResponse(['media' => $media]);
+        // Report what we refused rather than dropping it silently. A client whose
+        // source data holds identifiers instead of URLs (Smithsonian EDAN ids, say)
+        // otherwise sees a short media[] and no reason for it.
+        $rejected = $payload->rejectedUrls();
+        if ($rejected !== []) {
+            $this->logger->warning('batch[{client}]: refused {count} non-fetchable url(s), e.g. {sample}', [
+                'client' => $client,
+                'count' => count($rejected),
+                'sample' => implode(', ', array_slice($rejected, 0, 3)),
+            ]);
+        }
+
+        return new JsonResponse([
+            'media' => $media,
+            'rejected' => $rejected,
+        ]);
     }
 
     /**
