@@ -9,6 +9,7 @@ use App\Repository\AssetRepository;
 use App\Repository\MediaRecordRepository;
 use App\Workflow\AssetFlow;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Survos\MediaBundle\Contract\MediaSyncKeys;
@@ -37,7 +38,7 @@ final class AssetRegistry
         private readonly string        $archiveBucket,
         private readonly ImgproxyUrlBuilder $imgproxyUrlBuilder,
         private readonly MediaUrlGenerator $mediaUrlGenerator,
-
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -160,25 +161,47 @@ final class AssetRegistry
         $this->entityManager->flush();
     }
 
+    /**
+     * Kick a freshly registered asset into the pipeline.
+     *
+     * This exists because PLACE_NEW is the INITIAL place: an asset created by
+     * Asset::fromOriginalUrl() never *enters* it via a transition, so
+     * WorkflowListener's onEnter never fires and nothing would ever move.
+     *
+     * It reads PLACE_NEW's own `next` metadata and takes the first transition
+     * whose can() passes — deliberately the same first-applicable-wins rule
+     * WorkflowListener uses for every other place. It used to hardcode
+     * TRANSITION_FETCH_IIIF with no fallback, which was invisible only because
+     * that transition had no guard and therefore always passed. The moment it
+     * got one, every asset stalled in `new` with an empty queue.
+     */
     public function dispatch(Asset $asset): void
     {
-        // trigger download
-        $nextTransition = AssetFlow::TRANSITION_FETCH_IIIF;
-        if ($this->assetWorkflow->can($asset, $nextTransition))
-        {
-            // dispatch a download request
-            $message = new TransitionMessage($asset->id,
+        $next = (array) ($this->assetWorkflow->getMetadataStore()
+            ->getPlaceMetadata(AssetFlow::PLACE_NEW)['next'] ?? []);
+
+        foreach ($next as $transition) {
+            if (!$this->assetWorkflow->can($asset, $transition)) {
+                continue;
+            }
+
+            $message = new TransitionMessage(
+                $asset->id,
                 $asset::class,
-                $nextTransition,
-                AssetFlow::WORKFLOW_NAME);
-            $stamps = $this->asyncQueueLocator->stamps($message);
-            $this->messageBus->dispatch(
-                $message,
-                $stamps
+                $transition,
+                AssetFlow::WORKFLOW_NAME,
             );
+            $this->messageBus->dispatch($message, $this->asyncQueueLocator->stamps($message));
+
+            // Sequential semantics, matching WorkflowListener: one transition,
+            // not every applicable one.
+            return;
         }
 
-
+        $this->logger?->warning('dispatch[{id}]: no applicable transition from {place}', [
+            'id' => $asset->id,
+            'place' => AssetFlow::PLACE_NEW,
+        ]);
     }
 
     public function s3Url(Asset $asset)

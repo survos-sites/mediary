@@ -146,6 +146,19 @@ class AssetFlow
         info: 'Fetch IIIF manifest',
         description: 'Fetch IIIF metadata, then archive the selected source master to S3',
         async: true,
+        // Only when the client actually sent us a manifest to fetch. Without
+        // this the transition is taken by every asset and returns immediately:
+        // measured 2026-08-17, 0 of 3,545 assets carry a manifest by ANY route
+        // (sourceMeta iiif_manifest/iiifManifest, the iiif_manifest_id FK, or a
+        // row in iiif_manifest), yet 1,143 sit in PLACE_IIIF having passed
+        // through it. async is right for a manifest fetch — but the round trip
+        // was unconditional while the fetch it pays for has never once fired.
+        //
+        // A guard, not a conditional dispatch: PLACE_NEW lists
+        // next: [FETCH_IIIF, ARCHIVE] and WorkflowListener takes the first
+        // transition whose can() passes, so failing this guard falls straight
+        // through to archive with no branching anywhere.
+        guard: 'subject.hasIiifManifest',
         // `next` lives on PLACE_IIIF, NOT here — the same rule TRANSITION_ARCHIVE
         // documents above. Declaring it in both places dispatched archive TWICE
         // per asset: measured 2026-08-17, 85 assets through this transition

@@ -324,6 +324,24 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
     #[ORM\JoinColumn(name: 'iiif_manifest_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     public ?IiifManifest $iiifManifestEntity = null;
 
+    /**
+     * Is there a manifest for TRANSITION_FETCH_IIIF to actually go and fetch?
+     *
+     * The guard for that transition. Exactly the condition onFetchIiif() tests
+     * before returning early, hoisted so the workflow can decline the whole
+     * transition instead of paying an async round trip to discover there is no
+     * work. PLACE_NEW lists next: [FETCH_IIIF, ARCHIVE], so declining here
+     * falls through to archive on its own.
+     *
+     * Deliberately NOT `iiif_base`: 3,252 of 3,545 assets carry that, and it is
+     * an image-server base URL, not a manifest — there is nothing at it to
+     * fetch. Only the manifest keys count.
+     */
+    public bool $hasIiifManifest {
+        get => ($this->sourceMeta['iiif_manifest'] ?? $this->sourceMeta['iiifManifest'] ?? null) !== null
+            || $this->iiifManifestEntity !== null;
+    }
+
     #[ORM\ManyToOne(targetEntity: MediaRecord::class, inversedBy: 'assets')]
     #[ORM\JoinColumn(name: 'media_record_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     public ?MediaRecord $mediaRecord = null;
