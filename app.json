@@ -41,7 +41,7 @@
     "repository": "https://github.com/survos-sites/media",
     "scripts": {
         "dokku": {
-            "predeploy": "bin/console secrets:decrypt-to-local --force && bin/console d:m:m -n --allow-no-migration",
+            "predeploy": "sh -c 'bin/console secrets:decrypt-to-local --force && bin/console d:m:m -n --allow-no-migration'",
             "postdeploy": ""
         }
     },
