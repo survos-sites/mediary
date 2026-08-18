@@ -1,0 +1,23 @@
+{
+	frankenphp
+}
+
+:{$PORT:80} {
+	root * /app/public
+
+	# No `encode` directive: mediary.survos.com is Cloudflare-proxied, and Cloudflare
+	# compresses on the way to the browser regardless of what the origin sends.
+	# Setting Content-Encoding here adds a layer that can go wrong in transit --
+	# confirmed live on packages with zstd (valid at the origin, broke every asset in
+	# the browser with net::ERR_CONTENT_DECODING_FAILED once it hit Cloudflare's
+	# edge). Let Cloudflare own it end to end.
+
+	# mediary receives image uploads and multi-page PDFs. php.ini raises
+	# upload_max_filesize/post_max_size to 512M; Caddy has to allow the body through
+	# first or PHP never sees the request.
+	request_body {
+		max_size 512MB
+	}
+
+	php_server
+}

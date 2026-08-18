@@ -1,0 +1,18 @@
+# Dokku builds from a git archive, so this mostly matters for local `docker build`
+# runs -- but keeping the two contexts identical is what makes a local build a real
+# rehearsal of the deploy instead of an approximation.
+.git
+.github
+.idea
+vendor
+var
+public/assets
+public/bundles
+node_modules
+tests
+docs
+*.md
+.env.local
+.env.*.local
+docker-compose*.yml
+compose*.yaml

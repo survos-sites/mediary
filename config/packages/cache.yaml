@@ -6,17 +6,32 @@ framework:
         # derived from the container class hash and churns on every cache:clear.
         prefix_seed: survos/mediary
 
-        # Redis -- the "app" pool also backs doctrine.result_cache_pool (see
-        # doctrine.yaml), so the ORM result cache survives across workers and
-        # requests instead of living in per-process filesystem files. That is the
-        # immediate win; mediary runs many long-lived workers over the same rows.
-        # Dokku's dokku-redis addon injects REDIS_URL in production; locally it
-        # points at the shared dev stack's redis container, see .env.
-        app: cache.adapter.redis
-        default_redis_provider: '%env(REDIS_URL)%'
-
-        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
-        #app: cache.adapter.apcu
+        # APCu, deliberately -- in-process, no service, no network hop.
+        #
+        # This was cache.adapter.redis, justified by the ORM result cache being
+        # shared across mediary's many long-lived workers. That win was never
+        # actually realised, in two independent ways found on 2026-08-18:
+        #
+        #   1. REDIS_URL was never injected in production. cache.yaml reads
+        #      REDIS_URL; the Symfony vault defines REDIS (redis://dokku.survos.com:6379),
+        #      which NOTHING reads. So the live value fell through to the .env
+        #      default redis://localhost:6379 -- and nothing listens on localhost
+        #      inside the container. The app cache pointed at a dead endpoint for
+        #      as long as anyone can tell, and no one noticed.
+        #   2. doctrine.yaml wires result_cache_driver to doctrine.result_cache_pool,
+        #      but no code anywhere calls enableResultCache(). Doctrine only uses
+        #      the result cache when a query explicitly asks for it, so the pool
+        #      was never exercised even in principle.
+        #
+        # Redis is only worth a service when processes must share cache. Nothing
+        # in mediary does: no session handler, no lock, no rate limiter, and every
+        # messenger transport is doctrine://. harvest is the opposite case (millions
+        # of items, genuinely shared caching) and should keep Redis -- via
+        # `dokku redis:create` + `redis:link`, which is what injects REDIS_URL.
+        #
+        # NOTE: apc.enable_cli=1 is set in docker/php.ini. Without it APCu is
+        # unavailable in CLI, and mediary's eleven worker process types are all CLI.
+        app: cache.adapter.apcu
 
         # Namespaced pools use the above "app" backend by default
         #pools:

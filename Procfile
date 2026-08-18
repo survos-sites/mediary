@@ -1,4 +1,14 @@
-web: vendor/bin/heroku-php-nginx -C nginx.conf -F fpm_custom.conf public/
+# Dokku's Procfile support overrides the Dockerfile's CMD per process type -- even
+# under the dockerfile builder -- so a stale `web:` line silently keeps the old
+# broken command. This is the FrankenPHP one; the workers carry over unchanged.
+web: frankenphp run --config /etc/caddy/Caddyfile
+
+# WARNING -- these need `dokku ps:set mediary restart-policy unless-stopped`.
+# `messenger:consume --time-limit` exits 0 when the limit is reached, and docker's
+# `on-failure` policy (the dokku default) does NOT restart a container that exited 0.
+# Under on-failure every worker below dies for good one hour after deploy and never
+# returns -- visible as `Status <worker> 1: missing` while web keeps running and the
+# queues silently grow.
 meili: php -d memory_limit=768M bin/console messenger:consume meili --time-limit=3600 --memory-limit=640M
 info: php -d memory_limit=768M bin/console messenger:consume asset.info --time-limit=3600 --memory-limit=640M
 archive: php -d memory_limit=768M bin/console messenger:consume asset.archive --time-limit=3600 --memory-limit=640M
