@@ -33,9 +33,27 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    #
+    # Deny by default, same shape as harvest: everything needs ROLE_USER except the
+    # endpoints that MACHINES call. mediary is mostly a machine API, so getting the
+    # carve-outs right is the whole job -- a missing one silently breaks a client
+    # that has no human to see the login page, and the symptom is a redirect to
+    # /login parsed as a failed upload.
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # THE dispatch endpoint. media-bundle's MediaBatchDispatcher POSTs
+        # <endpoint>/<client>/batch -- harvest sends /harvest/batch, ssai /ssai/batch.
+        # Public but NOT unauthenticated in practice: payloads are client-scoped and
+        # the asset.analyzed callback is HMAC-signed (MEDIARY_WEBHOOK_SECRET).
+        # Regex is anchored so it cannot be widened by a longer path.
+        - { path: '^/[^/]+/batch$', roles: PUBLIC_ACCESS }
+        # dokku CHECKS and uptime monitoring hit this with no credentials.
+        - { path: ^/health, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        # Everything else -- UI, EasyAdmin, and the API Platform surface under /api --
+        # requires a login. Gate /api deliberately: nothing currently consumes it
+        # machine-to-machine (clients use /<client>/batch), but if that changes it
+        # needs a token authenticator, not a PUBLIC_ACCESS hole.
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:
