@@ -51,8 +51,8 @@
             "value": "secret"
         },
         "WEB_CONCURRENCY": {
-            "description": "The number of processes to run.",
-            "generator": "echo 5"
+            "description": "The number of processes to run. Plain value, NOT a generator: dokku 0.38.27 no longer runs app.json env generators, so the deploy aborts with 'required env var WEB_CONCURRENCY has no value, no default, and no TTY for prompt'. 0.38.16 ran the generator, which is why the Ashburn host never needed this set in config.",
+            "value": "5"
         },
         "DOKKU_CHECKS_WAIT": {
             "description": "Seconds to wait before running checks (lower = faster deploy).",
