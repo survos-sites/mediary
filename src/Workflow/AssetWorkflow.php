@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Workflow;
 
 use App\Ai\AssetAiTask;
+use App\Ai\FaceGeometry;
 use App\Message\WarmImgproxyCacheMessage;
 use Survos\MediaBundle\Dto\MediaEnrichment;
 use App\Service\AssetNotifier;
@@ -760,22 +761,37 @@ class AssetWorkflow
         [$objectIdentifiers, $objectIdentifierConfidences] = $this->objectIdentifierData($info);
         $asset->objectIdentifiers = $objectIdentifiers;
         $asset->objectIdentifierConfidences = $objectIdentifierConfidences;
-        $asset->faceCount = $this->faceCount($info);
+        $this->applyFaceGeometry($asset, $info);
     }
 
     /**
-     * Count of raw face-box detections from imgproxy's detect_objects (this deployment's
-     * object-detection model is a face detector). Deliberately NOT deduped like
-     * objectIdentifierData() — every box counts, since 3 faces all labelled "face" must
-     * count as 3, not collapse to 1 unique label. Powers the faceCount facet: 1 = portrait,
-     * 2 = couple, 3-5 = small group, 6+ = large group.
+     * The face boxes were always here — detect_objects rides along on the same /info call — but
+     * only count() was being read off them, so the arrangement was discarded. Keep it: the layout
+     * (portrait / pair / small_group / class_or_team / crowd) is what lets a public gallery demote
+     * the posed group shot, and it is the one signal for that which costs nothing extra and does
+     * not drift between model versions. See {@see FaceGeometry} for the geometry itself.
+     *
+     * faceCount keeps its old meaning exactly — every box counts, never deduped by label, since 3
+     * faces all labelled "face" must count as 3. It still powers the faceCount facet.
+     *
+     * null vs 0 is load-bearing and preserved: null means detection did not run for this asset,
+     * 0 means it ran and found nobody. Collapsing those would make "no people" and "never looked"
+     * indistinguishable in the facet.
      *
      * @param array<string, mixed> $info
      */
-    private function faceCount(array $info): ?int
+    private function applyFaceGeometry(Asset $asset, array $info): void
     {
-        $entries = $info['objects'] ?? null;
-        return is_array($entries) ? count($entries) : null;
+        $objects = $info['objects'] ?? null;
+        if (!is_array($objects)) {
+            $asset->faceCount = null;
+
+            return;
+        }
+
+        $geometry = FaceGeometry::fromObjects($objects);
+        $asset->faceCount = $geometry->count;
+        $asset->context['face_geometry'] = $geometry->toArray();
     }
 
     /**
