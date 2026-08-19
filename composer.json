@@ -29,6 +29,7 @@
         "fguillot/json-rpc": "^1.5.0",
         "inspector-apm/inspector-symfony": "^1.11.5",
         "jenssegers/imagehash": "^0.11.0",
+        "jwage/phpamqplib-messenger": "^0.10.1",
         "knplabs/knp-menu": "dev-master",
         "knplabs/knp-time-bundle": "^2.5",
         "league/color-extractor": "^0.4.0",

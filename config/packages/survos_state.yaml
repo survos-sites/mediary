@@ -1,10 +1,31 @@
 # Default configuration for extension with alias: "survos_state"
 survos_state:
-#    queue_prefix:         '%env(STATEQUEUE_PREFIX)%' // only used for rabbitmq
     base_layout:          base.html.twig
     enable_dynamic_routing: true
     workflow_paths:
         - '%kernel.project_dir%/src/Workflow'
 
-    async_transport_dsn:  'doctrine://default'
+    # queue_driver is a HARD requirement, not a hint: SurvosStateBundle switches between two
+    # dynamic-queue strategies on this value alone and deliberately does NOT infer it from
+    # async_transport_dsn's scheme, because that is usually an unresolved %env()% placeholder
+    # at compile time. Setting the DSN to AMQP without setting this leaves the bundle building
+    # Doctrine-shaped queues against a broker (and vice versa) -- see SurvosStateBundle::
+    # configure() and StatePrependExtension. Same pairing packages and lingua use.
+    queue_driver: rabbitmq
+    async_transport_dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
 
+# NOTE: no when@dev override on purpose. There is a RabbitMQ running locally
+# (survos_rabbitmq, rabbitmq:4-management), and dev deliberately exercises the SAME driver as
+# prod so that the rabbitmq path is what gets tested -- the dev/prod split is exactly how a
+# broker-only bug reaches production unnoticed. Re-add the block below if you need Doctrine's
+# inspectable rows while debugging:
+#
+#   when@dev:
+#       survos_state:
+#           queue_driver: doctrine
+#           async_transport_dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
+
+when@test:
+    survos_state:
+        queue_driver: doctrine
+        async_transport_dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'

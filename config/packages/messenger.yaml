@@ -13,17 +13,48 @@ framework:
 
         failure_transport: failed
         transports:
-            meili: 'doctrine://default?queue_name=meili'
+            # These stay on Doctrine, matching packages. The AMQP move here is state-bundle's
+            # per-transition dynamic queues (survos_state.queue_driver: rabbitmq), which use
+            # jwage/phpamqplib-messenger's dsn/vhost/exchange convention -- NOT the
+            # `options: queue_name:` trick, which is Doctrine's shared-table mechanism and
+            # means nothing to an AMQP transport.
+            #
+            # Two env vars on purpose: MESSENGER_TRANSPORT_DSN is the broker,
+            # DOCTRINE_MESSENGER_TRANSPORT_DSN is kept defined alongside it so any single
+            # transport can be flipped back to Doctrine for debugging without touching
+            # anything else.
+            meili:
+                dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: meili
+            cache_warm:
+                dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: cache_warm
+            # STAYS on Doctrine on purpose. A failed message is one you want to look at and
+            # retry, and under AMQP it is invisible both to `messenger:failed:*` and to
+            # zenstruck/messenger-monitor. Same choice packages and lingua made.
             failed: 'doctrine://default?queue_name=failed'
             sync: 'sync://'
-            cache_warm: 'doctrine://default?queue_name=cache_warm'
             # Outbound asset.analyzed notifications. Its own queue for two reasons: a
             # `media:replay-webhooks` backfill enqueues hundreds of thousands of these and must
             # not bury the meili or cache_warm queues behind them, and delivery is the one kind
             # of work here that depends on someone else's uptime — so it is the one that will
             # sit in retry, and that has to be drainable (and pausable) on its own.
+            # On AMQP: `media:replay-webhooks` enqueues hundreds of thousands of these, which is
+            # exactly the burst Doctrine handles badly. The trade is visibility -- under AMQP
+            # these are no longer rows you can select, and on 2026-08-18 that is precisely how
+            # 76 undelivered callbacks were spotted (`messenger:stats` showed the depth). The
+            # management UI on :15672 now covers depth; what is genuinely lost is per-message
+            # payload and retry-count inspection. `failed` stays on Doctrine, so anything that
+            # gives up for good is still a row.
             webhook:
-                dsn: 'doctrine://default?queue_name=webhook'
+                # The trailing path segment is the EXCHANGE name (jwage's convention is
+                # phpamqplib://user:pass@host:port/<vhost>/<exchange>). Without it the transport
+                # falls back to an exchange+queue literally called `messages`, which defeats the
+                # point of giving webhooks their own drainable, pausable queue -- and would
+                # collide with any other transport on this vhost that also omitted it.
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%/webhook'
                 retry_strategy:
                     # A subscriber restarting during a deploy is the common failure; give it
                     # minutes, not seconds. 4xx never gets here — VerifyingWebhookTransport
