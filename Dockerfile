@@ -25,6 +25,10 @@ WORKDIR /app
 #            platform requirements without it. Required to build, not to run.
 #   imagick- the expensive one in this list, ahead of intl. mediary is an image
 #            pipeline; this is not optional.
+#   sockets- required by php-amqplib (via jwage/phpamqplib-messenger), which is how
+#            the workflow transitions reach RabbitMQ. Composer fails the platform
+#            check on `ext-sockets` at BUILD time without it, so this is not
+#            optional either -- see the 2026-08-19 failed deploy.
 RUN install-php-extensions \
         apcu \
         exif \
@@ -35,6 +39,7 @@ RUN install-php-extensions \
         pdo_pgsql \
         pdo_sqlite \
         redis \
+        sockets \
         zip
 
 COPY Caddyfile /etc/caddy/Caddyfile
