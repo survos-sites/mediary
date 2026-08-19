@@ -48,6 +48,15 @@ security:
         - { path: '^/[^/]+/batch$', roles: PUBLIC_ACCESS }
         # dokku CHECKS and uptime monitoring hit this with no credentials.
         - { path: ^/health, roles: PUBLIC_ACCESS }
+        # Queue depth / consumer counts / throughput, for monitoring. Same audience as /health
+        # and the same reason it cannot require a login: the whole point is that something
+        # external can ping it. It is anchored and exact so it cannot be widened.
+        #
+        # Safe to expose because of what it deliberately omits: counts and timings only, no
+        # message bodies, no payloads, no dataset or asset content. The /admin/messenger UI
+        # shows the same numbers as pie charts and stays behind the firewall for the parts that
+        # DO list message contents.
+        - { path: '^/status\.json$', roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         # Everything else -- UI, EasyAdmin, and the API Platform surface under /api --
         # requires a login. Gate /api deliberately: nothing currently consumes it
