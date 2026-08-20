@@ -1,4 +1,15 @@
 # .symfony.local.yaml
+http:
+    port: 8010  # hard-forces the port (not preferred_port, which falls back to random).
+                # Same reasoning as harvest's 8008: mediary is a callback TARGET, so its
+                # address has to be stable. harvest's MEDIARY_ENDPOINT points here when the
+                # image pipeline runs against a local mediary, and mediary posts the
+                # asset.analyzed webhook back to harvest. Unpinned, Symfony CLI assigns from
+                # its shared ~30-project pool -- mediary was landing on 8000, which is the
+                # first port every other project tries, so it lost the race regularly and
+                # the endpoint silently pointed at whatever else had claimed it.
+                # 8010 sits above the 8000-8008 block those projects occupy.
+
 workers:
   # built-in command that builds and watches front-end assets
 

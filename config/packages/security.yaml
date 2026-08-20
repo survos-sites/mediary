@@ -31,41 +31,20 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    #
-    # Deny by default, same shape as harvest: everything needs ROLE_USER except the
-    # endpoints that MACHINES call. mediary is mostly a machine API, so getting the
-    # carve-outs right is the whole job -- a missing one silently breaks a client
-    # that has no human to see the login page, and the symptom is a redirect to
-    # /login parsed as a failed upload.
-    access_control:
-        # THE dispatch endpoint. media-bundle's MediaBatchDispatcher POSTs
-        # <endpoint>/<client>/batch -- harvest sends /harvest/batch, ssai /ssai/batch.
-        # Public but NOT unauthenticated in practice: payloads are client-scoped and
-        # the asset.analyzed callback is HMAC-signed (MEDIARY_WEBHOOK_SECRET).
-        # Regex is anchored so it cannot be widened by a longer path.
-        - { path: '^/[^/]+/batch$', roles: PUBLIC_ACCESS }
-        # dokku CHECKS and uptime monitoring hit this with no credentials.
-        - { path: ^/health, roles: PUBLIC_ACCESS }
-        # Queue depth / consumer counts / throughput, for monitoring. Same audience as /health
-        # and the same reason it cannot require a login: the whole point is that something
-        # external can ping it. It is anchored and exact so it cannot be widened.
-        #
-        # Safe to expose because of what it deliberately omits: counts and timings only, no
-        # message bodies, no payloads, no dataset or asset content. The /admin/messenger UI
-        # shows the same numbers as pie charts and stays behind the firewall for the parts that
-        # DO list message contents.
-        - { path: '^/status\.json$', roles: PUBLIC_ACCESS }
-        # The login page requests Tabler's dynamic favicon before authentication.
-        # Keep it public so Symfony does not save /favicon.svg as the post-login target.
-        - { path: '^/favicon\.svg$', roles: PUBLIC_ACCESS }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        # Everything else -- UI, EasyAdmin, and the API Platform surface under /api --
-        # requires a login. Gate /api deliberately: nothing currently consumes it
-        # machine-to-machine (clients use /<client>/batch), but if that changes it
-        # needs a token authenticator, not a PUBLIC_ACCESS hole.
-        - { path: ^/, roles: ROLE_USER }
+# Access control is defined ONLY under when@prod -- see below. In dev and test there is no
+# access_control at all, so the whole app is anonymous. That is deliberate: the login gate
+# exists to keep bots and randoms off the DEPLOYED site, and locally it only gets in the way
+# (it also made every anonymous crawl test assert against the login page rather than the
+# real one).
+#
+# It has to be all-or-nothing in one block: Symfony refuses to define security.access_control
+# in more than one place ("cannot be overwritten"), so the PUBLIC_ACCESS carve-outs move down
+# with the catch-all. Nothing is lost -- a carve-out only means anything when there is a
+# catch-all deny to carve out of.
+#
+# This is fail-OPEN by construction: an environment with no when@ block here has no catch-all
+# and is wide open. Correct for dev/test, but a new DEPLOYED environment (staging, preview, …)
+# MUST be given its own copy of this block or it ships unauthenticated.
 
 when@test:
     security:
@@ -79,3 +58,40 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
+
+when@prod:
+    security:
+        # Deny by default, same shape as harvest: everything needs ROLE_USER except the
+        # endpoints that MACHINES call. mediary is mostly a machine API, so getting the
+        # carve-outs right is the whole job -- a missing one silently breaks a client that
+        # has no human to see the login page, and the symptom is a redirect to /login
+        # parsed as a failed upload.
+        #
+        # Note: only the *first* matching access control is used, so the catch-all stays last.
+        access_control:
+            # THE dispatch endpoint. media-bundle's MediaBatchDispatcher POSTs
+            # <endpoint>/<client>/batch -- harvest sends /harvest/batch, ssai /ssai/batch.
+            # Public but NOT unauthenticated in practice: payloads are client-scoped and
+            # the asset.analyzed callback is HMAC-signed (MEDIARY_WEBHOOK_SECRET).
+            # Regex is anchored so it cannot be widened by a longer path.
+            - { path: '^/[^/]+/batch$', roles: PUBLIC_ACCESS }
+            # dokku CHECKS and uptime monitoring hit this with no credentials.
+            - { path: ^/health, roles: PUBLIC_ACCESS }
+            # Queue depth / consumer counts / throughput, for monitoring. Same audience as
+            # /health and the same reason it cannot require a login: the whole point is that
+            # something external can ping it. It is anchored and exact so it cannot be widened.
+            #
+            # Safe to expose because of what it deliberately omits: counts and timings only,
+            # no message bodies, no payloads, no dataset or asset content. The /admin/messenger
+            # UI shows the same numbers as pie charts and stays behind the firewall for the
+            # parts that DO list message contents.
+            - { path: '^/status\.json$', roles: PUBLIC_ACCESS }
+            # The login page requests Tabler's dynamic favicon before authentication.
+            # Keep it public so Symfony does not save /favicon.svg as the post-login target.
+            - { path: '^/favicon\.svg$', roles: PUBLIC_ACCESS }
+            - { path: ^/login, roles: PUBLIC_ACCESS }
+            # Everything else -- UI, EasyAdmin, and the API Platform surface under /api.
+            # Gate /api deliberately: nothing currently consumes it machine-to-machine
+            # (clients use /<client>/batch), but if that changes it needs a token
+            # authenticator, not a PUBLIC_ACCESS hole.
+            - { path: ^/, roles: ROLE_USER }

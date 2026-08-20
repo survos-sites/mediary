@@ -17,7 +17,8 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/api/files', 200])]
 	#[TestWith(['', '/api/media', 200])]
 	#[TestWith(['', '/api/storages', 200])]
-	#[TestWith(['', '/api/thumbs', 200])]
+	// /api/thumbs is gone: thumb caching happens in imgproxy, not here, so the Thumb
+	// API resource was dropped. Do not re-add without a route to back it.
 	#[TestWith(['', '/js/routing', 200])]
 	#[TestWith(['', '/crawler/crawlerdata', 200])]
 	#[TestWith(['', '/meili/meiliAdmin/docs', 500])]
