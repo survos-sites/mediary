@@ -58,7 +58,7 @@ use Symfony\Component\Workflow\Event\TransitionEvent;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Survos\StateBundle\Exception\UnrecoverableMessageException;
+use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Twig\Environment as TwigEnvironment;
 use Survos\GoogleSheetsBundle\Service\GoogleDriveService;
 use App\Service\OcrService;
@@ -68,6 +68,14 @@ use App\Workflow\AssetFlow as WF;
 class AssetWorkflow
 {
     const THUMBHASH_PRESET = 'thumb';
+
+    /**
+     * Places an asset comes to rest in. Reaching one fires the client callback even when there is
+     * no archiveUrl to report — see onCompleted(). `analyzed` is deliberately absent: it is a
+     * waypoint on the way to `complete`, not a destination.
+     */
+    private const TERMINAL_PLACES = [WF::PLACE_COMPLETE, WF::PLACE_FAILED, WF::PLACE_DELETED];
+
     private const CANONICAL_MAX_EDGE = 3000;
     private const CANONICAL_WEBP_QUALITY = 82;
     private ?float $sourceCooldownUntil = null;
@@ -495,7 +503,7 @@ class AssetWorkflow
             }
 
             $this->em->flush();
-        } catch (UnrecoverableMessageException $e) {
+        } catch (UnrecoverableMessageHandlingException $e) {
             $asset->sourceMeta ??= [];
             $asset->sourceMeta['iiif_error'] = $e->getMessage();
             $this->logger->warning('Skipping IIIF manifest fetch for {id}: {message}', [
@@ -548,7 +556,36 @@ class AssetWorkflow
         $status = $response->getStatusCode();
         $asset->statusCode = $status;
         if ($status !== 200) {
-            throw new RuntimeException(sprintf('Source returned HTTP %d for asset %s (%s)', $status, $asset->id, $url));
+            // Persist the status before throwing. A dead source URL is a fact about the asset that
+            // survives the failed message, and without this flush the throw discards it — leaving a
+            // row that looks untried and gets re-dispatched on every sweep.
+            $this->em->flush();
+
+            $message = sprintf('Source returned HTTP %d for asset %s (%s)', $status, $asset->id, $url);
+
+            // 404/410 is the source telling us the image is gone. Retrying it five times with
+            // backoff cannot change the answer, and the retry is not free: publishing a delayed
+            // message declares a delay queue, which is how one dead fortepan URL took the whole
+            // archive worker down (RabbitMQ 4.x denies the transient queue jwage declares). An
+            // unrecoverable exception goes straight to `failed` and never touches that path.
+            // Everything else — 5xx, 429, a proxy hiccup — is genuinely worth another attempt.
+            if (in_array($status, [404, 410], true)) {
+                // Move it to a terminal place as well as failing the message. Failing alone leaves
+                // the asset at `new`, which reads as "not tried yet" to every sweep and, since only
+                // a terminal place fires the client callback, leaves the client waiting on an image
+                // that is never coming. The transition guard re-checks statusCode, so this is inert
+                // if anything else picks the message up.
+                $this->messageBus->dispatch(new TransitionMessage(
+                    $asset->id,
+                    Asset::class,
+                    WF::TRANSITION_ARCHIVE_FAILED,
+                    WF::WORKFLOW_NAME,
+                ));
+
+                throw new UnrecoverableMessageHandlingException($message);
+            }
+
+            throw new RuntimeException($message);
         }
 
         $headers = $response->getHeaders();
@@ -892,12 +929,8 @@ class AssetWorkflow
         $this->em->flush();
 
         $transitionName = $event->getTransition()->getName();
-        if (in_array($transitionName, [WF::TRANSITION_QUEUE_AI, WF::TRANSITION_AI_TASK, WF::TRANSITION_LOCAL_OCR], true) && !$asset->aiLocked) {
-            if (!empty($asset->aiQueue) && $this->assetWorkflow->can($asset, WF::TRANSITION_AI_TASK)) {
-                $this->dispatchTransition($asset, WF::TRANSITION_AI_TASK);
-            } elseif (empty($asset->aiQueue) && $this->assetWorkflow->can($asset, WF::TRANSITION_AI_DONE)) {
-                $this->dispatchTransition($asset, WF::TRANSITION_AI_DONE);
-            }
+        if ($transitionName === WF::TRANSITION_AI_TASK) {
+            $this->advanceAiQueue($asset);
         }
 
         // Publish to the client's callback once there is archived state to report.
@@ -915,8 +948,14 @@ class AssetWorkflow
         // archiveUrl is the real precondition: it means there IS something worth
         // telling the client. Same rule ReplayWebhooksCommand selects on, so a live
         // delivery and a replay now agree about which assets qualify.
+        // ...and once it comes to REST, whatever the outcome. archiveUrl alone reports progress,
+        // which is the right rule for the happy path but silently excludes every asset that ends
+        // badly: a source that 404s never gets an archiveUrl, so the client is never told, and a
+        // row it is waiting on stays "in flight" forever. A terminal place is news — `failed` is
+        // as much an answer as `complete`, and a consumer that gates on "are all my images done?"
+        // cannot answer it without hearing about the dead ones.
         $callbackUrl = $asset->context['callback_url'] ?? null;
-        if ($callbackUrl && $asset->archiveUrl) {
+        if ($callbackUrl && ($asset->archiveUrl || in_array($asset->marking, self::TERMINAL_PLACES, true))) {
             $this->fireWebhook($asset, (string) $callbackUrl);
         }
 
@@ -1052,6 +1091,44 @@ class AssetWorkflow
         }
 
         return $taskName;
+    }
+
+    /**
+     * Walk aiQueue down by one, or end the pipeline once it is empty.
+     *
+     * Driven from the completion of TRANSITION_AI_TASK and nothing else. The
+     * transitions that ENTER PLACE_AI_READY (queue_ai, local_ocr) must not call
+     * this: that place declares next: [TRANSITION_AI_TASK], so state-bundle
+     * already dispatches the first task on entry. Doing both produced two
+     * ai_task messages for one asset with a single queued task, distinguishable
+     * only by their stamps — the workflow's carries DescriptionStamp/TagStamp,
+     * the hand-rolled one is bare. Measured 2026-08-20.
+     *
+     * The drain itself cannot be expressed as `next`, which is why this exists at
+     * all: between tasks the asset never leaves ai_ready, so entering the place
+     * fires exactly once no matter how many tasks are queued.
+     *
+     * An asset that arrives with an EMPTY queue still resolves — the entry
+     * dispatch runs one ai_task that does no work, and its completion lands here
+     * and takes the ai_done branch. One wasted hop, no stall.
+     */
+    private function advanceAiQueue(Asset $asset): void
+    {
+        if ($asset->aiLocked) {
+            return;
+        }
+
+        if (!empty($asset->aiQueue)) {
+            if ($this->assetWorkflow->can($asset, WF::TRANSITION_AI_TASK)) {
+                $this->dispatchTransition($asset, WF::TRANSITION_AI_TASK);
+            }
+
+            return;
+        }
+
+        if ($this->assetWorkflow->can($asset, WF::TRANSITION_AI_DONE)) {
+            $this->dispatchTransition($asset, WF::TRANSITION_AI_DONE);
+        }
     }
 
     private function dispatchTransition(Asset $asset, string $transition): void
@@ -1820,7 +1897,7 @@ class AssetWorkflow
 
                     // 404/410 = permanent failure — don't retry, mark as dead
                     if (in_array($code, [404, 410], true)) {
-                        throw new \Survos\StateBundle\Exception\UnrecoverableMessageException(
+                        throw new UnrecoverableMessageHandlingException(
                             "Permanent failure (HTTP {$code}) for {$url} — skipping retries"
                         );
                     }

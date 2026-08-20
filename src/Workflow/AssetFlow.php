@@ -136,7 +136,11 @@ class AssetFlow
         info: 'Local OCR',
         description: 'Run local OCR confidence pass and queue follow-up AI tasks',
         async: true,
-        next: [self::TRANSITION_AI_TASK]
+        // `next` deliberately absent: this transition's destination is
+        // PLACE_AI_READY, which already declares next: [TRANSITION_AI_TASK].
+        // Declaring it here too dispatches ai_task TWICE per asset -- the same
+        // duplicate TRANSITION_FETCH_IIIF documents below, and the reason
+        // `next` belongs on the PLACE, never on the transition that enters it.
     )]
     public const TRANSITION_LOCAL_OCR = 'local_ocr';
 
@@ -179,6 +183,29 @@ class AssetFlow
     )]
     public const TRANSITION_INFO_FAILED = 'info_failed';
 
+    /**
+     * The source is gone for good — give the asset somewhere to come to rest.
+     *
+     * `archive` aborts on a 404, so it never completes and never re-evaluates a `next`; without
+     * this the asset sits at `new` for ever, is re-dispatched by every sweep, and — because a
+     * terminal place is what fires the client callback — the client waits on it indefinitely. One
+     * dead fortepan URL was enough to hold a whole dataset's folio shut.
+     *
+     * Applied by an explicit TransitionMessage from AssetWorkflow::onArchive rather than a `next`,
+     * for that same reason: the only code that knows the source is permanently gone is the archive
+     * attempt that just failed. The guard means a message that arrives for any other reason is a
+     * no-op.
+     */
+    #[Transition(
+        from: [self::PLACE_NEW, self::PLACE_IIIF],
+        to: self::PLACE_FAILED,
+        info: 'Archive failed',
+        description: 'Source returned 404/410 — there is nothing to archive and retrying cannot change that',
+        guard: 'subject.statusCode in [404, 410]',
+        async: false,
+    )]
+    public const TRANSITION_ARCHIVE_FAILED = 'archive_failed';
+
 //    #[Transition(
 //        from: self::PLACE_INFORMED,
 //        to: self::PLACE_VALIDATED,
@@ -220,7 +247,8 @@ class AssetFlow
         info: 'Triage',
         description: 'Call ai-tools /v1/responses model=auto; persist Observation[] (caption, ocr_text, keywords).',
         async: true,
-        next: [self::TRANSITION_ANALYZE],
+        // `next` deliberately absent: destination PLACE_TRIAGED already declares
+        // next: [TRANSITION_ANALYZE]. See TRANSITION_LOCAL_OCR above.
     )]
     public const TRANSITION_TRIAGE = 'triage';
 
