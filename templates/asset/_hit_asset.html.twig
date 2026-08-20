@@ -35,8 +35,18 @@
 {% set isVideo = fileExt in ['mp4', 'mov', 'webm', 'm4v', 'avi', 'mkv'] %}
 {% set isAudio = fileExt in ['mp3', 'm4a', 'wav', 'ogg', 'flac', 'aac'] %}
 
+{# ThumbHash blur placeholder. imgproxy Pro's /info already returns thumb_hash (hex) for
+   every asset, so this is ~25 bytes we're carrying anyway — no extra request. Legitimately
+   absent on assets that predate the /info call, hence the ?? rather than a hard access. #}
+{% set thumbHash = (asset.context ?? {})['info']['thumb_hash'] ?? null %}
+
 <article class="card h-100 asset-search-card">
-    <a href="{{ path('asset_show', {id: asset.id}) }}" class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center overflow-hidden">
+    <a href="{{ path('asset_show', {id: asset.id}) }}" class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center overflow-hidden"
+        {% if thumbHash %}
+            data-controller="thumbhash"
+            data-thumbhash-hash-value="{{ thumbHash }}"
+            data-thumbhash-encoding-value="hex"
+        {% endif %}>
         {# Render via imgproxy from the canonical master, not a stored derivative. #}
         {% set thumbSource = asset.storageKey
             ? 's3://museado/' ~ asset.storageKey
@@ -58,6 +68,7 @@
                 alt="{{ title }}"
                 class="w-100 h-100 object-fit-contain"
                 loading="lazy"
+                {% if thumbHash %}data-thumbhash-target="image"{% endif %}
             >
         {% else %}
             <span class="text-muted small">No preview</span>

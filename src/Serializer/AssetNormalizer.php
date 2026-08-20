@@ -71,6 +71,17 @@ final class AssetNormalizer implements NormalizerInterface, NormalizerAwareInter
             $data['thumb'] = $signedSmall;
         }
 
+        // ThumbHash for the blur placeholder that stands in until $thumb loads. Promoted
+        // out of context['info'] for the same reason smallUrl is: clients (api-grid rows,
+        // Meilisearch hits) render from this payload and should not have to know that
+        // imgproxy's /info response is nested under `context`.
+        //
+        // Hex-encoded — that is imgproxy's encoding, NOT the unpadded base64 that
+        // Survos\ThumbHashBundle emits. The `thumbhash` Stimulus controller takes an
+        // `encoding` value for exactly this reason; see docs/local-image-analysis.md.
+        $thumbHash = $object->context['info']['thumb_hash'] ?? null;
+        $data['thumbHash'] = is_string($thumbHash) && $thumbHash !== '' ? $thumbHash : null;
+
         $sourceMeta = is_array($object->sourceMeta) ? $object->sourceMeta : [];
         $data['iiifManifest'] = $object->iiifManifestEntity?->manifestUrl ?? ($sourceMeta['iiif_manifest'] ?? null);
         $data['iiifBase'] = $object->iiifManifestEntity?->imageBase ?? ($sourceMeta['iiif_base'] ?? null);
