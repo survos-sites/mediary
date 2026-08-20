@@ -1,11 +1,12 @@
-{# Two sources of caption-y metadata for photos, neither on the Asset's core columns:
+{# Two sources of caption-y metadata for photos:
    1. sourceMeta — authoritative relational scrape (title, date/year, city, country). On the entity.
    2. AI claims (ai:caption, ai:observationProse, dcterms:subject), keyed by asset id in the claims
-      store. Hits.html.twig batch-primes them so asset_meta() here is a cache hit, not a per-card query. #}
+      store. Claims-enabled callers must batch-prime them so asset_meta() here is a cache hit,
+      not a per-card query. The homepage deliberately passes useClaims: false. #}
 {% set src = asset.sourceMeta|default({}) %}
 {% set srcTitle = src['dcterms:title']|default(src.title|default(null)) %}
 {% set srcPlace = [src.city|default(null), src.country|default(null)]|filter(v => v)|join(', ') %}
-{% set meta = asset_meta(asset.id) %}
+{% set meta = useClaims|default(true) ? asset_meta(asset.id) : {} %}
 {% set srcYear = src.date|default(meta.year) %}
 {% set title = asset.aiTitle ?: srcTitle ?: meta.caption ?: asset.filename ?: ('#' ~ asset.id|slice(0, 8)) %}
 {% set summary = asset.aiDescription ?: asset.description ?: meta.prose ?: asset.aiOcrText %}

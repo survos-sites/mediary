@@ -57,6 +57,9 @@ security:
         # shows the same numbers as pie charts and stays behind the firewall for the parts that
         # DO list message contents.
         - { path: '^/status\.json$', roles: PUBLIC_ACCESS }
+        # The login page requests Tabler's dynamic favicon before authentication.
+        # Keep it public so Symfony does not save /favicon.svg as the post-login target.
+        - { path: '^/favicon\.svg$', roles: PUBLIC_ACCESS }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         # Everything else -- UI, EasyAdmin, and the API Platform surface under /api --
         # requires a login. Gate /api deliberately: nothing currently consumes it
