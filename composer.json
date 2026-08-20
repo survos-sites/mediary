@@ -32,7 +32,6 @@
         "jwage/phpamqplib-messenger": "^0.10.1",
         "knplabs/knp-menu": "dev-master",
         "knplabs/knp-time-bundle": "^2.5",
-        "league/color-extractor": "^0.4.0",
         "league/flysystem-aws-s3-v3": "^3.35.1",
         "league/flysystem-memory": "^3.31",
         "lorisleiva/cron-translator": "^0.5.2",
@@ -74,6 +73,7 @@
         "survos/tabler-bundle": "^2.24.14",
         "survos/thumb-hash-bundle": "^2.18.18",
         "survos/tree-bundle": "^2.18.19",
+        "survos/tui-extras-bundle": "^2.10",
         "symfony/ai-anthropic-platform": "^0.12",
         "symfony/asset": "^8.1.0",
         "symfony/asset-mapper": "^8.1.2",
@@ -178,6 +178,9 @@
     },
     "conflict": {
         "symfony/symfony": "*"
+    },
+    "suggest": {
+        "league/color-extractor": "For local colour palette extraction if imgproxy Pro is unavailable — see docs/local-image-analysis.md"
     },
     "extra": {
         "symfony": {

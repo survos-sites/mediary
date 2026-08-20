@@ -67,4 +67,5 @@ return [
     OV\JsonRPCAPIBundle\OVJsonRPCAPIBundle::class => ['all' => true],
     Survos\SupervisorBundle\SurvosSupervisorBundle::class => ['dev' => true, 'test' => true],
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
+    Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['all' => true],
 ];

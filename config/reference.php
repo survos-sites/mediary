@@ -2968,6 +2968,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     runs_root?: scalar|Param|null, // Default: "runs"
  *     cache_root?: scalar|Param|null, // Default: "cache"
  *     zips_root?: scalar|Param|null, // Default: "vault"
+ *     capture_root?: scalar|Param|null, // Root for provider capture dirs (vault/<provider>/_capture) when they must live somewhere other than zips_root. Null/empty = same as zips_root. Absolute paths are used as-is, relative ones resolve under data_dir. Exists because capture and raw have opposite access patterns: capture holds write-once/read-once archives (nara ships a single 174 GB zip) while raw is re-read on every normalize, so a cached S3 mount that is right for raw is actively wrong for capture. // Default: null
  *     default_object_filename?: scalar|Param|null, // Default: "obj.jsonl"
  *     normalized_row_limit?: int|Param, // Cap records per core when the workflow normalizes (raw→normalized). 0 = all. Bind to an env var (e.g. DATASET_NORMALIZED_ROW_LIMIT) to throttle for smoke tests in .env.local. // Default: 0
  *     providers?: list<scalar|Param|null>,

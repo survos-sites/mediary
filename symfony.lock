@@ -347,6 +347,9 @@
     "survos/tree-bundle": {
         "version": "1.5.523"
     },
+    "survos/tui-extras-bundle": {
+        "version": "2.10.19"
+    },
     "survos/workflow-helper-bundle": {
         "version": "1.5.501"
     },
