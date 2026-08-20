@@ -935,7 +935,7 @@ class AssetWorkflow
             return;
         }
 
-        // Thumbhash and palette were computed in onDownload while the file was local.
+        // Thumbhash and pHash were computed in onDownload while the file was local.
         // Only fall back to the archive URL fetch if they're missing (e.g. older assets).
         $asset->context ??= [];
         $tasks = $asset->context['tasks'] ?? ['thumbhash', 'palette'];
@@ -978,12 +978,15 @@ class AssetWorkflow
             }
         }
 
-        if (empty($asset->context['colors']) && $asset->archiveUrl) {
-            $localForPalette = $this->localImagePath($asset, preferSmall: true);
-            $this->assetPreviewService->maybeComputePaletteAndPhash(
+        // Colours are no longer computed here: imgproxy Pro's /info returns `average` and
+        // `dominant_colors` (see onInfo()), so only the pHash still needs a local file.
+        // docs/local-image-analysis.md documents the old local recipe.
+        if (empty($asset->context['phash']) && $asset->archiveUrl) {
+            $localForPhash = $this->localImagePath($asset, preferSmall: true);
+            $this->assetPreviewService->maybeComputePhash(
                 $asset,
                 self::THUMBHASH_PRESET,
-                $localForPalette ?? $asset->archiveUrl
+                $localForPhash ?? $asset->archiveUrl
             );
         }
 

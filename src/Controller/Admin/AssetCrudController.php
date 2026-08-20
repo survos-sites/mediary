@@ -183,14 +183,9 @@ class AssetCrudController extends BaseCrudController
 //        yield ArrayField::new('resizedCount', "#resized");
         yield IntegerField::new('size')->setLabel('Size (bytes)'); // File size
 
-//        yield ArrayField::new('colorAnalysis', 'Colors')
-//            ->setTemplatePath('easy_admin/field/colors_index.html.twig')
-//            ->onlyOnIndex();
-
-        yield ArrayField::new('colorAnalysis', 'Colors')
-            ->setTemplatePath('easy_admin/field/colors_detail.html.twig')
-            ->onlyOnDetail();
-
+        // Colour fields removed with the local league/color-extractor step — they bound to a
+        // `colorAnalysis` property Asset never had. imgproxy Pro's `average`/`dominant_colors`
+        // live in context['info']; see docs/local-image-analysis.md.
 
 //        yield TextEditorField::new('context')->setLabel('Context (JSON)'); // Additional data
 

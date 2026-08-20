@@ -41,12 +41,9 @@
 <g id="node16" class="node">
 <title>transition_iiif</title>
 <polygon fill="lightBlue" stroke="lightBlue" points="403,-1283 259,-1283 259,-1211 403,-1211 403,-1283"/>
-<text text-anchor="start" x="326" y="-1261.6" font-family="Arial" font-weight="bold" font-size="8.00">iiif</text>
-<text text-anchor="start" x="297.5" y="-1253.6" font-family="Arial" font-style="italic" font-size="8.00">Fetch IIIF manifest</text>
-<text text-anchor="start" x="318.5" y="-1245.6" font-family="Arial" font-size="8.00">async: </text>
-<text text-anchor="start" x="304.5" y="-1229.6" font-family="Arial" font-size="8.00">Then: </text>
-<text text-anchor="start" x="328.5" y="-1229.6" font-family="Arial" text-decoration="underline" font-size="8.00">archive</text>
-<text text-anchor="start" x="354.5" y="-1229.6" font-family="Arial" font-size="8.00"> </text>
+<text text-anchor="start" x="326" y="-1253.6" font-family="Arial" font-weight="bold" font-size="8.00">iiif</text>
+<text text-anchor="start" x="297.5" y="-1245.6" font-family="Arial" font-style="italic" font-size="8.00">Fetch IIIF manifest</text>
+<text text-anchor="start" x="318.5" y="-1237.6" font-family="Arial" font-size="8.00">async: </text>
 </g>
 <!-- place_new&#45;&gt;transition_iiif -->
 <!-- new -->

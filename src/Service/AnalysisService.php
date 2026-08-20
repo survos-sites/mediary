@@ -19,8 +19,8 @@ final class AnalysisService
         // Example: ThumbHash (placeholder) — replace with your real impl
         // $out['thumbhash'] = Thumbhash::fromBytes($bytes);
 
-        // Example: colors — your League\ColorExtractor palette, etc.
-        // $out['colors'] = $this->extractColors($bytes);
+        // Colours come from imgproxy Pro's /info (`average`, `dominant_colors`), not from a
+        // local extractor — see docs/local-image-analysis.md.
 
         // Example: pHash
         // $out['phash'] = $this->perceptualHash($bytes);

@@ -7,15 +7,13 @@ use App\Entity\Asset;
 use Doctrine\ORM\EntityManagerInterface;
 use Jenssegers\ImageHash\ImageHash;
 use Jenssegers\ImageHash\Implementations\PerceptualHash;
-use League\ColorExtractor\ColorExtractor;
-use League\ColorExtractor\Palette;
 use Psr\Log\LoggerInterface;
 use Survos\ThumbHashBundle\Service\ThumbHashService;
 use Survos\ThumbHashBundle\Service\Thumbhash;
 use RuntimeException;
 
 /**
- * Builds image variants (LiipImagine filters) and performs analysis (blurhash/thumbhash, palettes, pHash)
+ * Builds image variants (LiipImagine filters) and performs analysis (blurhash/thumbhash, pHash)
  * off the cached thumbnail file, in one place. Safe to call from workflow steps or controllers
  * as long as the original/source image is available to Liip’s data loaders.
  *
@@ -33,7 +31,6 @@ final class AssetPreviewService
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $em,
         private readonly ThumbHashService $thumbHashService,
-        private readonly ColorAnalysisService $colorAnalysisService,
         private readonly string $publicDir = __DIR__ . '/../../public',
     ) {}
 
@@ -111,7 +108,7 @@ final class AssetPreviewService
 
         // Do analyses that depend on the thumbnail file
         $this->maybeComputeThumbhash($asset, $preset, $content, $w, $h);
-        $this->maybeComputePaletteAndPhash($asset, $preset, $cachedPath);
+        $this->maybeComputePhash($asset, $preset, $cachedPath);
 
         return [
             'url'    => $cachedUrl,
@@ -170,11 +167,16 @@ final class AssetPreviewService
         $asset->context['thumbhash'] = $key;
     }
 
-    public function maybeComputePaletteAndPhash(Asset $asset, string $preset, string $cachedPath): void
+    /**
+     * Colour palette extraction used to live here too (league/color-extractor +
+     * ColorAnalysisService). imgproxy Pro's /info now returns `average` and
+     * `dominant_colors`, so the local step was removed — see
+     * docs/local-image-analysis.md for the recipe if it ever needs rebuilding.
+     */
+    public function maybeComputePhash(Asset $asset, string $preset, string $cachedPath): void
     {
         $sourcePath = $cachedPath;
         $downloadTempPath = null;
-        $analysisTempPath = null;
 
         if (preg_match('#^https?://#', $cachedPath) === 1) {
             try {
@@ -190,22 +192,7 @@ final class AssetPreviewService
             }
         }
 
-        try {
-            $analysisTempPath = $this->createAnalysisSizedImage($sourcePath, 512);
-            $palettePath = $analysisTempPath ?? $sourcePath;
-
-            $palette   = Palette::fromFilename($palettePath, -1, 500);
-            $extractor = new ColorExtractor($palette);
-            $colors    = $extractor->extract(5); // array of ints (0xRRGGBB)
-            $asset->context ??= [];
-            $asset->context['colors'] = $colors;
-
-            // Richer analysis (bucketed hues, coverage, etc.)
-            $analysis = $this->colorAnalysisService->analyze($palettePath, top: 5, hueBuckets: 36);
-            $asset->context['color_analysis'] = $analysis;
-        } catch (\Throwable $e) {
-            // Non-fatal
-        }
+        $analysisTempPath = $this->createAnalysisSizedImage($sourcePath, 512);
 
         try {
             $hasher = new ImageHash(new PerceptualHash()); // 64-bit pHash
