@@ -48,10 +48,7 @@ class AssetFlow
         // but too slow to be part of the practical default pipeline. Bulk observe goes
         // through media:batch-observe (OpenAI Batch API) instead. Revisit if/when
         // argus triage becomes a proper AI task with its own scale story.
-        // Two exits with complementary guards, so this place is never a dead end: queue_ai when
-        // there is AI to run, no_ai (→ complete) when there isn't. It used to list queue_ai alone,
-        // which stranded every asset without AI tasks here.
-        next: [self::TRANSITION_QUEUE_AI, self::TRANSITION_NO_AI]
+        next: [self::TRANSITION_QUEUE_AI]
     )]
     public const PLACE_INFORMED = 'informed';
 
@@ -83,8 +80,15 @@ class AssetFlow
      public const PLACE_COMPLETE = 'complete';
 
     #[Place(
-        info: 'AI task pipeline active — aiQueue has pending tasks',
-        next: [self::TRANSITION_AI_TASK]
+        info: 'AI task pipeline active — run pending tasks, then finish',
+        // Both exits, with complementary guards (`aiQueue != []` / `aiQueue == []`), so this place
+        // is never a dead end. Listing ai_task alone meant an asset that arrived with an empty
+        // queue had nothing applicable and stopped here — 50,372 of them on production. The empty
+        // case was handled only by AssetWorkflow::advanceAiQueue(), which runs solely on
+        // TRANSITION_AI_TASK completion: reachable if a task had run, unreachable if none ever did,
+        // and lost for good if that one dispatch went missing. A `next` gets it from the graph
+        // instead of from a listener that has to remember.
+        next: [self::TRANSITION_AI_TASK, self::TRANSITION_AI_DONE]
     )]
     public const PLACE_AI_READY = 'ai_ready';
 
@@ -284,44 +288,25 @@ class AssetFlow
      public const TRANSITION_FINALIZE = 'finalize';
 
     /**
-     * Enqueue AI tasks — moves asset into the AI pipeline.
-     * Caller must populate aiQueue before applying this transition.
-     * Allowed from complete or analyzed so tasks can be added/re-added at any time.
+     * Enter the AI pipeline — with or without anything queued.
+     *
+     * The guard used to require `aiQueue != []`, which made `informed` a dead end for the common
+     * case: an asset carrying no AI tasks had no applicable transition and parked there for good
+     * (105,918 of them on production). The fix is NOT to route those around the pipeline — every
+     * asset takes the same path and an empty queue simply runs the task loop zero times. One path
+     * means the transitions downstream consumers depend on still fire, instead of a shortcut that
+     * skips whatever hangs off ai_ready.
+     *
+     * Allowed from complete so tasks can be added and re-run at any time.
      */
     #[Transition(
         from: [self::PLACE_COMPLETE, self::PLACE_INFORMED, self::PLACE_AI_READY, self::PLACE_NEW],
         to: self::PLACE_AI_READY,
         info: 'Queue AI tasks',
-        description: 'Populate aiQueue and enter the AI task pipeline',
-        guard: "subject.aiQueue != [] and not subject.aiLocked",
+        description: 'Enter the AI task pipeline (an empty aiQueue passes straight through to ai_done)',
+        guard: 'not subject.aiLocked',
     )]
     public const TRANSITION_QUEUE_AI = 'queue_ai';
-
-    /**
-     * Nothing queued for AI — the asset is finished the moment /info has run.
-     *
-     * Without this, `informed` was a dead end for the common case. Its only exit was
-     * TRANSITION_QUEUE_AI, guarded on `aiQueue != []`, so an asset carrying no AI tasks had no
-     * applicable transition and parked there for good: 105,918 of them on production, which reads
-     * as a slow pipeline but is a missing edge.
-     *
-     * It also kept AI on the critical path for everything downstream. Consumers wait on a terminal
-     * place (see harvest's DatasetEnrichGuard), so under the old graph a folio could not build until
-     * an LLM queue drained — even for a dataset where not one image had an AI task. Most items carry
-     * no AI at all; they should not pay for the ones that do.
-     *
-     * The guard is the exact complement of TRANSITION_QUEUE_AI's, so precisely one of the two fires
-     * and `informed` always has somewhere to go. Reaching `complete` early costs nothing later:
-     * TRANSITION_QUEUE_AI accepts PLACE_COMPLETE as a `from`, so queueing AI afterwards still works.
-     */
-    #[Transition(
-        from: self::PLACE_INFORMED,
-        to: self::PLACE_COMPLETE,
-        info: 'No AI queued',
-        description: 'aiQueue is empty, so /info was the last thing this asset needed',
-        guard: 'subject.aiQueue == [] and not subject.aiLocked',
-    )]
-    public const TRANSITION_NO_AI = 'no_ai';
 
     /**
      * Run next AI task — picks the first item off aiQueue, executes it,
