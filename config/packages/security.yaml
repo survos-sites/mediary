@@ -75,6 +75,16 @@ when@prod:
             # the asset.analyzed callback is HMAC-signed (MEDIARY_WEBHOOK_SECRET).
             # Regex is anchored so it cannot be widened by a longer path.
             - { path: '^/[^/]+/batch$', roles: PUBLIC_ACCESS }
+            # Claims read API for reader apps (zm). PUBLIC_ACCESS to the FIREWALL only — every
+            # endpoint checks a Bearer token against CLAIMS_API_TOKEN itself, and refuses with 503
+            # when that is unset, so an unconfigured deploy fails closed. Same shape as the batch
+            # endpoint above: machine caller, no session, self-authenticating.
+            #
+            # This is what lets reader apps drop CLAIMS_DATABASE_URL entirely — they hold a URL and
+            # a token instead of a Postgres DSN, and mediary stays the only process with DB access.
+            # Anchored so it cannot be widened; note /api/claims (API Platform's Claim resource)
+            # deliberately stays behind ROLE_USER.
+            - { path: '^/api/claim-store/', roles: PUBLIC_ACCESS }
             # dokku CHECKS and uptime monitoring hit this with no credentials.
             - { path: ^/health, roles: PUBLIC_ACCESS }
             # Queue depth / consumer counts / throughput, for monitoring. Same audience as
