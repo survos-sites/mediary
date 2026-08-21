@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11e9d71ff006a657f4101c17783b1c88",
+    "content-hash": "8df2130788860b9e33fcc4d37cf62ad7",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7823,16 +7823,16 @@
         },
         {
             "name": "survos/claims-bundle",
-            "version": "2.24.8",
+            "version": "2.24.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/claims-bundle.git",
-                "reference": "a0071005e5de570dfef9c2a9a481eca2a87568ce"
+                "reference": "e034ad7503e7908285eb477a33eb8c7be068439b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/claims-bundle/zipball/a0071005e5de570dfef9c2a9a481eca2a87568ce",
-                "reference": "a0071005e5de570dfef9c2a9a481eca2a87568ce",
+                "url": "https://api.github.com/repos/survos/claims-bundle/zipball/e034ad7503e7908285eb477a33eb8c7be068439b",
+                "reference": "e034ad7503e7908285eb477a33eb8c7be068439b",
                 "shasum": ""
             },
             "require": {
@@ -7880,7 +7880,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/claims-bundle/issues",
-                "source": "https://github.com/survos/claims-bundle/tree/2.24.8"
+                "source": "https://github.com/survos/claims-bundle/tree/2.24.25"
             },
             "funding": [
                 {
@@ -7888,7 +7888,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T18:25:01+00:00"
+            "time": "2026-08-21T12:29:55+00:00"
         },
         {
             "name": "survos/command-bundle",
@@ -8431,16 +8431,16 @@
         },
         {
             "name": "survos/field-bundle",
-            "version": "2.24.6",
+            "version": "2.24.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/field-bundle.git",
-                "reference": "6f02daa514c49701e47c1a17fd691e397a588da4"
+                "reference": "84370b7c8eedf8544130897efd59656131087d3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/field-bundle/zipball/6f02daa514c49701e47c1a17fd691e397a588da4",
-                "reference": "6f02daa514c49701e47c1a17fd691e397a588da4",
+                "url": "https://api.github.com/repos/survos/field-bundle/zipball/84370b7c8eedf8544130897efd59656131087d3f",
+                "reference": "84370b7c8eedf8544130897efd59656131087d3f",
                 "shasum": ""
             },
             "require": {
@@ -8491,7 +8491,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/field-bundle/issues",
-                "source": "https://github.com/survos/field-bundle/tree/2.24.6"
+                "source": "https://github.com/survos/field-bundle/tree/2.24.24"
             },
             "funding": [
                 {
@@ -8499,7 +8499,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T10:21:06+00:00"
+            "time": "2026-08-20T16:47:04+00:00"
         },
         {
             "name": "survos/google-sheets-bundle",
@@ -8912,16 +8912,16 @@
         },
         {
             "name": "survos/kit-bundle",
-            "version": "2.24.16",
+            "version": "2.24.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/kit-bundle.git",
-                "reference": "c03f337b4d46683cda600ee66403e7b6da5ec048"
+                "reference": "73b272b662beb3dcbdfe5b37f895bbf6a2b0ea68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/c03f337b4d46683cda600ee66403e7b6da5ec048",
-                "reference": "c03f337b4d46683cda600ee66403e7b6da5ec048",
+                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/73b272b662beb3dcbdfe5b37f895bbf6a2b0ea68",
+                "reference": "73b272b662beb3dcbdfe5b37f895bbf6a2b0ea68",
                 "shasum": ""
             },
             "require": {
@@ -8967,7 +8967,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/kit-bundle/issues",
-                "source": "https://github.com/survos/kit-bundle/tree/2.24.16"
+                "source": "https://github.com/survos/kit-bundle/tree/2.24.23"
             },
             "funding": [
                 {
@@ -8975,7 +8975,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-17T22:24:28+00:00"
+            "time": "2026-08-19T11:44:21+00:00"
         },
         {
             "name": "survos/lingua-contracts",
