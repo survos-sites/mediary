@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8df2130788860b9e33fcc4d37cf62ad7",
+    "content-hash": "9f4fe9ddec09743dec540eba60ea18a2",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -3533,21 +3533,21 @@
         },
         {
             "name": "jwage/phpamqplib-messenger",
-            "version": "0.10.1",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jwage/phpamqplib-messenger.git",
-                "reference": "dbc2d7bf3ba94bafafd453d43c772aa806fcf9e2"
+                "reference": "e1c6e2c1e1a878b7d85ca5408bd2e18d6241ef3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jwage/phpamqplib-messenger/zipball/dbc2d7bf3ba94bafafd453d43c772aa806fcf9e2",
-                "reference": "dbc2d7bf3ba94bafafd453d43c772aa806fcf9e2",
+                "url": "https://api.github.com/repos/jwage/phpamqplib-messenger/zipball/e1c6e2c1e1a878b7d85ca5408bd2e18d6241ef3e",
+                "reference": "e1c6e2c1e1a878b7d85ca5408bd2e18d6241ef3e",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.3",
-                "php-amqplib/php-amqplib": "^3.7",
+                "php-amqplib/php-amqplib": "^3.7.2",
                 "symfony/messenger": "^5.4 ||^6.3 || ^7.0 || ^8.0"
             },
             "require-dev": {
@@ -3560,6 +3560,7 @@
                 "symfony/uid": "^7.2 || ^8.0",
                 "vimeo/psalm": "^6"
             },
+            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -3584,9 +3585,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jwage/phpamqplib-messenger/issues",
-                "source": "https://github.com/jwage/phpamqplib-messenger/tree/0.10.1"
+                "source": "https://github.com/jwage/phpamqplib-messenger/tree/main"
             },
-            "time": "2026-06-19T10:57:49+00:00"
+            "time": "2026-08-25T05:32:05+00:00"
         },
         {
             "name": "knplabs/knp-menu",
@@ -21390,6 +21391,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "jwage/phpamqplib-messenger": 20,
         "knplabs/knp-menu": 20,
         "meilisearch/meilisearch-php": 20
     },

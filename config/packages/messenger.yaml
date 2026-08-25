@@ -55,6 +55,22 @@ framework:
                 # point of giving webhooks their own drainable, pausable queue -- and would
                 # collide with any other transport on this vhost that also omitted it.
                 dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%/webhook'
+                options:
+                    delay:
+                        # REQUIRED for the retry_strategy below to work at all. Without it
+                        # jwage/phpamqplib-messenger declares its delay queue transient +
+                        # non-exclusive, which RabbitMQ 4.3 denies by default
+                        # (`transient_nonexcl_queues`): the broker answers INTERNAL_ERROR and
+                        # CLOSES the connection, so the first retried webhook kills
+                        # messenger:consume outright and the restart policy turns that into a
+                        # crash loop with nothing in the logs pointing at the delay queue
+                        # (harvest hit this: 7,035 restarts, 2,229 messages frozen). This
+                        # transport was exposed the whole time it has been on AMQP -- the retry
+                        # policy below is exactly the trigger. Opt-in flag from
+                        # jwage/phpamqplib-messenger#124 (merged 2026-08-25, untagged; see the
+                        # dev-main constraint in composer.json). x-expires still cleans the
+                        # delay queues up -- durable does not change that.
+                        durable: true
                 retry_strategy:
                     # A subscriber restarting during a deploy is the common failure; give it
                     # minutes, not seconds. 4xx never gets here — VerifyingWebhookTransport

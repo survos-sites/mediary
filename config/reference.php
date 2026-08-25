@@ -1766,6 +1766,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     workflow_paths?: list<scalar|Param|null>,
  *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"
  *     queue_driver?: "doctrine"|"rabbitmq"|Param, // Default: "doctrine"
+ *     retry_strategy?: array{
+ *         max_retries?: int|Param, // Default: 3
+ *         delay?: int|Param, // Default: 1000
+ *         multiplier?: float|Param, // Default: 2
+ *         max_delay?: int|Param, // Default: 0
+ *     },
  * }
  * @psalm-type SurvosThumbHashConfig = array{
  *     direction?: scalar|Param|null, // Default: "LR"
@@ -2436,6 +2442,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     reader_only?: bool|Param, // Reader-only consumer: read mediary's central claims via ClaimReader, do NOT map the Claim entity (no local claim table) or register the writer services. Default false = writer (entities + ingestor). // Default: false
  *     entity_manager?: scalar|Param|null, // Writer EM for the Claim/ClaimRun entities. Default "default" = the app DB (current behavior). Set to a named EM (e.g. "claims", backed by CLAIMS_DATABASE_URL) to write claims to a SHARED central DB instead. The named EM must be defined in the app doctrine config (connection only — the bundle maps the entities to it). // Default: "default"
  *     list_predicates?: list<scalar|Param|null>,
+ *     reader?: "dbal"|"api"|Param, // How ClaimReaderInterface reaches the central claims store. "dbal" (default) opens a Postgres connection from CLAIMS_DATABASE_URL — the app needs network access to the DB, a readonly role, and a credential to rotate. "api" calls mediary over HTTP instead, so only mediary touches the database and a reader app holds a URL + token. Writers are unaffected: ClaimIngestor always writes over the EM. // Default: "dbal"
+ *     api?: array{ // Settings for reader: api. Ignored when reader: dbal.
+ *         base_uri?: scalar|Param|null, // Mediary base URI, e.g. https://mediary.survos.com. Empty leaves ApiClaimReader::isAvailable() false so callers degrade instead of erroring. // Default: null
+ *         token?: scalar|Param|null, // Bearer token sent to the claims API. Reads are not public: claims can contain unpublished AI output. // Default: null
+ *     },
  * }
  * @psalm-type AiConfig = array{
  *     platform?: array{
