@@ -19,5 +19,20 @@
 		max_size 512MB
 	}
 
-	php_server
+	# Browsers ask for /favicon.ico unprompted on the first page view of every
+	# session. Without a terminating route the request falls through to php_server
+	# and Symfony answers it with a NotFoundHttpException -- the single noisiest
+	# line in the production log, and never a real error. `handle` blocks are
+	# mutually exclusive and evaluated in the order written, so this one ends the
+	# request here: public/favicon.ico is served if it exists, otherwise 204, and
+	# PHP is never booted either way.
+	handle /favicon.ico {
+		@missing not file
+		respond @missing 204
+		file_server
+	}
+
+	handle {
+		php_server
+	}
 }
