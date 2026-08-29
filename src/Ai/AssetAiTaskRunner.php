@@ -85,10 +85,20 @@ final class AssetAiTaskRunner
         $asset->aiQueue = array_values(array_unique(array_merge($asset->aiQueue, $names)));
         $this->entityManager->flush();
 
+        // Kick the pipeline only when nothing else will. queue_ai is the genuine
+        // kickoff -- an asset sitting in `informed` has no pending dispatch, so
+        // adding work here must start it.
+        //
+        // ai_task is NOT dispatched here, though `can()` often passes: entering
+        // PLACE_AI_READY already dispatches it via that place's next: [AI_TASK].
+        // Doing both produced two identical ai_task messages for one asset with a
+        // single queued task -- observed 2026-08-20, distinguishable only by their
+        // stamps (the workflow's carries DescriptionStamp/TagStamp, this one was
+        // bare). Continuation while the queue drains is the task chain's job, and
+        // finishAiPipeline() applies AI_DONE once it empties, so an asset cannot
+        // sit in ai_ready with pending work and no dispatch in flight.
         if ($this->assetWorkflow->can($asset, WF::TRANSITION_QUEUE_AI)) {
             $this->dispatchTransition($asset, WF::TRANSITION_QUEUE_AI);
-        } elseif ($this->assetWorkflow->can($asset, WF::TRANSITION_AI_TASK)) {
-            $this->dispatchTransition($asset, WF::TRANSITION_AI_TASK);
         }
     }
 
