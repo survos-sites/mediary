@@ -2,6 +2,9 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 parameters:
+    # Local addresses never need the dev proxy; going through it turns a
+    # same-machine fetch into a 407.
+    no_proxy_default: '127.0.0.1,localhost,::1'
     media_canonical_dir_default: '%kernel.project_dir%/var/canonical'
 
 services:

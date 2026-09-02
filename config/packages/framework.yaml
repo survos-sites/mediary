@@ -22,6 +22,14 @@ framework:
             # Vision tasks (enrich_from_thumbnail) can take 45-60s for OpenAI to process.
             # The default (60s) is too low — raise it.
             proxy: '%env(HTTP_PROXY)%'
+            # HTTP_PROXY is the Symfony CLI proxy, and it exists so mediary can
+            # resolve *.wip names in dev. Sending everything through it broke the
+            # thing mediary does most: fetching an image to analyse. An imgproxy
+            # URL on this same machine (127.0.0.1:8080) went out through the proxy
+            # and came back 407 Proxy Authentication Required, surfacing as
+            # "Error while downloading file. Upstream status code: 407" -- which
+            # reads like the image server rejected us, not like we never asked it.
+            no_proxy: '%env(default:no_proxy_default:NO_PROXY)%'
 
 #    error_controller: App\Controller\ErrorController::show
 
