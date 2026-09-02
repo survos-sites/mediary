@@ -85,6 +85,16 @@ when@prod:
             # Anchored so it cannot be widened; note /api/claims (API Platform's Claim resource)
             # deliberately stays behind ROLE_USER.
             - { path: '^/api/claim-store/', roles: PUBLIC_ACCESS }
+            # JSON-RPC for machine callers -- an edge station analysing a scan, or a hub
+            # asking for a transcription. PUBLIC_ACCESS to the FIREWALL only: analyzeUrl
+            # checks MEDIARY_API_TOKEN itself and refuses every call when that is unset,
+            # so an unconfigured deploy fails closed.
+            #
+            # Without this the session firewall answered these callers with a 302 to
+            # /login, which is not something a machine can follow -- and there is no LAN
+            # to fall back on. A scanning station lives at a client site; mediary lives on
+            # the internet; they share a connection only by accident.
+            - { path: '^/api/v1$', roles: PUBLIC_ACCESS }
             # dokku CHECKS and uptime monitoring hit this with no credentials.
             - { path: ^/health, roles: PUBLIC_ACCESS }
             # Queue depth / consumer counts / throughput, for monitoring. Same audience as
