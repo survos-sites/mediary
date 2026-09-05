@@ -40,6 +40,18 @@ when@test:
 when@prod:
     monolog:
         handlers:
+            # Errors outside Messenger -- the mediary callback controller, the RPC
+            # endpoint, HTTP client failures -- reach a phone here. Wrapped in
+            # `deduplication` on purpose: NotifierHandler has no throttling of its
+            # own, and one bad deploy emitting the same error per request would
+            # otherwise buzz hundreds of times. Same error within the window = one push.
+            ntfy_deduplicated:
+                type: deduplication
+                handler: ntfy
+                time: 300
+            ntfy:
+                type: service
+                id: app.monolog.ntfy_handler
             main:
                 type: fingers_crossed
                 action_level: error

@@ -1,12 +1,16 @@
 framework:
     notifier:
         chatter_transports:
-        texter_transports:
+            # ntfy://[USER:PASSWORD]@HOST[:PORT]/TOPIC  ("default" host = ntfy.sh).
+            # Unset in dev/test: an empty DSN disables the transport rather than
+            # failing container compilation, so a laptop with no NTFY_DSN still boots.
+            ntfy: '%env(default::NTFY_DSN)%'
+
+        # Background failures are the whole point of this transport: they happen when
+        # nobody has a browser open, so they must not route to email (which is read as
+        # rarely as the logs) or to Mercure (which only reaches connected browsers).
         channel_policy:
-            # use chat/slack, chat/telegram, sms/twilio or sms/nexmo
-            urgent: ['email']
-            high: ['email']
-            medium: ['email']
-            low: ['email']
-        admin_recipients:
-            - { email: admin@example.com }
+            urgent: ['chat/ntfy']
+            high:   ['chat/ntfy']
+            medium: ['chat/ntfy']
+            low:    ['chat/ntfy']

@@ -46,3 +46,10 @@ services:
             $signer: '@webhook.signer'
             $logger: '@logger'
 
+    # monolog-bundle ships no `notifier` handler type, so the bridge's handler is
+    # registered as a plain service and referenced by `type: service` above.
+    app.monolog.ntfy_handler:
+        class: Symfony\Bridge\Monolog\Handler\NotifierHandler
+        arguments:
+            $notifier: '@notifier'
+            $level: !php/const Monolog\Level::Error

@@ -572,6 +572,15 @@
             "config/packages/notifier.yaml"
         ]
     },
+    "symfony/ntfy-notifier": {
+        "version": "8.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "0d5e496659d7361bb4e6648eb8332f8cf097533d"
+        }
+    },
     "symfony/phpunit-bridge": {
         "version": "7.2",
         "recipe": {

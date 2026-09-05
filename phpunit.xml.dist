@@ -6,9 +6,9 @@
          backupGlobals="false"
          colors="true"
          testdox="true"
-         stopOnFailure="true"
          bootstrap="tests/bootstrap.php"
-         stopOnDeprecation="true"
+         failOnDeprecation="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
 >
     <php>
         <ini name="display_errors" value="1" />
