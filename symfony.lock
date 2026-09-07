@@ -314,9 +314,6 @@
     "survos/mcp-bundle": {
         "version": "dev-main"
     },
-    "survos/media-bundle": {
-        "version": "2.0.83"
-    },
     "survos/meili-bundle": {
         "version": "1.5.600"
     },

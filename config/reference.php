@@ -2229,27 +2229,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         include?: list<scalar|Param|null>,
  *     },
  * }
- * @psalm-type SurvosMediaConfig = array{
- *     default_locale?: scalar|Param|null, // Default: "en"
- *     cache_ttl?: scalar|Param|null, // Default: 3600
- *     media_server?: array{
- *         host?: scalar|Param|null, // Default: "https://media.wip"
- *         apiKey?: scalar|Param|null, // Default: null
- *         resize_path?: scalar|Param|null, // Default: "/media/{preset}/{id}"
- *     },
- *     presets?: array<string, array{ // Default: {"small":{"resize":"fill","width":192,"height":192},"medium":{"resize":"fit","width":400,"height":400},"large":{"resize":"fit","width":800,"height":800},"ai":{"resize":"fit","width":512,"height":512},"thumb":{"resize":"fit","width":300,"height":300}}
- *         resize?: scalar|Param|null, // Default: "fit"
- *         width?: int|Param,
- *         height?: int|Param,
- *     }>,
- *     providers?: array<string, array{ // Default: []
- *         enabled?: bool|Param, // Default: true
- *         api_key?: scalar|Param|null,
- *         api_secret?: scalar|Param|null,
- *         access_token?: scalar|Param|null,
- *         options?: list<mixed>,
- *     }>,
- * }
  * @psalm-type SurvosIiifConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: false
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
@@ -3123,7 +3102,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_meili?: SurvosMeiliConfig,
  *     survos_ez?: SurvosEzConfig,
  *     survos_doc?: SurvosDocConfig,
- *     survos_media?: SurvosMediaConfig,
  *     survos_iiif?: SurvosIiifConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
  *     survos_api_grid?: SurvosApiGridConfig,
@@ -3181,7 +3159,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_code?: SurvosCodeConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
- *         survos_media?: SurvosMediaConfig,
  *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
@@ -3237,7 +3214,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
- *         survos_media?: SurvosMediaConfig,
  *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
@@ -3293,7 +3269,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_code?: SurvosCodeConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
- *         survos_media?: SurvosMediaConfig,
  *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,

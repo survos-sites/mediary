@@ -64,7 +64,6 @@
         "survos/iiif-bundle": "^2.24.7",
         "survos/imgproxy-bundle": "^2.24.24",
         "survos/js-twig-bundle": "^2.18.18",
-        "survos/media-bundle": "^2.27.3",
         "survos/meili-bundle": "^2.26.9",
         "survos/search-bundle": "^2.24.21",
         "survos/simple-datatables-bundle": "^2.19.4",
@@ -181,17 +180,17 @@
         "symfony/symfony": "*"
     },
     "suggest": {
-        "league/color-extractor": "For local colour palette extraction if imgproxy Pro is unavailable — see docs/local-image-analysis.md"
+        "league/color-extractor": "For local colour palette extraction if imgproxy Pro is unavailable \u2014 see docs/local-image-analysis.md"
     },
     "extra": {
         "symfony": {
             "allow-contrib": "true"
         },
-            "class-metadata": {
-                "paths": [
-                    "src/Entity"
-                ]
-            }
+        "class-metadata": {
+            "paths": [
+                "src/Entity"
+            ]
+        }
     },
     "require-dev": {
         "phpunit/phpunit": "^13.3.2",

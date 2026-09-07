@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3e5a10b8969ca143e8d96c3184346d7",
+    "content-hash": "db44bc3147955fed941b8a1a449eb66d",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -9067,83 +9067,6 @@
                 }
             ],
             "time": "2026-06-09T21:17:04+00:00"
-        },
-        {
-            "name": "survos/media-bundle",
-            "version": "2.27.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/media-bundle.git",
-                "reference": "0a5af6c33393a3c5328eb79d8db3d96df6717ba3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/0a5af6c33393a3c5328eb79d8db3d96df6717ba3",
-                "reference": "0a5af6c33393a3c5328eb79d8db3d96df6717ba3",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "^4.3.2",
-                "doctrine/doctrine-bundle": "^3.0",
-                "league/flysystem": "^3.0",
-                "php": "^8.5",
-                "survos/data-contracts": "^2.27.1",
-                "survos/field-bundle": "^2.5",
-                "survos/iiif-bundle": "^2.7",
-                "survos/imgproxy-bundle": "^2.7",
-                "survos/kit-bundle": "^2.5",
-                "survos/state-bundle": "^2.0",
-                "symfony/config": "^8.1",
-                "symfony/dependency-injection": "^8.1",
-                "symfony/http-kernel": "^8.1",
-                "symfony/messenger": "^8.1",
-                "symfony/remote-event": "^8.1",
-                "symfony/ux-twig-component": "^3.0",
-                "symfony/webhook": "^8.1",
-                "twig/twig": "^3.4|^4.0"
-            },
-            "require-dev": {
-                "nyholm/psr7": "^1.8",
-                "openai-php/client": "^v0.19.0",
-                "phpstan/phpstan": "^2.0",
-                "symfony/browser-kit": "^8.1",
-                "symfony/framework-bundle": "^8.1",
-                "symfony/http-client": "^8.1",
-                "symfony/phpunit-bridge": "^8.1",
-                "symfony/twig-bundle": "^8.1",
-                "symfony/var-dumper": "^8.1"
-            },
-            "suggest": {
-                "survos/tabler-bundle": "Admin navbar menu and the search/UI templates. Optional: MediaMenuSubscriber is only registered when TablerBundle is present (config/services.php), so a headless/CLI client does not need it. Was ^2.5.",
-                "symfony/ai-platform": "Required for #[With] JSON Schema constraints on MediaSyncItem properties"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\MediaBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Manage media without direct relationships",
-            "keywords": [
-                "symfony",
-                "symfony-ux",
-                "ux"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.27.3"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-09-07T14:56:28+00:00"
         },
         {
             "name": "survos/meili-bundle",
