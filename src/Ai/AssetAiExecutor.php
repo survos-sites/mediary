@@ -41,6 +41,28 @@ final class AssetAiExecutor
     {
         $taskObj = $this->registry->get($task);
         if ($taskObj === null) {
+            // LOUD. An unknown task name is a configuration bug in the caller, not a runtime
+            // condition, and it used to return ok:false in silence -- no log, no exception, no
+            // entry in the failure transport. A client requesting a task this server does not
+            // have got no answer and no reason, and the absence of output was indistinguishable
+            // from "no AI was requested for this asset". Found exactly that way: a client had
+            // been asking for names that never existed here, for as long as anyone could tell.
+            //
+            // Still a return rather than a throw: one bad task name in an aiQueue must not kill
+            // the sibling tasks on the same asset. The error log plus the known-task list is what
+            // makes it findable -- the caller almost always has a typo or a stale name, and
+            // seeing what IS registered is the fastest route to the fix.
+            $this->logger->error(
+                'AssetAiExecutor: no handler registered for AI task "{task}" (asset {asset}); known tasks: {known}',
+                [
+                    'task' => $task,
+                    // Property hook, not a getter -- Asset has no getId(); calling one here
+                    // fatals on the very path that exists to report a problem.
+                    'asset' => $asset->id,
+                    'known' => implode(', ', array_keys($this->registry->getTaskMap())),
+                ],
+            );
+
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'task handler not found'];
         }
 
