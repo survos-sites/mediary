@@ -36,8 +36,9 @@ Anything both sides must agree on is defined once, in a package neither owns:
 
 | Concern | Class |
 |---|---|
-| Asset id from a URL (`xxh3`) | `Util\MediaIdentity` |
-| Archive key (`orig/aa/bb/<hash>.<ext>`) | `Util\MediaKeyService` |
+| Asset id from a URL — `xxh3`, 16 hex, **not** reversible | `Util\MediaIdentity` |
+| imgproxy-style key — URL-safe base64, **reversible** | `Util\MediaKeyService::keyFromString()` |
+| Archive key (`orig/aa/bb/<hash>.<ext>`), hashed from that key | `Util\MediaKeyService::archivePathFromKey()` |
 | Batch wire format | `Dto\BatchPayloadDto`, `Dto\BatchItemDto` |
 | Sync protocol keys | `Vocabulary\MediaSyncKeys` |
 | Preset names (`small`, `ai`, …) | `Vocabulary\MediaPreset` |
