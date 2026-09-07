@@ -18,11 +18,6 @@ services:
     App\:
         resource: '../src/'
 
-    # AI-task result sidecar cache, backed by the shared archive (S3) bucket.
-    Survos\MediaBundle\Service\SidecarService:
-        arguments:
-            $storage: '@?archive.storage'
-
     # --- Outbound webhook delivery (see docs/webhooks.md) ---
 
     # http_client, but routing `.wip` subscribers through the Symfony CLI proxy. Every local

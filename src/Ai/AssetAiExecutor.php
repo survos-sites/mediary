@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Survos\AiWorkflowBundle\Task\TaskRegistry;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
-use Survos\MediaBundle\Service\SidecarService;
+use App\Service\SidecarService;
 
 /**
  * Runs a single ai-workflow-bundle task against an Asset (via {@see AssetSubject})
