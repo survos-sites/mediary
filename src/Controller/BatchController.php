@@ -96,6 +96,12 @@ final class BatchController implements LoggerAwareInterface
             }
         }
         $this->claimIngestor->recordBatch($claimItems);
+        // recordBatch() only persist()s. Claims live on their own entity manager
+        // (survos_claims.entity_manager: claims), so assetRegistry->flush() below commits the
+        // DEFAULT em and never touches them -- exactly the failure ClaimIngestor::flush()'s
+        // docblock warns about: "claims silently never commit when a separate EM is configured".
+        // The endpoint returned 200 and wrote nothing.
+        $this->claimIngestor->flush();
 
         $media = [];
         $queue = [];
