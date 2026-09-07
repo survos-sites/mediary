@@ -1,0 +1,6 @@
+# Deliver webhooks through the proxy-aware client: every local subscriber's callback URL is a
+# `.wip` host that resolves nowhere else. Only the client is mediary's decision — kit wires the
+# decorator and its four collaborators, which is bundle plumbing, not app config.
+survos_kit:
+    webhook:
+        http_client: survos.webhook.http_client

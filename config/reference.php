@@ -2966,6 +2966,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosAiWorkflowConfig = array{
  *     disabled_tasks?: list<scalar|Param|null>,
  * }
+ * @psalm-type SurvosKitConfig = array{
+ *     webhook?: array{
+ *         http_client?: scalar|Param|null, // Default: null
+ *         transports?: list<scalar|Param|null>,
+ *     },
+ * }
  * @psalm-type SurvosImportConfig = array{
  *     dir?: scalar|Param|null, // Default directory for data files // Default: "data"
  *     dto_namespace_roots?: list<scalar|Param|null>,
@@ -3131,6 +3137,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_claims?: SurvosClaimsConfig,
  *     ai?: AiConfig,
  *     survos_ai_workflow?: SurvosAiWorkflowConfig,
+ *     survos_kit?: SurvosKitConfig,
  *     survos_import?: SurvosImportConfig,
  *     survos_dataset?: SurvosDatasetConfig,
  *     live_component?: LiveComponentConfig,
@@ -3189,6 +3196,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ai?: AiConfig,
  *         mcp?: McpConfig,
  *         survos_ai_workflow?: SurvosAiWorkflowConfig,
+ *         survos_kit?: SurvosKitConfig,
  *         survos_import?: SurvosImportConfig,
  *         survos_dataset?: SurvosDatasetConfig,
  *         live_component?: LiveComponentConfig,
@@ -3243,6 +3251,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_claims?: SurvosClaimsConfig,
  *         ai?: AiConfig,
  *         survos_ai_workflow?: SurvosAiWorkflowConfig,
+ *         survos_kit?: SurvosKitConfig,
  *         survos_import?: SurvosImportConfig,
  *         survos_dataset?: SurvosDatasetConfig,
  *         live_component?: LiveComponentConfig,
@@ -3299,6 +3308,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ai?: AiConfig,
  *         mcp?: McpConfig,
  *         survos_ai_workflow?: SurvosAiWorkflowConfig,
+ *         survos_kit?: SurvosKitConfig,
  *         survos_import?: SurvosImportConfig,
  *         survos_dataset?: SurvosDatasetConfig,
  *         live_component?: LiveComponentConfig,
