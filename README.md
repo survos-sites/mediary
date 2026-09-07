@@ -38,10 +38,13 @@ Anything both sides must agree on is defined once, in a package neither owns:
 |---|---|
 | Asset id from a URL — `xxh3`, 16 hex, **not** reversible | `Util\MediaIdentity` |
 | imgproxy-style key — URL-safe base64, **reversible** | `Util\MediaKeyService::keyFromString()` |
-| Archive key (`orig/aa/bb/<hash>.<ext>`), hashed from that key | `Util\MediaKeyService::archivePathFromKey()` |
+| Sidecar/bucketed path — `o/<1 hex>/<2 hex>/<key>.<ext>`, key kept as filename | `Util\MediaKeyService::archivePathFromKey()` |
 | Batch wire format | `Dto\BatchPayloadDto`, `Dto\BatchItemDto` |
 | Sync protocol keys | `Vocabulary\MediaSyncKeys` |
 | Preset names (`small`, `ai`, …) | `Vocabulary\MediaPreset` |
+
+mediary's own archive layout for originals (`orig/<2>/<2>/<long hex>.<ext>`) is a separate scheme
+from `archivePathFromKey()` above — don't conflate them.
 
 These used to live in media-bundle, which meant the server imported the client to understand its
 own wire format. Producer and consumer now derive the same values without either depending on the
