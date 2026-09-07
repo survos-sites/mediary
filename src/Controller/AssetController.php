@@ -12,7 +12,6 @@ use App\Repository\AssetRepository;
 use App\Service\AssetRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Survos\AiWorkflowBundle\Task\TaskRegistry;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

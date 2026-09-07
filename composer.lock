@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72d03ca21a6d85efeae10d2c8330b3fd",
+    "content-hash": "ea96beebee30c52c68390d8c68f089f9",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8109,16 +8109,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.24.33",
+            "version": "2.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "14c540c1b1db935dae11131a0babf759fa315a63"
+                "reference": "cc33a2a87b714d4b4bcb963582b74bd66ec5197a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/14c540c1b1db935dae11131a0babf759fa315a63",
-                "reference": "14c540c1b1db935dae11131a0babf759fa315a63",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/cc33a2a87b714d4b4bcb963582b74bd66ec5197a",
+                "reference": "cc33a2a87b714d4b4bcb963582b74bd66ec5197a",
                 "shasum": ""
             },
             "require": {
@@ -8147,7 +8147,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.24.33"
+                "source": "https://github.com/survos/data-contracts/tree/2.27.2"
             },
             "funding": [
                 {
@@ -8155,7 +8155,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-25T13:27:04+00:00"
+            "time": "2026-09-07T14:18:04+00:00"
         },
         {
             "name": "survos/dataset-bundle",
@@ -9070,16 +9070,16 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.27.0",
+            "version": "2.27.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "757083f7c9d7e3ee4d89a23edbf21d3e339d97f5"
+                "reference": "d657c9eb881c127f429ab7d6dcf4233d4e91f03a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/757083f7c9d7e3ee4d89a23edbf21d3e339d97f5",
-                "reference": "757083f7c9d7e3ee4d89a23edbf21d3e339d97f5",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/d657c9eb881c127f429ab7d6dcf4233d4e91f03a",
+                "reference": "d657c9eb881c127f429ab7d6dcf4233d4e91f03a",
                 "shasum": ""
             },
             "require": {
@@ -9087,13 +9087,12 @@
                 "doctrine/doctrine-bundle": "^3.0",
                 "league/flysystem": "^3.0",
                 "php": "^8.5",
-                "survos/data-contracts": "^2.5",
+                "survos/data-contracts": "^2.27.1",
                 "survos/field-bundle": "^2.5",
                 "survos/iiif-bundle": "^2.7",
                 "survos/imgproxy-bundle": "^2.7",
                 "survos/kit-bundle": "^2.5",
                 "survos/state-bundle": "^2.0",
-                "survos/tabler-bundle": "^2.5",
                 "symfony/config": "^8.1",
                 "symfony/dependency-injection": "^8.1",
                 "symfony/http-kernel": "^8.1",
@@ -9115,6 +9114,7 @@
                 "symfony/var-dumper": "^8.1"
             },
             "suggest": {
+                "survos/tabler-bundle": "Admin navbar menu and the search/UI templates. Optional: MediaMenuSubscriber is only registered when TablerBundle is present (config/services.php), so a headless/CLI client does not need it. Was ^2.5.",
                 "symfony/ai-platform": "Required for #[With] JSON Schema constraints on MediaSyncItem properties"
             },
             "type": "symfony-bundle",
@@ -9135,7 +9135,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.27.0"
+                "source": "https://github.com/survos/media-bundle/tree/2.27.2"
             },
             "funding": [
                 {
@@ -9143,7 +9143,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-07T13:48:48+00:00"
+            "time": "2026-09-07T14:18:01+00:00"
         },
         {
             "name": "survos/meili-bundle",

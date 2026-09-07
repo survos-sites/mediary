@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Survos\DataContracts\Vocabulary\MediaPreset;
+
 use App\Entity\Asset;
 use App\Entity\IiifManifest;
 use App\Repository\AssetRepository;
 use App\Repository\IiifManifestRepository;
 use App\Service\AssetRegistry;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -60,7 +61,7 @@ final class IiifController extends AbstractController
         [$width, $height] = $this->dimensions($asset);
 
         $sizes = [];
-        foreach (MediaUrlGenerator::PRESETS as $preset) {
+        foreach (MediaPreset::PRESETS as $preset) {
             [$w, $h] = $preset['size'];
             $sizes[] = ['width' => (int) $w, 'height' => (int) $h];
         }
@@ -343,13 +344,13 @@ final class IiifController extends AbstractController
     private function presetFromIiifSize(string $size): string
     {
         if ($size === 'full' || $size === 'max') {
-            return MediaUrlGenerator::PRESET_LARGE;
+            return MediaPreset::LARGE;
         }
 
         if (preg_match('/^(\d+),$/', $size, $m) === 1) {
             $requestedWidth = (int) $m[1];
             $candidates = [];
-            foreach (MediaUrlGenerator::PRESETS as $presetName => $preset) {
+            foreach (MediaPreset::PRESETS as $presetName => $preset) {
                 $candidates[$presetName] = (int) $preset['size'][0];
             }
 
@@ -359,7 +360,7 @@ final class IiifController extends AbstractController
                     return $presetName;
                 }
             }
-            return MediaUrlGenerator::PRESET_LARGE;
+            return MediaPreset::LARGE;
         }
 
         throw new BadRequestHttpException('Unsupported IIIF size. Use max, full, or {w},');
@@ -377,7 +378,7 @@ final class IiifController extends AbstractController
 
     private function dimensions(Asset $asset): array
     {
-        $fallback = MediaUrlGenerator::PRESETS[MediaUrlGenerator::PRESET_LARGE]['size'];
+        $fallback = MediaPreset::PRESETS[MediaPreset::LARGE]['size'];
         $width = $asset->width ?? (int) $fallback[0];
         $height = $asset->height ?? (int) $fallback[1];
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Ai;
 
 use App\Entity\Asset;
-use Survos\MediaBundle\Contract\MediaSyncKeys;
+use Survos\DataContracts\Vocabulary\MediaSyncKeys;
 use Survos\DataContracts\Workflow\AudioSubjectInterface;
 use Survos\DataContracts\Workflow\ContextSubjectInterface;
 use Survos\DataContracts\Workflow\ImageSubjectInterface;

@@ -5,8 +5,8 @@ namespace App\Repository;
 use App\Entity\Asset;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Survos\MediaBundle\Service\MediaKeyService;
-use Survos\MediaBundle\Util\MediaIdentity;
+use Survos\DataContracts\Util\MediaKeyService;
+use Survos\DataContracts\Util\MediaIdentity;
 
 /**
  * @extends ServiceEntityRepository<Asset>

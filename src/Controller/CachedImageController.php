@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Survos\DataContracts\Vocabulary\MediaPreset;
+
 
 use App\Service\AssetRegistry;
 use App\Workflow\AssetFlow;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Survos\MediaBundle\Service\MediaKeyService;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
+use Survos\DataContracts\Util\MediaKeyService;
 use Survos\StateBundle\Message\TransitionMessage;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -54,7 +55,7 @@ final class CachedImageController
         #[MapQueryParameter] ?string $url = null,
     ): Response
     {
-        if (!isset(MediaUrlGenerator::PRESETS[$preset])) {
+        if (!isset(MediaPreset::PRESETS[$preset])) {
             throw new BadRequestHttpException('Unknown image preset: ' . $preset);
         }
 
@@ -75,7 +76,7 @@ final class CachedImageController
         $this->assetRegistry->dispatch($asset);
 //        dd(afterDispatch: $asset);
 
-        $imgproxyUrl = $this->assetRegistry->imgProxyUrl($asset, MediaUrlGenerator::PRESET_SMALL);
+        $imgproxyUrl = $this->assetRegistry->imgProxyUrl($asset, MediaPreset::SMALL);
         $this->logger->info("Redirecting with image: {$source}");
 
         $response = new RedirectResponse($imgproxyUrl, 302);

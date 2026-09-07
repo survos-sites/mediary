@@ -2,6 +2,8 @@
 
 namespace App\Controller\Admin;
 
+use Survos\DataContracts\Vocabulary\MediaPreset;
+
 use App\Entity\Asset;
 use App\Entity\Media;
 use App\Entity\User;
@@ -29,7 +31,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Form\Type\ComparisonType;
 use Google\Service\GroupsMigration\Resource\Archive;
 use Survos\EzBundle\Controller\BaseCrudController;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
 use Survos\StateBundle\Traits\EasyMarkingTrait;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\Attribute\Target;
@@ -139,7 +140,7 @@ class AssetCrudController extends BaseCrudController
 //            ->setLabel('Thumb')
 //            ->formatValue(function ($value, Asset $asset) {
 //                if ($asset->storageKey) {
-//                    $imgProxyUrl = $this->assetRegistry->imgProxyUrl($asset, MediaUrlGenerator::PRESET_SMALL);
+//                    $imgProxyUrl = $this->assetRegistry->imgProxyUrl($asset, MediaPreset::SMALL);
 //                    return $imgProxyUrl;
 //                }
 //            })
@@ -150,7 +151,7 @@ class AssetCrudController extends BaseCrudController
 //            ->setLabel('Thumb')
 //            ->formatValue(function ($value, Asset $asset) {
 //                if ($asset->storageKey) {
-//                    $imgProxyUrl = $this->assetRegistry->imgProxyUrl($asset, MediaUrlGenerator::PRESET_SMALL);
+//                    $imgProxyUrl = $this->assetRegistry->imgProxyUrl($asset, MediaPreset::SMALL);
 //                    return "<img src='$imgProxyUrl' title='{$asset->storageKey}' style='max-width: 36px;'>";
 //                }
 //            })

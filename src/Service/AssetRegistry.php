@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Survos\DataContracts\Vocabulary\MediaPreset;
+
 use App\Entity\Asset;
 use App\Entity\MediaRecord;
 use App\Repository\AssetRepository;
@@ -12,8 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
-use Survos\MediaBundle\Contract\MediaSyncKeys;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
+use Survos\DataContracts\Vocabulary\MediaSyncKeys;
 use Survos\StateBundle\Message\TransitionMessage;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -37,7 +38,6 @@ final class AssetRegistry
         #[Autowire('%env(AWS_S3_BUCKET_NAME)%')]
         private readonly string        $archiveBucket,
         private readonly ImgproxyUrlBuilder $imgproxyUrlBuilder,
-        private readonly MediaUrlGenerator $mediaUrlGenerator,
         private readonly ?LoggerInterface $logger = null,
     ) {
     }
@@ -349,7 +349,7 @@ final class AssetRegistry
         return $ext !== '' ? $ext : null;
     }
 
-    public function imgProxyUrl(Asset $asset, string $preset = MediaUrlGenerator::PRESET_SMALL): ?string
+    public function imgProxyUrl(Asset $asset, string $preset = MediaPreset::SMALL): ?string
     {
         return $this->imgProxyDebug($asset, $preset)['url'];
     }
@@ -368,7 +368,7 @@ final class AssetRegistry
     ];
 
     /** @return array{url: ?string, source: string, source_url: ?string} */
-    public function imgProxyDebug(Asset $asset, string $preset = MediaUrlGenerator::PRESET_SMALL): array
+    public function imgProxyDebug(Asset $asset, string $preset = MediaPreset::SMALL): array
     {
         // if the asset has been stored on OUR s3, then use it, much faster.
         if ($asset->storageKey) {

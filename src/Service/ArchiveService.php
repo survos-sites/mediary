@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use InvalidArgumentException;
-use Survos\MediaBundle\Service\MediaKeyService;
+use Survos\DataContracts\Util\MediaKeyService;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use function rtrim;

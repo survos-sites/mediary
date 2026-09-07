@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace App\Workflow;
 
+use Survos\DataContracts\Vocabulary\MediaPreset;
+
 use App\Ai\AssetAiTask;
 use App\Ai\FaceGeometry;
 use App\Message\WarmImgproxyCacheMessage;
-use Survos\MediaBundle\Dto\MediaEnrichment;
+use Survos\DataContracts\Dto\MediaEnrichment;
 use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
 use App\Service\ClaimSearchSync;
@@ -33,8 +35,7 @@ use Survos\AiPipelineBundle\Task\AiTaskInterface;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
 use Survos\ClaimsBundle\Service\RawClaim;
 use Survos\ClaimsBundle\Service\RunMeta;
-use Survos\MediaBundle\Service\MediaKeyService;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
+use Survos\DataContracts\Util\MediaKeyService;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Symfony\Component\HttpClient\Response\StreamWrapper;
 use App\Util\ImageProbe;
@@ -84,7 +85,6 @@ class AssetWorkflow
 
     public function __construct(
         private readonly AssetAiExecutor $executor,
-        private MediaUrlGenerator $mediaUrlGenerator,
         private readonly ArchiveService $archiveService,
         private ThumbHashService $thumbHashService,
         private readonly AtomicFileWriter $atomicFileWriter,
@@ -205,7 +205,7 @@ class AssetWorkflow
         $asset->storageKey = $path;
         $asset->storageBackend = 'archive';
         $asset->archiveUrl = $this->assetRegistry->s3Url($asset);
-        $asset->smallUrl = $this->assetRegistry->imgProxyUrl($asset, MediaUrlGenerator::PRESET_SMALL);
+        $asset->smallUrl = $this->assetRegistry->imgProxyUrl($asset, MediaPreset::SMALL);
     }
 
     public function ingestLocalFile(Asset $asset, string $localPath): void
@@ -680,7 +680,7 @@ class AssetWorkflow
      */
     private function warmThumbnailCache(Asset $asset): void
     {
-        $url = $this->assetRegistry->imgProxyUrl($asset, MediaUrlGenerator::PRESET_SMALL);
+        $url = $this->assetRegistry->imgProxyUrl($asset, MediaPreset::SMALL);
         if ($url !== null) {
             $this->messageBus->dispatch(new WarmImgproxyCacheMessage($url));
         }
@@ -1244,7 +1244,7 @@ class AssetWorkflow
         }
 
         return [
-            'url' => $this->assetRegistry->imgProxyUrl($asset, MediaUrlGenerator::PRESET_SMALL),
+            'url' => $this->assetRegistry->imgProxyUrl($asset, MediaPreset::SMALL),
             'source' => 'imgproxy_small',
         ];
     }

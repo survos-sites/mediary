@@ -5,7 +5,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use Survos\MediaBundle\Dto\MediaEnrichment;
+use Survos\DataContracts\Dto\MediaEnrichment;
 use App\Workflow\AssetFlow as WF;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +17,7 @@ use Survos\FieldBundle\Entity\RouteParametersInterface;
 use Survos\FieldBundle\Enum\Widget;
 use Survos\MeiliBundle\Metadata\Fields;
 use Survos\MeiliBundle\Metadata\MeiliIndex;
-use Survos\MediaBundle\Util\MediaIdentity;
+use Survos\DataContracts\Util\MediaIdentity;
 use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\StateBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;

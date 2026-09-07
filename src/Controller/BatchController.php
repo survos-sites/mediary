@@ -12,7 +12,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
 use Survos\ClaimsBundle\Service\RawClaim;
-use Survos\MediaBundle\Dto\BatchPayloadDto;
+use Survos\DataContracts\Dto\BatchPayloadDto;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

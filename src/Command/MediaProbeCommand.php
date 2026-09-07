@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use Survos\DataContracts\Vocabulary\MediaPreset;
+
 use App\Controller\CachedImageController;
-use Survos\MediaBundle\Service\MediaKeyService;
-use Survos\MediaBundle\Service\MediaUrlGenerator;
+use Survos\DataContracts\Util\MediaKeyService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\Option;
@@ -30,8 +31,8 @@ final class MediaProbeCommand
         #[Argument(description: 'Source media URL')]
         ?string $url = null,
 
-        #[Argument('Image preset (must exist in MediaUrlGenerator::PRESETS)')]
-        string $preset = MediaUrlGenerator::PRESET_SMALL,
+        #[Argument('Image preset (must exist in MediaPreset::PRESETS)')]
+        string $preset = MediaPreset::SMALL,
 
         #[Option('Client identifier (optional)')]
         ?string $client = null,
