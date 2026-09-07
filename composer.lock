@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aaf0575aa2bc60933dad1ce987e5d46f",
+    "content-hash": "72d03ca21a6d85efeae10d2c8330b3fd",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -62,16 +62,16 @@
         },
         {
             "name": "api-platform/core",
-            "version": "v4.3.17",
+            "version": "v4.3.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "815f7f401e6e3acdf0530283cf9dedcddc537839"
+                "reference": "df3b916f622f0f1458602f61a0f4a0e84eadf59e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/815f7f401e6e3acdf0530283cf9dedcddc537839",
-                "reference": "815f7f401e6e3acdf0530283cf9dedcddc537839",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/df3b916f622f0f1458602f61a0f4a0e84eadf59e",
+                "reference": "df3b916f622f0f1458602f61a0f4a0e84eadf59e",
                 "shasum": ""
             },
             "require": {
@@ -146,7 +146,7 @@
                 "jangregor/phpstan-prophecy": "^2.1.11",
                 "justinrainbow/json-schema": "^6.5.2",
                 "laravel/framework": "^11.0 || ^12.0 || ^13.0",
-                "mcp/sdk": "^0.6",
+                "mcp/sdk": "^0.8",
                 "orchestra/testbench": "^10.9 || ^11.0",
                 "phpspec/prophecy-phpunit": "^2.2",
                 "phpstan/extension-installer": "^1.1",
@@ -180,8 +180,8 @@
                 "symfony/intl": "^6.4 || ^7.0 || ^8.0",
                 "symfony/json-streamer": "^7.4 || ^8.0",
                 "symfony/maker-bundle": "^1.24",
-                "symfony/mcp-bundle": "dev-main",
-                "symfony/mercure-bundle": "*",
+                "symfony/mcp-bundle": "^0.13",
+                "symfony/mercure-bundle": "^0.4.3|^0.5",
                 "symfony/messenger": "^6.4 || ^7.0 || ^8.0",
                 "symfony/object-mapper": "^7.4 || ^8.0",
                 "symfony/routing": "^6.4 || ^7.0 || ^8.0",
@@ -274,9 +274,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v4.3.17"
+                "source": "https://github.com/api-platform/core/tree/v4.3.18"
             },
-            "time": "2026-07-12T06:11:13+00:00"
+            "time": "2026-09-04T09:13:46+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -2699,16 +2699,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.457.0",
+            "version": "v0.458.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "d6ad056c8d6683c035a5d4e2c6dd77247150ccc1"
+                "reference": "1bf817c792a3c2112f93d785d1a891510f7366c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d6ad056c8d6683c035a5d4e2c6dd77247150ccc1",
-                "reference": "d6ad056c8d6683c035a5d4e2c6dd77247150ccc1",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/1bf817c792a3c2112f93d785d1a891510f7366c9",
+                "reference": "1bf817c792a3c2112f93d785d1a891510f7366c9",
                 "shasum": ""
             },
             "require": {
@@ -2737,9 +2737,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.457.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.458.0"
             },
-            "time": "2026-08-31T01:26:27+00:00"
+            "time": "2026-09-07T01:24:24+00:00"
         },
         {
             "name": "google/auth",
@@ -4707,16 +4707,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "3.10.0",
+            "version": "3.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "b321dd6749f0bf7189444158a3ce785cc16d69b0"
+                "reference": "147f303310f06334f03f409e49d7ad1e275ff05a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b321dd6749f0bf7189444158a3ce785cc16d69b0",
-                "reference": "b321dd6749f0bf7189444158a3ce785cc16d69b0",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/147f303310f06334f03f409e49d7ad1e275ff05a",
+                "reference": "147f303310f06334f03f409e49d7ad1e275ff05a",
                 "shasum": ""
             },
             "require": {
@@ -4794,7 +4794,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/3.10.0"
+                "source": "https://github.com/Seldaek/monolog/tree/3.11.0"
             },
             "funding": [
                 {
@@ -4806,7 +4806,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-02T08:56:05+00:00"
+            "time": "2026-09-02T12:39:56+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -8159,16 +8159,16 @@
         },
         {
             "name": "survos/dataset-bundle",
-            "version": "2.26.9",
+            "version": "2.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/dataset-bundle.git",
-                "reference": "6f3f265a90eb5096c5ef1f1a022e27ba8d05ac8d"
+                "reference": "9d0ea74c6380e710e8ba1e8860b20665ce856c70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/dataset-bundle/zipball/6f3f265a90eb5096c5ef1f1a022e27ba8d05ac8d",
-                "reference": "6f3f265a90eb5096c5ef1f1a022e27ba8d05ac8d",
+                "url": "https://api.github.com/repos/survos/dataset-bundle/zipball/9d0ea74c6380e710e8ba1e8860b20665ce856c70",
+                "reference": "9d0ea74c6380e710e8ba1e8860b20665ce856c70",
                 "shasum": ""
             },
             "require": {
@@ -8223,7 +8223,7 @@
             "description": "Shared data directory conventions and path utilities for dataset-driven apps (APP_DATA_DIR).",
             "support": {
                 "issues": "https://github.com/survos/dataset-bundle/issues",
-                "source": "https://github.com/survos/dataset-bundle/tree/2.26.9"
+                "source": "https://github.com/survos/dataset-bundle/tree/2.27.0"
             },
             "funding": [
                 {
@@ -8231,7 +8231,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-29T15:31:42+00:00"
+            "time": "2026-09-07T13:49:17+00:00"
         },
         {
             "name": "survos/doc-bundle",
@@ -9070,16 +9070,16 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.26.22",
+            "version": "2.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "ad9a5848ecaaa37ef88f49463ad84872ff046838"
+                "reference": "757083f7c9d7e3ee4d89a23edbf21d3e339d97f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/ad9a5848ecaaa37ef88f49463ad84872ff046838",
-                "reference": "ad9a5848ecaaa37ef88f49463ad84872ff046838",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/757083f7c9d7e3ee4d89a23edbf21d3e339d97f5",
+                "reference": "757083f7c9d7e3ee4d89a23edbf21d3e339d97f5",
                 "shasum": ""
             },
             "require": {
@@ -9092,6 +9092,7 @@
                 "survos/iiif-bundle": "^2.7",
                 "survos/imgproxy-bundle": "^2.7",
                 "survos/kit-bundle": "^2.5",
+                "survos/state-bundle": "^2.0",
                 "survos/tabler-bundle": "^2.5",
                 "symfony/config": "^8.1",
                 "symfony/dependency-injection": "^8.1",
@@ -9114,7 +9115,6 @@
                 "symfony/var-dumper": "^8.1"
             },
             "suggest": {
-                "survos/state-bundle": "Drives the media probe lifecycle as an async Symfony workflow (imgproxy /info enrichment)",
                 "symfony/ai-platform": "Required for #[With] JSON Schema constraints on MediaSyncItem properties"
             },
             "type": "symfony-bundle",
@@ -9135,7 +9135,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.26.22"
+                "source": "https://github.com/survos/media-bundle/tree/2.27.0"
             },
             "funding": [
                 {
@@ -9143,7 +9143,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-05T14:01:37+00:00"
+            "time": "2026-09-07T13:48:48+00:00"
         },
         {
             "name": "survos/meili-bundle",
@@ -9415,16 +9415,16 @@
         },
         {
             "name": "survos/state-bundle",
-            "version": "2.26.14",
+            "version": "2.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/state-bundle.git",
-                "reference": "5b8f45055900549b41514b0ae7457501af6fd741"
+                "reference": "207818a605655deb18445cd9482300fe759aff16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/state-bundle/zipball/5b8f45055900549b41514b0ae7457501af6fd741",
-                "reference": "5b8f45055900549b41514b0ae7457501af6fd741",
+                "url": "https://api.github.com/repos/survos/state-bundle/zipball/207818a605655deb18445cd9482300fe759aff16",
+                "reference": "207818a605655deb18445cd9482300fe759aff16",
                 "shasum": ""
             },
             "require": {
@@ -9490,7 +9490,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/state-bundle/issues",
-                "source": "https://github.com/survos/state-bundle/tree/2.26.14"
+                "source": "https://github.com/survos/state-bundle/tree/2.27.0"
             },
             "funding": [
                 {
@@ -9498,7 +9498,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-01T15:15:53+00:00"
+            "time": "2026-09-07T13:48:48+00:00"
         },
         {
             "name": "survos/storage-bundle",
@@ -19256,16 +19256,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "14.3.1",
+            "version": "14.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "6ce313bb110384148d1dc7695a99175f59529069"
+                "reference": "93d62632fb675b76c9b941fdcfcfa10ffb9dea75"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6ce313bb110384148d1dc7695a99175f59529069",
-                "reference": "6ce313bb110384148d1dc7695a99175f59529069",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/93d62632fb675b76c9b941fdcfcfa10ffb9dea75",
+                "reference": "93d62632fb675b76c9b941fdcfcfa10ffb9dea75",
                 "shasum": ""
             },
             "require": {
@@ -19284,7 +19284,7 @@
                 "theseer/tokenizer": "^2.0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.3.1"
+                "phpunit/phpunit": "^13.3.2"
             },
             "suggest": {
                 "ext-pcov": "PHP extension that provides line coverage",
@@ -19322,7 +19322,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.1"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.2"
             },
             "funding": [
                 {
@@ -19342,7 +19342,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-16T05:23:47+00:00"
+            "time": "2026-09-04T03:46:43+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
