@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ea96beebee30c52c68390d8c68f089f9",
+    "content-hash": "c3e5a10b8969ca143e8d96c3184346d7",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8109,16 +8109,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.27.2",
+            "version": "2.27.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "cc33a2a87b714d4b4bcb963582b74bd66ec5197a"
+                "reference": "d9d5f5ddfb2f181e3cc2d1d5eba36e0a1452fcd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/cc33a2a87b714d4b4bcb963582b74bd66ec5197a",
-                "reference": "cc33a2a87b714d4b4bcb963582b74bd66ec5197a",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/d9d5f5ddfb2f181e3cc2d1d5eba36e0a1452fcd4",
+                "reference": "d9d5f5ddfb2f181e3cc2d1d5eba36e0a1452fcd4",
                 "shasum": ""
             },
             "require": {
@@ -8147,7 +8147,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.27.2"
+                "source": "https://github.com/survos/data-contracts/tree/2.27.3"
             },
             "funding": [
                 {
@@ -8155,7 +8155,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-07T14:18:04+00:00"
+            "time": "2026-09-07T14:56:23+00:00"
         },
         {
             "name": "survos/dataset-bundle",
@@ -8914,16 +8914,16 @@
         },
         {
             "name": "survos/kit-bundle",
-            "version": "2.24.23",
+            "version": "2.27.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/kit-bundle.git",
-                "reference": "73b272b662beb3dcbdfe5b37f895bbf6a2b0ea68"
+                "reference": "ba68bfb2b447b6426dd1fb3deeeebd82278efbe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/73b272b662beb3dcbdfe5b37f895bbf6a2b0ea68",
-                "reference": "73b272b662beb3dcbdfe5b37f895bbf6a2b0ea68",
+                "url": "https://api.github.com/repos/survos/kit-bundle/zipball/ba68bfb2b447b6426dd1fb3deeeebd82278efbe2",
+                "reference": "ba68bfb2b447b6426dd1fb3deeeebd82278efbe2",
                 "shasum": ""
             },
             "require": {
@@ -8969,7 +8969,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/kit-bundle/issues",
-                "source": "https://github.com/survos/kit-bundle/tree/2.24.23"
+                "source": "https://github.com/survos/kit-bundle/tree/2.27.3"
             },
             "funding": [
                 {
@@ -8977,7 +8977,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-19T11:44:21+00:00"
+            "time": "2026-09-07T14:55:53+00:00"
         },
         {
             "name": "survos/lingua-contracts",
@@ -9070,16 +9070,16 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.27.2",
+            "version": "2.27.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "d657c9eb881c127f429ab7d6dcf4233d4e91f03a"
+                "reference": "0a5af6c33393a3c5328eb79d8db3d96df6717ba3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/d657c9eb881c127f429ab7d6dcf4233d4e91f03a",
-                "reference": "d657c9eb881c127f429ab7d6dcf4233d4e91f03a",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/0a5af6c33393a3c5328eb79d8db3d96df6717ba3",
+                "reference": "0a5af6c33393a3c5328eb79d8db3d96df6717ba3",
                 "shasum": ""
             },
             "require": {
@@ -9135,7 +9135,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/2.27.2"
+                "source": "https://github.com/survos/media-bundle/tree/2.27.3"
             },
             "funding": [
                 {
@@ -9143,7 +9143,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-07T14:18:01+00:00"
+            "time": "2026-09-07T14:56:28+00:00"
         },
         {
             "name": "survos/meili-bundle",
