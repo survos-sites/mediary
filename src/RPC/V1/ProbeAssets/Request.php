@@ -18,10 +18,29 @@ final class Request
     /** @var list<string> */
     private array $ids = [];
 
+    /**
+     * Shared secret, checked by ProbeAssetsMethod. A probe returns titles, descriptions, OCR
+     * text, AI output and storage URLs, so it is a read of the archive's contents, not a health
+     * check -- and /api/v1 is PUBLIC_ACCESS at the firewall, so nothing else stands in front of
+     * it. analyzeUrl already works this way; this brings the read side in line.
+     */
+    private string $token = '';
+
     /** @param list<string> $ids 16-hex asset ids */
-    public function __construct(array $ids = [])
+    public function __construct(array $ids = [], string $token = '')
     {
         $this->ids = $ids;
+        $this->token = $token;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 
     /** @return list<string> */

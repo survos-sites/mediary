@@ -136,21 +136,32 @@ request. Adding a tool: [doc/JSONRPC.md](doc/JSONRPC.md).
 
 ## Probe API (polling fallback)
 
-When callbacks cannot get through — a local dev tunnel is down — poll directly.
+When callbacks cannot get through — a local dev tunnel is down — poll over JSON-RPC.
 
 ```bash
-curl -s "https://mediary.wip/fetch/media/<asset_id>" | jq
-
-curl -s "https://mediary.wip/fetch/media/by-ids?id=<id1>,<id2>" | jq
-curl -s -X POST "https://mediary.wip/fetch/media/by-ids" \
-  -H 'Content-Type: application/json' -d '{"ids": ["<id1>", "<id2>"]}' | jq
+curl -s -X POST https://mediary.survos.com/api/v1 \
+  -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","method":"probeAssets",
+       "params":{"ids":["<id1>","<id2>"],"token":"$MEDIARY_API_TOKEN"},"id":"1"}' | jq
 ```
 
-The response carries top-level asset fields (`id`, `source`, `marking`, `meta`), `thumbs` and full
+Returns `{assets: [...], found: N, missing: [...]}`. Unknown ids come back in `missing` rather
+than being silently dropped, so a short array cannot pass for a complete answer.
+
+Each asset carries the top-level fields (`id`, `source`, `marking`, `meta`), `thumbs` and full
 `variants`, `context` (where OCR/AI enrichment lives), `children` (page/OCR derivatives), and
 convenience mirrors `ocr` / `ai` from `context`.
 
----
+> **The REST routes this replaces did not work for API clients.** `GET /fetch/media/{id}` and
+> `POST /fetch/media/by-ids` are not in security.yaml's PUBLIC_ACCESS list — only
+> `^/[^/]+/batch$`, `^/api/v1$` and `^/api/claim-store/` are — so everything else falls through
+> `- { path: ^/, roles: ROLE_USER }` and 302s to `/login`. Worse than a clean 401: HTTP clients
+> follow the redirect, so the caller gets **200 with the login page's HTML** and fails while
+> parsing JSON, which reads as though mediary returned garbage rather than as a refusal. Both
+> transports were served by the same AssetProbeService, so the JSON-RPC rows are identical.
+>
+> `probeAssets` requires the token and fails closed when `MEDIARY_API_TOKEN` is unset — a probe
+> returns titles, OCR text, AI output and storage URLs, so it reads the archive's contents.
 
 ## Running it
 

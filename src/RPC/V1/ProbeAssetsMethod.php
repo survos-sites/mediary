@@ -9,6 +9,7 @@ use App\RPC\V1\ProbeAssets\Response;
 use App\Service\AssetProbeService;
 use OV\JsonRPCAPIBundle\Core\Annotation\JsonRPCAPI;
 use OV\JsonRPCAPIBundle\Core\ApiMethodInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * EXPERIMENTAL. The first JSON-RPC method in mediary, and the proving ground for whether
@@ -37,12 +38,30 @@ use OV\JsonRPCAPIBundle\Core\ApiMethodInterface;
 #[JsonRPCAPI(methodName: 'probeAssets', type: 'POST')]
 final readonly class ProbeAssetsMethod implements ApiMethodInterface
 {
-    public function __construct(private AssetProbeService $probeService)
+    public function __construct(
+        private AssetProbeService $probeService,
+        #[Autowire('%env(default::MEDIARY_API_TOKEN)%')]
+        private ?string $apiToken = null,
+    )
     {
     }
 
     public function call(Request $request): Response
     {
+        // Same fail-closed rule as analyzeUrl: a deploy that forgot the token refuses callers
+        // rather than serving everyone. This endpoint used to check nothing at all, which was
+        // survivable only while the REST routes were the ones clients actually used; now that
+        // media-bundle's probe()/probeMany() come through here, it is the read path for the
+        // whole archive.
+        $expected = trim((string) $this->apiToken);
+        if ($expected === '') {
+            throw new \RuntimeException('MEDIARY_API_TOKEN is not configured; refusing all probeAssets calls.');
+        }
+
+        if (!hash_equals($expected, $request->getToken())) {
+            throw new \RuntimeException('Invalid token.');
+        }
+
         $ids   = $request->getIds();
         $rows  = $this->probeService->probeMany($ids);
 
