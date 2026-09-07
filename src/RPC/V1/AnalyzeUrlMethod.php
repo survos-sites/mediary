@@ -68,7 +68,10 @@ final readonly class AnalyzeUrlMethod implements ApiMethodInterface
         $task = $request->getTask();
 
         $asset = $this->assetRegistry->ensureAsset($url, null, flush: true);
-        $outcome = $this->executor->run($asset, $task, [], $request->isForce());
+        $scope = $request->getScope();
+        $context = $scope === '' ? [] : ['scope' => $scope];
+
+        $outcome = $this->executor->run($asset, $task, $context, $request->isForce());
 
         if (!($outcome['ok'] ?? false)) {
             throw new \RuntimeException(sprintf('Task %s: %s', $task, $outcome['reason'] ?? 'failed'));

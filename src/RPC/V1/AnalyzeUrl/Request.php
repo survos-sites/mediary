@@ -12,6 +12,13 @@ final class Request
         private string $callbackUrl = '',
         private string $token = '',
         private bool $force = false,
+        /**
+         * Dataset scope for the claims this task persists, e.g. "mus/youtube". Without it the
+         * claims land unscoped and `claims:fetch <dataset>` cannot pull them back -- the REST
+         * route this method replaces accepted ?scope= for exactly that reason, so dropping it
+         * would have quietly changed behaviour rather than merely changed transport.
+         */
+        private string $scope = '',
     ) {
     }
 
@@ -63,5 +70,15 @@ final class Request
     public function setForce(bool $force): void
     {
         $this->force = $force;
+    }
+
+    public function getScope(): string
+    {
+        return $this->scope;
+    }
+
+    public function setScope(string $scope): void
+    {
+        $this->scope = $scope;
     }
 }
