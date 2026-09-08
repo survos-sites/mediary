@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a6e26e875a768c98dd9a6c038e1eb28",
+    "content-hash": "b3485f07789126ee57603f267a12e1d4",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8109,16 +8109,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.27.5",
+            "version": "2.27.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "1d8c9ab8a0a4c46257fe97969540d9aeed13aecf"
+                "reference": "1effeaa387ce5b2681f18120d0fa89cc9547f044"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/1d8c9ab8a0a4c46257fe97969540d9aeed13aecf",
-                "reference": "1d8c9ab8a0a4c46257fe97969540d9aeed13aecf",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/1effeaa387ce5b2681f18120d0fa89cc9547f044",
+                "reference": "1effeaa387ce5b2681f18120d0fa89cc9547f044",
                 "shasum": ""
             },
             "require": {
@@ -8147,7 +8147,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.27.5"
+                "source": "https://github.com/survos/data-contracts/tree/2.27.7"
             },
             "funding": [
                 {
@@ -8155,7 +8155,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-07T20:14:51+00:00"
+            "time": "2026-09-08T01:37:26+00:00"
         },
         {
             "name": "survos/dataset-bundle",
