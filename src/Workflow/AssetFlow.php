@@ -180,12 +180,29 @@ class AssetFlow
     )]
     public const TRANSITION_FETCH_IIIF = 'iiif';
 
+    /**
+     * An asset whose /info call fails had no way out, which is the bug this `from` list fixes.
+     *
+     * It read `from: PLACE_INFORMED` -- reachable only AFTER info succeeded. But a failing info
+     * step never reaches `informed`; it leaves the asset at `archived`. So the transition that
+     * exists to handle info failure was unreachable from the one state info failure produces, and
+     * such an asset sat at `archived` forever.
+     *
+     * That is not cosmetic. Clients gate on terminal status (harvest's DatasetEnrichGuard counts
+     * anything outside ['complete','failed','deleted'] as pending), so a single wedged asset stalls
+     * its whole dataset's enrich step indefinitely. Two Cleveland assets and four Walters assets hit
+     * it on consecutive days, both times from imgproxy returning 502 for a source that is fine.
+     *
+     * The statusCode guard is dropped for the same reason: statusCode is the SOURCE's status, and
+     * in every observed case it was 200 -- the S3 object downloads perfectly, imgproxy is what
+     * fails. Guarding on it asserted the opposite of the condition being handled. Nothing applies
+     * this transition automatically, so it stays an operator/retry decision.
+     */
     #[Transition(
-        from: self::PLACE_INFORMED,
+        from: [self::PLACE_ARCHIVED, self::PLACE_INFORMED],
         to: self::PLACE_FAILED,
         info: 'Info failed',
         description: 'imgproxy /info did not return usable source metadata; may be retried with backoff',
-        guard: "subject.statusCode !== 200",
         async: false
     )]
     public const TRANSITION_INFO_FAILED = 'info_failed';
