@@ -2,3 +2,13 @@ survos_command:
     # expose app:my-command, etc.
     namespaces: [app, survos:workflow,workflow]
 
+# Routes default to OFF in the bundle, deliberately: they RUN console commands, so on a public
+# host doctrine:database:drop is a click away. But @SurvosState/d3-workflow.html.twig links every
+# transition to path('survos_command', ...) unconditionally, so with them off the whole
+# /state/workflow/<name> page 500s with "Unable to generate a URL for the named route".
+#
+# dev only, and left behind the bundle's default /admin/commands prefix. Do NOT lift this out of
+# when@dev without putting the prefix behind a real firewall rule first.
+when@dev:
+    survos_command:
+        routes_enabled: true

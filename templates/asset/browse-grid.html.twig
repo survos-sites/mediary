@@ -5,6 +5,9 @@
 {% block body %}
 <div class="container-xl py-4">
     <h1>Assets</h1>
-    <twig:SurvosApiGrid:api_grid apiGetCollectionUrl="/api/assets.json" class="App\\Entity\\Asset" />
+    {# The component registers as "api_grid" (AsTwigComponent in ApiGridComponent); the
+       namespaced <twig:SurvosApiGrid:api_grid> form matched no class, so UX fell back to an
+       AnonymousComponent and the template died on this.getNormalizedColumns. #}
+    <twig:api_grid :class="'App\\Entity\\Asset'" apiGetCollectionUrl="/api/assets.json" />
 </div>
 {% endblock %}
