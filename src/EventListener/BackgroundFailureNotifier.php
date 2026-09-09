@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\Notifier\ChatterInterface;
 use Symfony\Component\Notifier\Bridge\Ntfy\NtfyOptions;
 use Symfony\Component\Notifier\Message\ChatMessage;
@@ -35,7 +36,15 @@ use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 final readonly class BackgroundFailureNotifier
 {
     public function __construct(
-        private ChatterInterface $chatter,
+        /**
+         * @param \Closure(): ChatterInterface $chatter
+         *
+         * A closure, not the chatter. Building it resolves every configured DSN, so a
+         * transport Symfony cannot construct throws while this listener is being
+         * INSTANTIATED -- before __invoke's try/catch exists. Same fault that killed
+         * mediary's webhook worker and blocked a deploy on 2026-09-09.
+         */
+        #[AutowireServiceClosure('chatter')] private \Closure $chatter,
         private LoggerInterface $logger,
         #[Autowire('%env(default::NTFY_DSN)%')] private ?string $ntfyDsn = null,
         #[Autowire('%env(default::APP_BASE_URL)%')] private ?string $baseUrl = null,
@@ -58,7 +67,7 @@ final readonly class BackgroundFailureNotifier
         }
 
         try {
-            $this->chatter->send($this->build($event));
+            ($this->chatter)()->send($this->build($event));
         } catch (\Throwable $notifyError) {
             // Rule 2. The original failure is already being logged by Messenger;
             // this only records that we could not shout about it.
