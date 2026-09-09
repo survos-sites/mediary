@@ -7,6 +7,10 @@ namespace App\RPC\V1;
 use App\RPC\V1\AnalyzeUrl\Request;
 use App\RPC\V1\AnalyzeUrl\Response;
 use App\Service\AssetRegistry;
+use App\Workflow\AssetFlow;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\Workflow\WorkflowInterface;
 use OV\JsonRPCAPIBundle\Core\Annotation\JsonRPCAPI;
 use OV\JsonRPCAPIBundle\Core\ApiMethodInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -42,6 +46,9 @@ final readonly class AnalyzeUrlMethod implements ApiMethodInterface
     public function __construct(
         private AssetRegistry $assetRegistry,
         private \App\Ai\AssetAiExecutor $executor,
+        private EntityManagerInterface $entityManager,
+        #[Target(AssetFlow::WORKFLOW_NAME)]
+        private WorkflowInterface $assetWorkflow,
         #[Autowire('%env(default::MEDIARY_API_TOKEN)%')]
         private ?string $apiToken = null,
     ) {
@@ -68,6 +75,19 @@ final readonly class AnalyzeUrlMethod implements ApiMethodInterface
         $task = $request->getTask();
 
         $asset = $this->assetRegistry->ensureAsset($url, null, flush: true);
+
+        // ensureAsset() persists straight into the initial place, so no transition is ever
+        // applied and PLACE_NEW's `next: [FETCH_IIIF, ARCHIVE]` never fires -- the asset sits
+        // in `new` forever and the master is never streamed into our S3. Every image ssai has
+        // ever sent arrived this way, which is why callers were left pinned to the scan
+        // station that produced the file. Kick archive here so the master is mirrored and
+        // /info follows; it is async, so this pass still analyses the URL it was given while
+        // the S3 copy lands behind it.
+        if ($this->assetWorkflow->can($asset, AssetFlow::TRANSITION_ARCHIVE)) {
+            $this->assetWorkflow->apply($asset, AssetFlow::TRANSITION_ARCHIVE);
+            $this->entityManager->flush();
+        }
+
         $scope = $request->getScope();
         $context = $scope === '' ? [] : ['scope' => $scope];
 
