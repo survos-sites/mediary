@@ -5,9 +5,9 @@
 #
 # The old `/tools` route pointed at ecourty/mcp-server-bundle's
 # `mcp_server.entrypoint_controller`, a package that is no longer installed -- it 500'd
-# on every request. symfony/mcp-bundle registers its own route (default path /_mcp)
-# through this loader, but only when a client transport is enabled; see
-# config/packages/mcp.yaml.
+# on every request. symfony/mcp-bundle registers its own route through this loader,
+# but only for a server with the http transport enabled; see config/packages/mcp.yaml,
+# which also pins the path back to /_mcp (0.13 moved the default to /mcp/<name>).
 when@dev:
     mcp:
         resource: mcp
