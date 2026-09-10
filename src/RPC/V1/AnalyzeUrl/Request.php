@@ -17,8 +17,14 @@ final class Request
          * claims land unscoped and `claims:fetch <dataset>` cannot pull them back -- the REST
          * route this method replaces accepted ?scope= for exactly that reason, so dropping it
          * would have quietly changed behaviour rather than merely changed transport.
+         *
+         * Nullable because that is the ONLY thing the RPC layer reads as "optional": MethodSpec
+         * wraps a param in Assert\Optional when its type allows null and ignores defaults, so
+         * `string $scope = ''` made scope mandatory and every existing caller (ssai's narration
+         * transcription, depot's capture:enrich) started failing with "[scope] - This field is
+         * missing." Omitted still means unscoped, exactly as before scope existed.
          */
-        private string $scope = '',
+        private ?string $scope = null,
     ) {
     }
 
@@ -74,10 +80,10 @@ final class Request
 
     public function getScope(): string
     {
-        return $this->scope;
+        return trim($this->scope ?? '');
     }
 
-    public function setScope(string $scope): void
+    public function setScope(?string $scope): void
     {
         $this->scope = $scope;
     }
