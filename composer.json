@@ -46,7 +46,7 @@
         "roave/better-reflection": "^6.72",
         "stof/doctrine-extensions-bundle": "^1.15.3",
         "survos/ai-batch-bundle": "^2.26.9",
-        "survos/ai-workflow-bundle": "^2.26.9",
+        "survos/ai-workflow-bundle": "^2.28.1",
         "survos/api-grid-bundle": "^2.19.2",
         "survos/atlas-bundle": ">=2.10.19",
         "survos/auth-bundle": "^2.24.33",
