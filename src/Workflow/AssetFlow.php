@@ -341,6 +341,10 @@ class AssetFlow
         description: 'Execute the next task in aiQueue and record the result in aiCompleted',
         guard: "subject.aiQueue != [] and not subject.aiLocked",
         async: true,
+        // Up to 500 assets per provider batch job (AssetAiBatchSubmitter); a partial group goes
+        // out once the worker idles. Only with survos_state.batch_enabled (MEDIARY_AI_BATCH=1):
+        // off, every ai_task is its own message and runs sync. See docs/ai-batching.md.
+        batch: 500,
     )]
     public const TRANSITION_AI_TASK = 'ai_task';
 

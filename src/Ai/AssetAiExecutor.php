@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Survos\AiWorkflowBundle\Task\TaskRegistry;
+use Survos\AiWorkflowBundle\Task\TaskResult;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
 use App\Service\SidecarService;
 
@@ -93,11 +94,22 @@ final class AssetAiExecutor
             }
         }
 
-        $result = $taskObj->run($subject);
+        return ['ok' => true, 'cached' => false, 'response' => $this->record($asset, $task, $subject, $taskObj->run($subject))];
+    }
+
+    /**
+     * Persist one task result for an asset: the S3 sidecar (cache-aside), the claims, and the
+     * search columns. The sync path above and the provider-batch path (AssetAiBatchApplier) both
+     * end here, so an asset's claims do not depend on which way its task ran.
+     *
+     * @return array<string,mixed> the run's response (what aiCompleted records)
+     */
+    public function record(Asset $asset, string $task, AssetSubject $subject, TaskResult $result): array
+    {
         $response = (array) ($result->meta?->response ?? []);
 
         if ($this->sidecar->isAvailable()) {
-            // Likewise on the way out. The paid call has already happened and the
+            // Tolerant, like the read in run(). The paid call has already happened and the
             // claims below are the durable record; losing the cache write costs a
             // re-run later, losing the claims costs the data.
             try {
@@ -145,6 +157,6 @@ final class AssetAiExecutor
             }
         }
 
-        return ['ok' => true, 'cached' => false, 'response' => $response];
+        return $response;
     }
 }

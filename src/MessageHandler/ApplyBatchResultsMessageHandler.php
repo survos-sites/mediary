@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Ai\AssetAiBatchApplier;
+use App\Ai\AssetAiBatchSubmitter;
 use App\Entity\Asset;
 use App\Service\ClaimSearchSync;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +20,9 @@ use Tacman\AiBatch\Message\ApplyBatchResultsMessage;
 use Tacman\AiBatch\Service\OpenAiBatchClient;
 
 /**
+ * Asset-task batches (AssetAiBatchSubmitter: any BatchableTaskInterface task, any provider) go to
+ * AssetAiBatchApplier. What follows is the older observe-only path (media:batch-observe).
+ *
  * Apply a completed observe batch into the shared claims store. Each result's custom_id is the Asset
  * id (xxh3 of the image url); its JSON content is mapped to `observe:*` RawClaims and recorded via
  * ClaimIngestor keyed (scope=dataset, subjectType=Asset, subjectId=asset id) — the same record-centric
@@ -40,6 +45,7 @@ final class ApplyBatchResultsMessageHandler
         private readonly FilesystemOperator $storage,
         private readonly LoggerInterface $logger,
         private readonly ClaimSearchSync $claimSearchSync,
+        private readonly AssetAiBatchApplier $assetTaskApplier,
     ) {
     }
 
@@ -47,6 +53,11 @@ final class ApplyBatchResultsMessageHandler
     {
         $batch = $this->em->getRepository(AiBatch::class)->find($message->aiBatchId);
         if (!$batch instanceof AiBatch || $batch->status === 'applied') {
+            return;
+        }
+        if (($batch->meta['kind'] ?? null) === AssetAiBatchSubmitter::KIND) {
+            $this->assetTaskApplier->apply($batch);
+
             return;
         }
 

@@ -1763,6 +1763,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     queue_prefix?: scalar|Param|null, // Default: ""
  *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
  *     enable_dynamic_routing?: bool|Param, // Default: true
+ *     batch_size?: int|Param, // Default size for #[Transition(batch: true-ish)] groups; a transition's own batch: N wins // Default: 100
+ *     batch_idle_timeout?: int|Param, // Seconds of worker idleness after which a partial batch is flushed // Default: 5
+ *     batch_enabled?: bool|Param, // Off: #[Transition(batch: N)] transitions travel as plain TransitionMessages, one at a time, exactly as if unbatched. Env-able: '%env(bool:APP_BATCH)%' // Default: true
  *     allow_force_place?: scalar|Param|null, // Default: "%kernel.debug%"
  *     workflow_paths?: list<scalar|Param|null>,
  *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"

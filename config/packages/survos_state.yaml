@@ -14,6 +14,11 @@ survos_state:
     queue_driver: rabbitmq
     async_transport_dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%'
 
+    # Provider batch APIs for AI tasks (ai_task is #[Transition(batch: 500)]): half price, results
+    # in minutes to hours. Off, every ai_task is its own message and runs one sync call, exactly as
+    # before. See docs/ai-batching.md.
+    batch_enabled: '%env(bool:MEDIARY_AI_BATCH)%'
+
 # NOTE: no when@dev override on purpose. There is a RabbitMQ running locally
 # (survos_rabbitmq, rabbitmq:4-management), and dev deliberately exercises the SAME driver as
 # prod so that the rabbitmq path is what gets tested -- the dev/prod split is exactly how a

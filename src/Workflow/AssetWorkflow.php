@@ -30,6 +30,7 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\Flysystem\UnableToWriteFile;
 use League\Flysystem\Visibility;
 use Psr\Log\LoggerInterface;
+use App\Ai\AssetAiBatchSubmitter;
 use App\Ai\AssetAiExecutor;
 use Survos\AiPipelineBundle\Task\AiTaskInterface;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
@@ -40,6 +41,7 @@ use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Symfony\Component\HttpClient\Response\StreamWrapper;
 use App\Util\ImageProbe;
 use Survos\StateBundle\Attribute\Workflow;
+use Survos\StateBundle\Message\BatchedTransitionMessage;
 use Survos\StateBundle\Message\TransitionMessage;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Survos\StorageBundle\Service\StorageService;
@@ -230,8 +232,44 @@ class AssetWorkflow
     public function onAiTask(TransitionEvent $event): void
     {
         $asset = $this->getAsset($event);
+
+        // AssetAiBatchSubmitter already put this task in a provider batch job. Take it off the
+        // queue and lock the asset: onCompleted's advanceAiQueue stops at the lock, and
+        // AssetAiBatchApplier resumes the queue when the results land (completeBatchedTask).
+        // Locked HERE, not in the submitter, because ai_task's guard refuses a locked asset.
+        $pending = $asset->context[AssetAiBatchSubmitter::PENDING] ?? null;
+        if (($event->getContext()[BatchedTransitionMessage::CONTEXT_BATCHED] ?? false) && is_array($pending)) {
+            $task = (string) ($pending['task'] ?? '');
+            if (($asset->aiQueue[0] ?? null) === $task) {
+                array_shift($asset->aiQueue);
+                $this->consumeTaskOverride($asset, $task);
+            }
+            $asset->aiLocked = true;
+            $this->em->flush();
+
+            return;
+        }
+
         $this->runNextAiTask($asset);
         $this->em->flush();
+    }
+
+    /**
+     * A provider batch answered for this asset's task (AssetAiBatchApplier): record the outcome
+     * exactly as a sync run would, unlock, and walk the queue on -- the next ai_task, or ai_done.
+     *
+     * @param array<string, mixed> $outcome what aiCompleted records: response, or failed + error
+     */
+    public function completeBatchedTask(Asset $asset, string $taskName, array $outcome): void
+    {
+        $this->recordCompletedTask($asset, $taskName, $outcome);
+        $context = $asset->context ?? [];
+        unset($context[AssetAiBatchSubmitter::PENDING]);
+        $asset->context = $context;
+        $asset->aiLocked = false;
+        $this->em->flush();
+
+        $this->advanceAiQueue($asset);
     }
 
     #[AsTransitionListener(WF::WORKFLOW_NAME, AssetFlow::TRANSITION_LOCAL_OCR)]
