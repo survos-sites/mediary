@@ -19,3 +19,7 @@ A bounded original-source retry, AiBatch 16 / batch_6aa5ceb92de481908fff04b59543
 All 30 Mistral pages used 222,397 input / 28,878 output tokens. Batch 14's durable copy has 18 lines, 67,690 bytes. No paid image OCR was used. Previous Mistral OCR image test is AiBatch 1, one page; this is not a larger OCR test.
 
 Exported 30 claims via the existing claims exporter, then DatasetInfo normalize/enrich/folio transitions and ink:folio:refresh. Local Sunday Telegram now has 174 readable article records. These groupings remain unreviewed, not ground-truth segmentation. Local URL: http://ink.wip/sunday-telegram .
+
+## Synchronization checkpoint
+
+Production push abc5352 failed at build: locked state-bundle 2.27.4 does not accept Transition(batch: ...). The running production release was retained. Composer now locks state-bundle 2.28.2. That retry has NOT been deployed; production batch flag and scheduler scaling have not been changed. Local queue adapter and its focused test are committed with a dependency on mono's PeriodicalStructureTask; release that task before deploying the adapter. Local MEDIARY_AI_BATCH=1 is deliberately an ignored environment override, not a committed credential file.
