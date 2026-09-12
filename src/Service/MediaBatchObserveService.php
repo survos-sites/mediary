@@ -32,6 +32,7 @@ final class MediaBatchObserveService
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly OpenAiBatchClient $client,
+        private readonly AssetPresigner $presigner,
     ) {
     }
 
@@ -39,6 +40,7 @@ final class MediaBatchObserveService
     public function batchObserve(
         SymfonyStyle $io,
         #[Argument('Claim scope to record under (e.g. mus/fpus, or mediary)')] string $scope,
+        #[Option('Explicit asset IDs for a bounded test; repeat for multiple assets')] array $assetId = [],
         #[Option('Max assets to include (0 = all eligible)')] int $limit = 0,
         #[Option('Requests per provider batch')] int $chunkSize = 2000,
         #[Option('OpenAI model')] string $model = 'gpt-4o-mini',
@@ -47,6 +49,9 @@ final class MediaBatchObserveService
     ): int {
         $qb = $this->em->getRepository(Asset::class)->createQueryBuilder('a')
             ->where('a.originalUrl IS NOT NULL');
+        if ($assetId !== []) {
+            $qb->andWhere('a.id IN (:ids)')->setParameter('ids', $assetId);
+        }
         if ($limit > 0) {
             $qb->setMaxResults($limit);
         }
@@ -114,7 +119,7 @@ final class MediaBatchObserveService
                     ['role' => 'system', 'content' => self::SYSTEM],
                     ['role' => 'user', 'content' => [
                         ['type' => 'text', 'text' => 'Observe this image and return the JSON object.'],
-                        ['type' => 'image_url', 'image_url' => ['url' => $asset->originalUrl, 'detail' => $imageDetail]],
+                        ['type' => 'image_url', 'image_url' => ['url' => $this->presigner->archiveUrl($asset) ?? $asset->originalUrl, 'detail' => $imageDetail]],
                     ]],
                 ],
             ],

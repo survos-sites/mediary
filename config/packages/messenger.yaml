@@ -13,6 +13,11 @@ framework:
 
         failure_transport: failed
         transports:
+            # Batch handlers retain acknowledgements until flush. Allow enough in-flight
+            # deliveries to fill ai_task's declared batch instead of one job per asset.
+            asset.ai.task:
+                options:
+                    prefetch_count: 500
             # These stay on Doctrine, matching packages. The AMQP move here is state-bundle's
             # per-transition dynamic queues (survos_state.queue_driver: rabbitmq), which use
             # jwage/phpamqplib-messenger's dsn/vhost/exchange convention -- NOT the

@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use League\Flysystem\FilesystemOperator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -77,6 +78,31 @@ final class PollBatchesMessageHandler
         return Command::SUCCESS;
     }
 
+    #[AsCommand('media:ai-batch:verify', 'Read archived results without contacting the AI provider and verify their checksum')]
+    public function verifyArchive(SymfonyStyle $io, #[Argument('Local AiBatch ID')] int $id): int
+    {
+        $batch = $this->em->find(AiBatch::class, $id);
+        if (!$batch instanceof AiBatch || $batch->savedResultPath === null) {
+            $io->error('No archived result for this batch.');
+            return Command::FAILURE;
+        }
+        $contents = $this->storage->read($batch->savedResultPath);
+        $expected = $batch->meta['resultArchive']['sha256'] ?? null;
+        if (!is_string($expected) || !hash_equals($expected, hash('sha256', $contents))) {
+            $io->error('Missing archive receipt or checksum mismatch.');
+            return Command::FAILURE;
+        }
+        $count = $input = $output = 0;
+        foreach (explode("\n", trim($contents)) as $line) {
+            $result = \Tacman\AiBatch\Model\BatchResult::fromProviderLine($batch->provider, json_decode($line, true, 512, JSON_THROW_ON_ERROR));
+            ++$count;
+            $input += $result->promptTokens;
+            $output += $result->outputTokens;
+        }
+        $io->success(sprintf('%d results recovered from archive; SHA-256 verified; %d bytes; %d input / %d output tokens. No provider requests.', $count, strlen($contents), $input, $output));
+        return Command::SUCCESS;
+    }
+
     public function __invoke(PollBatchesMessage $message): void
     {
         $repo = $this->em->getRepository(AiBatch::class);
@@ -84,7 +110,10 @@ final class PollBatchesMessageHandler
         // Ended, not landed: a previous apply threw. Try again. (First, so a job that ends in
         // the loop below is handed off once per poll, not twice.)
         foreach ($repo->findBy(['status' => ['completed', 'failed']]) as $batch) {
-            if (self::isAssetTask($batch)) {
+            if ($batch->savedResultPath === null) {
+                // A previous archive attempt may have failed. Retry before applying.
+                $this->poll($batch);
+            } elseif (self::isAssetTask($batch)) {
                 $this->handOff($batch);
             }
         }
@@ -120,20 +149,35 @@ final class PollBatchesMessageHandler
             try {
                 $lines = [];
                 foreach ($client->fetchResults($job) as $result) {
-                    $lines[] = json_encode($result->raw, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    $lines[] = json_encode($result->raw, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 }
                 $key = sprintf('ai-batch/%s/%s/%s.jsonl', trim((string) ($batch->datasetKey ?? '_'), '/') ?: '_', $batch->task, $batch->providerBatchId);
-                $this->storage->write($key, implode("\n", $lines) . "\n");
+                $contents = implode("\n", $lines) . "\n";
+                $this->storage->write($key, $contents, ['visibility' => 'private']);
+                $checksum = hash('sha256', $contents);
+                if (!hash_equals($checksum, hash('sha256', $this->storage->read($key)))) {
+                    throw new \RuntimeException('Archived batch failed read-back verification.');
+                }
+                $batch->meta['resultArchive'] = [
+                    'sha256' => $checksum,
+                    'bytes' => strlen($contents),
+                    'lines' => count($lines),
+                    'verifiedAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
+                ];
                 $batch->savedResultPath = $key;
                 $this->logger->info('ai-batch {id} {status} → {key} ({n} lines)', ['id' => $batch->providerBatchId, 'status' => $job->status, 'key' => $key, 'n' => \count($lines)]);
             } catch (\Throwable $e) {
-                // Not fatal: the applier asks the provider directly when there is no S3 copy.
+                // Keep the terminal job pending so the next poll retries durable archival.
                 $this->logger->warning('ai-batch {id}: archiving results failed: {err}', ['id' => $batch->providerBatchId, 'err' => $e->getMessage()]);
             }
         }
         $this->em->flush();
 
-        if (self::isAssetTask($batch) || ($job->isComplete() && $batch->savedResultPath !== null)) {
+        // A failed job with no output can still unlock its assets. Successful output
+        // must survive independently of the provider before any claims are applied.
+        $needsArchive = $job->isComplete() || $job->outputFileId !== null || $job->errorFileId !== null;
+        if ((!$needsArchive || $batch->savedResultPath !== null)
+            && (self::isAssetTask($batch) || $job->isComplete())) {
             $this->handOff($batch);
         }
     }

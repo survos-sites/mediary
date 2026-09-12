@@ -27,7 +27,7 @@ analyze: php -d memory_limit=768M bin/console messenger:consume asset.analyze --
 # width, and exactly 6 at `complete` out of 652,747. It looked like a stalled pipeline; it was
 # a missing process type.
 triage: php -d memory_limit=768M bin/console messenger:consume asset.triage --time-limit=3600 --memory-limit=640M
-ai: php -d memory_limit=768M bin/console messenger:consume asset.ai.task --time-limit=3600 --memory-limit=640M
+ai: php -d memory_limit=768M bin/console messenger:consume asset.ai.task --fetch-size=500 --time-limit=3600 --memory-limit=640M
 delete: php -d memory_limit=768M bin/console messenger:consume asset.delete --time-limit=3600 --memory-limit=640M
 scheduler: php -d memory_limit=768M bin/console messenger:consume scheduler_default --time-limit=3600 --memory-limit=640M
 webhook: php bin/console messenger:consume webhook --time-limit=3600 --memory-limit=256M
