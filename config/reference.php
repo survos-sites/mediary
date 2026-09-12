@@ -1762,7 +1762,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  *     queue_prefix?: scalar|Param|null, // Default: ""
  *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
- *     enable_dynamic_routing?: bool|Param, // Default: true
+ *     enable_dynamic_routing?: bool|Param, // Inert as of 2026-09-12: transition routing comes from AsyncQueueLocator::stamps() at the dispatch site, not from middleware. See SurvosStateBundle::loadExtension(). // Default: true
  *     batch_size?: int|Param, // Default size for #[Transition(batch: true-ish)] groups; a transition's own batch: N wins // Default: 100
  *     batch_idle_timeout?: int|Param, // Seconds of worker idleness after which a partial batch is flushed // Default: 5
  *     batch_enabled?: bool|Param, // Off: #[Transition(batch: N)] transitions travel as plain TransitionMessages, one at a time, exactly as if unbatched. Env-able: '%env(bool:APP_BATCH)%' // Default: true
