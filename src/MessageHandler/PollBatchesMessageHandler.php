@@ -6,8 +6,12 @@ namespace App\MessageHandler;
 
 use App\Ai\AssetAiBatchSubmitter;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use League\Flysystem\FilesystemOperator;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Attribute\Option;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -40,6 +44,37 @@ final class PollBatchesMessageHandler
         private readonly MessageBusInterface $bus,
         private readonly LoggerInterface $logger,
     ) {
+    }
+
+    /**
+     * The same poll the scheduler runs every two minutes, on demand -- for watching a batch land,
+     * and for getting one moving again after a provider or S3 outage without waiting for the tick.
+     */
+    #[AsCommand('media:ai-batch:poll', 'Poll in-flight AI batches now and apply any that have finished')]
+    public function pollNow(
+        SymfonyStyle $io,
+        #[Option('Keep polling until every in-flight batch is done')] bool $wait = false,
+        #[Option('Seconds between polls when waiting')] int $every = 15,
+    ): int {
+        $repo = $this->em->getRepository(AiBatch::class);
+        do {
+            $this->__invoke(new PollBatchesMessage());
+            $this->em->clear();
+            $inFlight = $repo->findBy(['status' => ['submitted', 'processing']]);
+            foreach ($repo->findBy([], ['id' => 'DESC'], 10) as $batch) {
+                $io->writeln(sprintf(
+                    '  <info>%d</info> %s/%s %s — %d requested, %d done, %d applied%s',
+                    $batch->id, $batch->provider, $batch->task, $batch->status,
+                    $batch->requestCount, $batch->completedCount, $batch->appliedCount,
+                    $batch->providerBatchId ? ' · ' . $batch->providerBatchId : '',
+                ));
+            }
+            if ($wait && $inFlight !== []) {
+                sleep(max(1, $every));
+            }
+        } while ($wait && $inFlight !== []);
+
+        return Command::SUCCESS;
     }
 
     public function __invoke(PollBatchesMessage $message): void

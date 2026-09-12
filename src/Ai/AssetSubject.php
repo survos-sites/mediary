@@ -63,9 +63,20 @@ final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterf
         $this->asset->aiLocked = $locked;
     }
 
+    /**
+     * The URL a task should read the image from.
+     *
+     * `image_url` in the runtime context wins. That is how the batch path hands a task a
+     * presigned URL for our own archived copy (AssetPresigner) instead of the source: a
+     * provider's batch workers fetch the bytes themselves, hours later, and the source may be
+     * slow, rate-limited or -- as with archive.org's IIIF endpoint -- unfetchable for them.
+     * Nothing persists the override; it lives on the subject for the length of one call.
+     */
     public function getWorkflowImageUrl(): ?string
     {
-        return $this->asset->originalUrl;
+        $override = $this->context['image_url'] ?? null;
+
+        return is_string($override) && $override !== '' ? $override : $this->asset->originalUrl;
     }
 
     /**

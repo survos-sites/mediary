@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Ai;
 
 use App\Entity\Asset;
+use App\Service\AssetPresigner;
 use App\Service\SidecarService;
 use App\Workflow\AssetFlow;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,6 +48,7 @@ final class AssetAiBatchSubmitter
         private readonly TaskRegistry $registry,
         private readonly BatchClients $clients,
         private readonly SidecarService $sidecar,
+        private readonly AssetPresigner $presigner,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
     ) {
@@ -112,10 +114,19 @@ final class AssetAiBatchSubmitter
             return null; // a forced re-run or an explicit sync request: the debugging paths
         }
 
-        // Same context runNextAiTask() gives the sync run, so both paths send the same request.
+        // Same context runNextAiTask() gives the sync run, so both paths send the same request...
         $context = $asset->context ?? [];
         if (isset($override['model']) && is_string($override['model']) && $override['model'] !== '') {
             $context['model_hint'] = $override['model'];
+        }
+        // ...except for where the provider reads the bytes. A batch worker fetches hours later,
+        // on its own, so point it at our archived master under a signature that expires rather
+        // than at the source: mediary already downloaded these bytes, and sources are not
+        // reliably fetchable by a third party (Mistral cannot fetch archive.org IIIF at all).
+        // Transient -- never written back to asset.context, which would persist a signed URL.
+        $presigned = $this->presigner->archiveUrl($asset);
+        if ($presigned !== null) {
+            $context['image_url'] = $presigned;
         }
         $subject = new AssetSubject($asset, $context);
         if (!$taskObj->supports($subject) || !$taskObj->supportsBatch($subject)) {
