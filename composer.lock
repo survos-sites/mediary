@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "804b38f0d1ff1521cab905169e1c9e1c",
+    "content-hash": "0656f48a07773e7f84f4a1108d56cd81",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -7377,16 +7377,16 @@
         },
         {
             "name": "survos/ai-batch-bundle",
-            "version": "2.26.9",
+            "version": "2.28.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/ai-batch-bundle.git",
-                "reference": "a842bd13ee023a09b8bf0c4f39341ceac316dcc9"
+                "reference": "e719356534b2adb70ba80019a67d8dd8c3e8e3fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/ai-batch-bundle/zipball/a842bd13ee023a09b8bf0c4f39341ceac316dcc9",
-                "reference": "a842bd13ee023a09b8bf0c4f39341ceac316dcc9",
+                "url": "https://api.github.com/repos/survos/ai-batch-bundle/zipball/e719356534b2adb70ba80019a67d8dd8c3e8e3fd",
+                "reference": "e719356534b2adb70ba80019a67d8dd8c3e8e3fd",
                 "shasum": ""
             },
             "require": {
@@ -7436,7 +7436,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/ai-batch-bundle/issues",
-                "source": "https://github.com/survos/ai-batch-bundle/tree/2.26.9"
+                "source": "https://github.com/survos/ai-batch-bundle/tree/2.28.3"
             },
             "funding": [
                 {
@@ -7444,7 +7444,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-30T11:19:56+00:00"
+            "time": "2026-09-12T22:16:43+00:00"
         },
         {
             "name": "survos/ai-workflow-bundle",

@@ -45,6 +45,7 @@ final class MediaBatchObserveService
         #[Option('Requests per provider batch')] int $chunkSize = 2000,
         #[Option('OpenAI model')] string $model = 'gpt-4o-mini',
         #[Option('Image detail sent to OpenAI')] string $imageDetail = 'low',
+        #[Option('Use original URLs instead of archive URLs')] bool $original = false,
         #[Option('Build but do not submit')] bool $dryRun = false,
     ): int {
         $qb = $this->em->getRepository(Asset::class)->createQueryBuilder('a')
@@ -68,7 +69,7 @@ final class MediaBatchObserveService
         foreach (array_chunk($assets, max(1, $chunkSize)) as $i => $chunk) {
             $lines = [];
             foreach ($chunk as $asset) {
-                $lines[] = json_encode($this->requestLine($asset, $model, $imageDetail), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                $lines[] = json_encode($this->requestLine($asset, $model, $imageDetail, $original), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             }
             $n = \count($lines);
 
@@ -104,7 +105,7 @@ final class MediaBatchObserveService
     }
 
     /** @return array<string,mixed> */
-    private function requestLine(Asset $asset, string $model, string $imageDetail): array
+    private function requestLine(Asset $asset, string $model, string $imageDetail, bool $original = false): array
     {
         return [
             'custom_id' => $asset->id,
@@ -119,7 +120,7 @@ final class MediaBatchObserveService
                     ['role' => 'system', 'content' => self::SYSTEM],
                     ['role' => 'user', 'content' => [
                         ['type' => 'text', 'text' => 'Observe this image and return the JSON object.'],
-                        ['type' => 'image_url', 'image_url' => ['url' => $this->presigner->archiveUrl($asset) ?? $asset->originalUrl, 'detail' => $imageDetail]],
+                        ['type' => 'image_url', 'image_url' => ['url' => ($original ? $asset->originalUrl : ($this->presigner->archiveUrl($asset) ?? $asset->originalUrl)), 'detail' => $imageDetail]],
                     ]],
                 ],
             ],

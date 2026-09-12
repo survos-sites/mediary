@@ -109,8 +109,9 @@ final class ApplyBatchResultsMessageHandler
             }
         }
 
-        $batch->appliedCount = $claimsTotal;
-        $batch->status = 'applied';
+        $batch->appliedCount = $assets;
+        $batch->meta['appliedClaims'] = $claimsTotal;
+        $batch->status = $assets > 0 ? 'applied' : 'failed';
         $this->em->flush();
 
         $this->logger->info('observe-batch {id} applied: {c} claim(s) across {a} asset(s)', ['id' => $batch->id, 'c' => $claimsTotal, 'a' => $assets]);

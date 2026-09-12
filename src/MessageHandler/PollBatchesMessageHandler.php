@@ -93,12 +93,18 @@ final class PollBatchesMessageHandler
             return Command::FAILURE;
         }
         $count = $input = $output = 0;
+        $errors = [];
         foreach (explode("\n", trim($contents)) as $line) {
+            if ($line === "") { continue; }
             $result = \Tacman\AiBatch\Model\BatchResult::fromProviderLine($batch->provider, json_decode($line, true, 512, JSON_THROW_ON_ERROR));
             ++$count;
+            if (!$result->success) {
+                $errors[] = [$result->customId, $result->errorCode, preg_replace('~https?://[^\s]+~', '[URL]', (string) $result->error)];
+            }
             $input += $result->promptTokens;
             $output += $result->outputTokens;
         }
+        if ($errors !== []) { $io->table(['Asset', 'Error code', 'Error'], $errors); }
         $io->success(sprintf('%d results recovered from archive; SHA-256 verified; %d bytes; %d input / %d output tokens. No provider requests.', $count, strlen($contents), $input, $output));
         return Command::SUCCESS;
     }
@@ -113,7 +119,7 @@ final class PollBatchesMessageHandler
             if ($batch->savedResultPath === null) {
                 // A previous archive attempt may have failed. Retry before applying.
                 $this->poll($batch);
-            } elseif (self::isAssetTask($batch)) {
+            } elseif (self::isAssetTask($batch) || $batch->status === 'completed') {
                 $this->handOff($batch);
             }
         }
@@ -150,6 +156,9 @@ final class PollBatchesMessageHandler
                 $lines = [];
                 foreach ($client->fetchResults($job) as $result) {
                     $lines[] = json_encode($result->raw, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                }
+                if (count($lines) < $job->completedCount + $job->failedCount) {
+                    throw new \RuntimeException('Provider result archive is incomplete; keeping batch pending.');
                 }
                 $key = sprintf('ai-batch/%s/%s/%s.jsonl', trim((string) ($batch->datasetKey ?? '_'), '/') ?: '_', $batch->task, $batch->providerBatchId);
                 $contents = implode("\n", $lines) . "\n";
