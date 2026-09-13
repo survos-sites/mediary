@@ -51,7 +51,7 @@ final class MediaRecord implements MarkingInterface, \Stringable
     #[Groups(['media_record.read'])]
     public string $recordKey;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['media_record.read'])]
     public ?string $label = null;
 
