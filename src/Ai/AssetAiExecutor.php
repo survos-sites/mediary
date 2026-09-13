@@ -12,6 +12,7 @@ use Psr\Log\NullLogger;
 use Survos\AiWorkflowBundle\Task\TaskRegistry;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
 use App\Service\SidecarService;
+use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 
 /**
  * Runs a single ai-workflow-bundle task against an Asset (via {@see AssetSubject})
@@ -29,6 +30,7 @@ final class AssetAiExecutor
         private readonly LoggerInterface $logger = new NullLogger(),
         private readonly ?ClaimSearchSync $claimSearchSync = null,
         private readonly ?EntityManagerInterface $em = null,
+        private readonly ?ImgproxyUrlBuilder $imageUrls = null,
     ) {
     }
 
@@ -66,7 +68,7 @@ final class AssetAiExecutor
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'task handler not found'];
         }
 
-        $subject = new AssetSubject($asset, $context);
+        $subject = new AssetSubject($asset, $context, $this->imageUrls);
         if (!$taskObj->supports($subject)) {
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'not supported for this asset'];
         }

@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Survos\AiWorkflowBundle\Task\TaskRegistry;
 use Symfony\Contracts\Service\ServiceProviderInterface;
+use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 final class AssetRecoveryTest extends TestCase
 {
     public function testArchivedImageIsUsedWithoutChangingIdentity(): void
@@ -22,6 +23,9 @@ final class AssetRecoveryTest extends TestCase
         $asset->archiveUrl = 'https://storage.example/image.jpg';
         self::assertSame($asset->archiveUrl, $subject->getWorkflowImageUrl());
         self::assertSame($asset->id, $subject->getWorkflowSubjectId());
+        $urls = new ImgproxyUrlBuilder(host: 'https://images.example');
+        $subject = new AssetSubject($asset, imageUrls: $urls);
+        self::assertSame($urls->aiThumbnail($asset->archiveUrl), $subject->getAiSmallUrl());
     }
     public function testExecutorFailureLeavesTaskPending(): void
     {
