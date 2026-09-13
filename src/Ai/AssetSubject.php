@@ -65,7 +65,7 @@ final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterf
 
     public function getWorkflowImageUrl(): ?string
     {
-        return $this->asset->originalUrl;
+        return $this->asset->archiveUrl ?? $this->asset->originalUrl;
     }
 
     /**

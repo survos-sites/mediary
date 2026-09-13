@@ -1052,7 +1052,7 @@ class AssetWorkflow
             return null;
         }
 
-        $taskName = (string) array_shift($asset->aiQueue);
+        $taskName = (string) $asset->aiQueue[0];
         $taskOverride = $this->consumeTaskOverride($asset, $taskName);
         $context = $asset->context ?? [];
         if (isset($taskOverride['model']) && is_string($taskOverride['model']) && $taskOverride['model'] !== '') {
@@ -1083,8 +1083,12 @@ class AssetWorkflow
                 'AI task "{task}" failed on asset {id}: {error}',
                 ['task' => $taskName, 'id' => $asset->id, 'error' => $e->getMessage()],
             );
-            $this->recordCompletedTask($asset, $taskName, ['failed' => true, 'error' => $e->getMessage()]);
+            // Leave the task pending and let Messenger retry. A transport/provider
+            // failure must not empty the queue and falsely complete the asset.
+            throw $e;
         }
+
+        array_shift($asset->aiQueue);
 
         if ($completeWhenQueueEmpty && empty($asset->aiQueue)) {
             $this->finishAiPipeline($asset);
