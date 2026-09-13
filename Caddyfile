@@ -1,10 +1,3 @@
-{
-	frankenphp {
-		# Bound thread lifetime during sustained registration traffic.
-		max_requests 100
-	}
-}
-
 :{$PORT:80} {
 	root * /app/public
 
