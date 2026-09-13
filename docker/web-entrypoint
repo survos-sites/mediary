@@ -1,0 +1,27 @@
+#!/bin/bash
+set -euo pipefail
+
+# Dokku's predeploy console commands run as root; FPM's pool uses www-data.
+mkdir -p /app/var
+chown -R www-data:www-data /app/var
+
+php-fpm --nodaemonize &
+php_pid=$!
+caddy run --config /etc/caddy/Caddyfile &
+caddy_pid=$!
+
+cleanup() {
+    kill -TERM "$php_pid" "$caddy_pid" 2>/dev/null || true
+    wait "$php_pid" "$caddy_pid" 2>/dev/null || true
+}
+trap cleanup EXIT
+trap 'exit 143' TERM
+trap 'exit 130' INT
+
+# Keep both services supervised. If either exits, stop its peer and let Dokku
+# restart the container instead of leaving a half-running HTTP service.
+set +e
+wait -n "$php_pid" "$caddy_pid"
+status=$?
+if [ "$status" -eq 0 ]; then status=1; fi
+exit "$status"
