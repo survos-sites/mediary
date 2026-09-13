@@ -9,12 +9,13 @@ ai:
              api_key: '%env(ANTHROPIC_API_KEY)%'
         mistral:
             api_key: '%env(MISTRAL_API_KEY)%'
-        # Free, self-hosted vision/OCR via ai-tools (OpenAI Responses API, no key).
+        # Self-hosted vision/OCR via the authenticated ai-tools Responses API.
         # Required so ai-workflow-bundle's FlorenceTask / OcrTask services resolve.
         # Models: tesseract, florence-2, florence-2-fast, auto.
         openresponses:
             ai_tools:
                 base_url: '%env(AI_TOOLS_URL)%'
+                api_key: '%env(AI_TOOLS_API_KEY)%'
 
     agent:
         # ── OCR / handwriting transcription ───────────────────────────────────
