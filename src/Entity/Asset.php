@@ -391,6 +391,18 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
      #[ORM\Column(type: Types::JSON, options: ['default' => '[]'])]
      public array $aiCompleted = [];
 
+    public function hasSuccessfulAiTask(string $task): bool
+    {
+        foreach ($this->aiCompleted as $entry) {
+            if ($entry['task'] === $task
+                && empty($entry['result']['failed'])
+                && empty($entry['result']['skipped'])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
      /**
       * Normalized aggregate built from aiCompleted for display/indexing.
       */

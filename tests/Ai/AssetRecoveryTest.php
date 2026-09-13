@@ -13,6 +13,19 @@ use Symfony\Contracts\Service\ServiceProviderInterface;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 final class AssetRecoveryTest extends TestCase
 {
+    public function testOnlySuccessfulTasksCanBeReused(): void
+    {
+        $asset = new Asset();
+        $asset->aiCompleted = [
+            ['task' => 'observe', 'result' => ['failed' => true]],
+            ['task' => 'ocr_tesseract', 'result' => ['skipped' => true]],
+        ];
+        self::assertFalse($asset->hasSuccessfulAiTask('observe'));
+        self::assertFalse($asset->hasSuccessfulAiTask('ocr_tesseract'));
+        $asset->aiCompleted[] = ['task' => 'observe', 'result' => ['cached' => false, 'response' => ['caption' => 'A bridge']]];
+        self::assertTrue($asset->hasSuccessfulAiTask('observe'));
+        self::assertFalse($asset->hasSuccessfulAiTask('another_task'));
+    }
     public function testArchivedImageIsUsedWithoutChangingIdentity(): void
     {
         $asset = new Asset();
