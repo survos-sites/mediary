@@ -1,15 +1,28 @@
 # syntax=docker/dockerfile:1.7
 
-# FrankenPHP 2 doesn't exist yet -- latest stable is on the 1.x line. Floating on
-# 1 still gets patch releases on the current PHP 8.5 build.
+# Use PHP's patched ZTS runtime while FrankenPHP's published image still ships
+# PHP 8.5.9. Only the server binary and watcher library come from FrankenPHP;
+# libphp and extensions come from the PHP 8.5.10 base below.
 ARG FRANKENPHP_VERSION=1
-ARG PHP_VERSION=8.5
+ARG PHP_VERSION=8.5.10
+
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php8.5 AS frankenphp
 
 # ---- base: OS packages + PHP extensions FrankenPHP needs to run this app.
 # Shared by both stages below and cached as one layer across deploys -- it only
 # rebuilds when this file changes, not when application code changes. That is what
 # makes the 3-5 minute cold build a one-time cost rather than a per-deploy tax.
-FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
+FROM php:${PHP_VERSION}-zts-trixie AS base
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libbrotli1 mailcap libcap2-bin \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=frankenphp /usr/local/bin/frankenphp /usr/local/bin/install-php-extensions /usr/local/bin/
+COPY --from=frankenphp /usr/local/lib/libwatcher* /usr/local/lib/
+RUN ldconfig && setcap cap_net_bind_service=+ep /usr/local/bin/frankenphp
+
+ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
+HEALTHCHECK CMD curl -fsS http://localhost:2019/metrics >/dev/null || exit 1
 
 WORKDIR /app
 
