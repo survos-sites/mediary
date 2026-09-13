@@ -17,7 +17,9 @@ final class MediaRecordFlow
     #[Place(initial: true, info: 'Record created and awaiting linked assets', next: [self::TRANSITION_GROUP_ASSETS])]
     public const PLACE_NEW = 'new';
 
-    #[Place(info: 'Assets associated to the record', next: [self::TRANSITION_QUEUE_SPLIT, self::TRANSITION_QUEUE_AI])]
+    // Splitting is still a scaffold, so registration must not enqueue a split
+    // for every record. Asset processing runs through its own workflow.
+    #[Place(info: 'Assets associated to the record', next: [self::TRANSITION_QUEUE_AI])]
     public const PLACE_GROUPED = 'grouped';
 
     #[Place(info: 'Split requested for compound payloads (e.g. PDF)', next: [self::TRANSITION_SPLIT_ASSETS])]
