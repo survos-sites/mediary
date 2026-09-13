@@ -2,8 +2,10 @@
 set -euo pipefail
 
 # Dokku's predeploy console commands run as root; FPM's pool uses www-data.
-mkdir -p /app/var
-find /app/var -user root -exec chown www-data:www-data {} +
+for writable_dir in /app/var /var/www/data; do
+    mkdir -p "$writable_dir"
+    find "$writable_dir" -user root -exec chown www-data:www-data {} +
+done
 
 php-fpm --nodaemonize &
 php_pid=$!
