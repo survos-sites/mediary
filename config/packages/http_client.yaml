@@ -3,3 +3,4 @@ framework:
         scoped_clients:
             ai_tools.client:
                 base_uri: '%env(resolve:AI_TOOLS_BASE_URI)%'
+                auth_bearer: '%env(AI_TOOLS_API_KEY)%'
