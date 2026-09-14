@@ -175,7 +175,10 @@ final class AssetRegistry
         if ($asset->aiQueue === []) {
             $tasks = $contextHints[MediaSyncKeys::AI_QUEUE] ?? null;
             if (is_array($tasks)) {
-                $asset->aiQueue = array_values(array_filter($tasks, 'is_string'));
+                $asset->aiQueue = array_values(array_unique(array_filter(
+                    $tasks,
+                    static fn(mixed $task): bool => is_string($task) && !$asset->hasSuccessfulAiTask($task),
+                )));
             }
         }
 

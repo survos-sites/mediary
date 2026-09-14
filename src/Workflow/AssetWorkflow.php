@@ -781,7 +781,9 @@ class AssetWorkflow
                 'format',
                 'dimensions',
                 'exif:1:1',
-                'thumb_hash',
+                // imgproxy's native vips_thumb_hash crashes on some Cleveland
+                // masters (SIGABRT). Keep the other metadata and blurhash;
+                // optional placeholders must not take down the /info service.
                 'blurhash:4:3',
                 'perceptual_hash',
                 'average',
@@ -1105,7 +1107,7 @@ class AssetWorkflow
             return null;
         }
 
-        $taskName = (string) array_shift($asset->aiQueue);
+        $taskName = (string) $asset->aiQueue[0];
         $taskOverride = $this->consumeTaskOverride($asset, $taskName);
         $context = $asset->context ?? [];
         if (isset($taskOverride['model']) && is_string($taskOverride['model']) && $taskOverride['model'] !== '') {
@@ -1136,8 +1138,12 @@ class AssetWorkflow
                 'AI task "{task}" failed on asset {id}: {error}',
                 ['task' => $taskName, 'id' => $asset->id, 'error' => $e->getMessage()],
             );
-            $this->recordCompletedTask($asset, $taskName, ['failed' => true, 'error' => $e->getMessage()]);
+            // Leave the task pending and let Messenger retry. A transport/provider
+            // failure must not empty the queue and falsely complete the asset.
+            throw $e;
         }
+
+        array_shift($asset->aiQueue);
 
         if ($completeWhenQueueEmpty && empty($asset->aiQueue)) {
             $this->finishAiPipeline($asset);

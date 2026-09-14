@@ -15,8 +15,10 @@
                 "type": "startup",
                 "name": "web check",
                 "path": "/health",
-                "attempts": 3,
-                "timeout": 5
+                "initialDelay": 10,
+                "attempts": 6,
+                "wait": 5,
+                "timeout": 10
             }
         ]
     },

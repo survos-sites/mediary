@@ -1,15 +1,28 @@
 # syntax=docker/dockerfile:1.7
 
-# FrankenPHP 2 doesn't exist yet -- latest stable is on the 1.x line. Floating on
-# 1 still gets patch releases on the current PHP 8.5 build.
+# Keep PHP in isolated FPM processes: native crashes in the threaded embedded
+# runtime took down every HTTP request during bulk registration.
 ARG FRANKENPHP_VERSION=1
-ARG PHP_VERSION=8.5
+ARG PHP_VERSION=8.5.10
 
-# ---- base: OS packages + PHP extensions FrankenPHP needs to run this app.
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php8.5 AS extension-installer
+FROM caddy:2 AS caddy
+
+# ---- base: OS packages + PHP extensions needed to run this app.
 # Shared by both stages below and cached as one layer across deploys -- it only
 # rebuilds when this file changes, not when application code changes. That is what
 # makes the 3-5 minute cold build a one-time cost rather than a per-deploy tax.
-FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION} AS base
+FROM php:${PHP_VERSION}-fpm-trixie AS base
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends mailcap libcap2-bin \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=extension-installer /usr/local/bin/install-php-extensions /usr/local/bin/
+COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
+RUN setcap cap_net_bind_service=+ep /usr/local/bin/caddy
+
+ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
+HEALTHCHECK CMD curl -fsS --max-time 10 "http://127.0.0.1:${PORT:-80}/" >/dev/null || exit 1
 
 WORKDIR /app
 
@@ -44,6 +57,8 @@ RUN install-php-extensions \
 
 COPY Caddyfile /etc/caddy/Caddyfile
 COPY docker/php.ini $PHP_INI_DIR/conf.d/app.ini
+COPY docker/php-fpm.conf /usr/local/etc/php-fpm.d/zz-mediary.conf
+COPY --chmod=755 docker/web-entrypoint /usr/local/bin/mediary-web
 
 # ---- build: composer + asset-mapper. Needs the full toolchain (composer, dev deps
 # for autoload discovery) but none of it ships in the final image. No Node/npm stage
@@ -97,4 +112,4 @@ COPY --from=build --chown=www-data:www-data /app /app
 
 EXPOSE 80
 
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+CMD ["mediary-web"]

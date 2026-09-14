@@ -1,7 +1,7 @@
 # Dokku's Procfile support overrides the Dockerfile's CMD per process type -- even
 # under the dockerfile builder -- so a stale `web:` line silently keeps the old
-# broken command. This is the FrankenPHP one; the workers carry over unchanged.
-web: frankenphp run --config /etc/caddy/Caddyfile
+# broken command. Keep web aligned with the Dockerfile's supervised entrypoint.
+web: mediary-web
 
 # Every name after the colon must be a REAL transport. `download: ... asset.download` used to
 # live here and there is no such receiver -- messenger exits 1 with "The receiver

@@ -1,7 +1,3 @@
-{
-	frankenphp
-}
-
 :{$PORT:80} {
 	root * /app/public
 
@@ -20,7 +16,7 @@
 	}
 
 	# Browsers ask for /favicon.ico unprompted on the first page view of every
-	# session. Without a terminating route the request falls through to php_server
+	# session. Without a terminating route the request falls through to PHP
 	# and Symfony answers it with a NotFoundHttpException -- the single noisiest
 	# line in the production log, and never a real error. `handle` blocks are
 	# mutually exclusive and evaluated in the order written, so this one ends the
@@ -33,6 +29,9 @@
 	}
 
 	handle {
-		php_server
+		php_fastcgi 127.0.0.1:9000 {
+			capture_stderr
+		}
+		file_server
 	}
 }

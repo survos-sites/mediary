@@ -7,6 +7,8 @@ namespace App\Ai;
 use App\Entity\Asset;
 use Survos\DataContracts\Vocabulary\MediaSyncKeys;
 use Survos\DataContracts\Workflow\AudioSubjectInterface;
+use Survos\DataContracts\Workflow\AiThumbnailProviderInterface;
+use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Survos\DataContracts\Workflow\ContextSubjectInterface;
 use Survos\DataContracts\Workflow\ImageSubjectInterface;
 use Survos\DataContracts\Workflow\WorkflowSubjectInterface;
@@ -16,12 +18,13 @@ use Survos\DataContracts\Workflow\WorkflowSubjectInterface;
  * its TaskRegistry tasks (observe, ocr_mistral, …) can run directly against an
  * Asset — without the removed ai-pipeline-bundle handler layer.
  */
-final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterface, AudioSubjectInterface, ContextSubjectInterface
+final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterface, AudioSubjectInterface, ContextSubjectInterface, AiThumbnailProviderInterface
 {
     /** @param array<string,mixed> $context runtime hints merged over the asset's own context */
     public function __construct(
         private readonly Asset $asset,
         private readonly array $context = [],
+        private readonly ?ImgproxyUrlBuilder $imageUrls = null,
     ) {
     }
 
@@ -76,7 +79,15 @@ final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterf
     {
         $override = $this->context['image_url'] ?? null;
 
-        return is_string($override) && $override !== '' ? $override : $this->asset->originalUrl;
+        return is_string($override) && $override !== ''
+            ? $override
+            : ($this->asset->archiveUrl ?? $this->asset->originalUrl);
+    }
+
+    public function getAiSmallUrl(): string
+    {
+        $source = $this->getWorkflowImageUrl();
+        return $this->imageUrls?->aiThumbnail($source) ?? $source;
     }
 
     /**
