@@ -369,7 +369,7 @@ class AssetWorkflow
         }
 
         $startedAt = microtime(true);
-        $payload = $this->aiToolsObserveService->observeImage($imageUrl, 'auto');
+        $payload = $this->aiToolsObserveService->observeImage($imageUrl, 'florence-2');
         $claims = is_array($payload['claims'] ?? null) ? $payload['claims'] : [];
         $run = is_array($payload['run'] ?? null) ? $payload['run'] : [];
         $durationMs = (int) round((microtime(true) - $startedAt) * 1000);
@@ -1419,27 +1419,9 @@ class AssetWorkflow
         }
 
         if (!isset($asset->context['tasks']) || !is_array($asset->context['tasks'])) {
-            $tasks = ['thumbhash', 'palette'];
-            if ($this->shouldAutoQueueOcr($analysis)) {
-                $tasks[] = 'ocr';
-                $asset->context['ocr_auto_queued'] = true;
-            }
-            $asset->context['tasks'] = $tasks;
+            // OCR is opt-in: edge clients and newspaper providers can supply it.
+            $asset->context['tasks'] = ['thumbhash', 'palette'];
         }
-    }
-
-    /** @param array<string, mixed> $analysis */
-    private function shouldAutoQueueOcr(array $analysis): bool
-    {
-        if (($analysis['has_text_likely'] ?? false) === true) {
-            return true;
-        }
-
-        $primaryType = is_string($analysis['primary_type'] ?? null)
-            ? (string) $analysis['primary_type']
-            : null;
-
-        return in_array($primaryType, ['document', 'text_page', 'handwritten_note', 'tag_or_label'], true);
     }
 
     private function finishAiPipeline(Asset $asset): void

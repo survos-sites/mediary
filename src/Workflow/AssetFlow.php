@@ -252,9 +252,9 @@ class AssetFlow
     public const TRANSITION_INVALID = 'invalid_file';
 
     /**
-     * Triage = FREE local observation. Calls ai-tools /v1/responses with model=auto:
-     * Florence-2 (caption + ocr_text + dense region tags) plus Tesseract for
-     * dense documents. Result is an Observation[] envelope persisted on the asset.
+     * Triage uses ai-tools /v1/responses with model=florence-2 for
+     * caption, visible text, and dense region tags. A separate Tesseract pass
+     * is opt-in. Result is an Observation[] envelope persisted on the asset.
      *
      * Distinct from {@see TRANSITION_ANALYZE}: triage extracts media-derived
      * facts (free, local Python). Analyze computes mathematical visual features
@@ -269,7 +269,7 @@ class AssetFlow
         from: self::PLACE_INFORMED,
         to: self::PLACE_TRIAGED,
         info: 'Triage',
-        description: 'Call ai-tools /v1/responses model=auto; persist Observation[] (caption, ocr_text, keywords).',
+        description: 'Call ai-tools /v1/responses model=florence-2; persist Observation[] (caption, ocr_text, keywords).',
         async: true,
         // `next` deliberately absent: destination PLACE_TRIAGED already declares
         // next: [TRANSITION_ANALYZE]. See TRANSITION_LOCAL_OCR above.
