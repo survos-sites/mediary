@@ -66,6 +66,7 @@ use Twig\Environment as TwigEnvironment;
 use Survos\GoogleSheetsBundle\Service\GoogleDriveService;
 use App\Service\OcrService;
 use App\Workflow\AssetFlow as WF;
+use Survos\DataContracts\Vocabulary\OcrProvider;
 
 //#[Workflow(name: WF::WORKFLOW_NAME, supports: [Asset::class])]
 class AssetWorkflow
@@ -276,6 +277,20 @@ class AssetWorkflow
     public function onLocalOcr(TransitionEvent $event): void
     {
         $asset = $this->getAsset($event);
+
+        // The producer already handed us better OCR than we can make — publisher ALTO off the
+        // scanning master, not a re-read of a derivative JPEG. Skip the pass, but let the
+        // transition complete: it is also what carries the asset into PLACE_AI_READY, so blocking
+        // it would strand the asset short of its AI tasks.
+        if ($asset->localOcrText !== null && $asset->localOcrProvider !== OcrProvider::AI_TOOLS) {
+            $this->logger->info('Local OCR skipped for {id}: {provider} OCR supplied at ingest', [
+                'id' => $asset->id,
+                'provider' => $asset->localOcrProvider,
+            ]);
+
+            return;
+        }
+
         $sourceUrl = $this->preferredLocalOcrUrl($asset);
         if ($sourceUrl === null) {
             $this->logger->warning('Local OCR skipped for {id}: no source URL', ['id' => $asset->id]);
@@ -318,7 +333,7 @@ class AssetWorkflow
             : null;
         $asset->localOcrPrimaryType = is_string($analysis['primary_type'] ?? null) ? $analysis['primary_type'] : null;
         $asset->localOcrSourceUrl = $sourceUrl;
-        $asset->localOcrProvider = 'ai-tools';
+        $asset->localOcrProvider = OcrProvider::AI_TOOLS;
         $asset->localOcrModel = 'tesseract';
         $asset->localOcrAt = new \DateTimeImmutable();
         $asset->localOcrStatus = 200;
@@ -407,7 +422,7 @@ class AssetWorkflow
         }
 
         $asset->localOcrSourceUrl = $imageUrl;
-        $asset->localOcrProvider = 'ai-tools';
+        $asset->localOcrProvider = OcrProvider::AI_TOOLS;
         $asset->localOcrModel = is_string($run['model'] ?? null) ? $run['model'] : 'auto';
         $asset->localOcrAt = new \DateTimeImmutable();
         $asset->localOcrStatus = 200;
