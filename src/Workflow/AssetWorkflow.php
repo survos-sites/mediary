@@ -767,28 +767,13 @@ class AssetWorkflow
             // download to our server, NO nesting (the source is a real object in our
             // bucket, never another imgproxy URL).
             //
-            // The default response carries format, dimensions, mime_type, size, exif,
-            // iptc, xmp, orientation; we add perceptual hashes and face detection. Notes:
-            //  - blurhash needs TWO components (bh:x:y); a valueless token 404s.
-            //  - detect_objects returns face boxes (this deployment's model is a face
-            //    detector) — kept, it's cheap, already stored, and drives faceCount below.
-            //  - classify (generic ImageNet-style labels) was dropped: weak on archival
-            //    photography. ai-tools/argus's Florence-2 triage (see onTriage below)
-            //    produces far better observe:tag / observe:description claims and is now
-            //    the source of truth for tags/descriptions.
+            // Registration needs metadata only. Pixel-derived hashes, colours and
+            // detection belong to optional enrichment after the dataset is available.
             $info = $this->imgproxyUrlBuilder->info($source, [
                 'size',
                 'format',
                 'dimensions',
                 'exif:1:1',
-                // imgproxy's native vips_thumb_hash crashes on some Cleveland
-                // masters (SIGABRT). Keep the other metadata and blurhash;
-                // optional placeholders must not take down the /info service.
-                'blurhash:4:3',
-                'perceptual_hash',
-                'average',
-                'dominant_colors',
-                'detect_objects:1',
             ]);
 
             $asset->context ??= [];
@@ -847,21 +832,18 @@ class AssetWorkflow
             };
         }
 
-        // classification (imgproxy's classify:5 labels) is no longer requested — see the
-        // comment in onInfo(). $asset->classification is left in place but unpopulated
-        // going forward; observe:tag claims from argus triage are the tag source now.
-        [$objectIdentifiers, $objectIdentifierConfidences] = $this->objectIdentifierData($info);
-        $asset->objectIdentifiers = $objectIdentifiers;
-        $asset->objectIdentifierConfidences = $objectIdentifierConfidences;
-        $this->applyFaceGeometry($asset, $info);
+        // Basic metadata refreshes must not erase previously computed detection.
+        if (is_array($info['objects'] ?? null)) {
+            [$objectIdentifiers, $objectIdentifierConfidences] = $this->objectIdentifierData($info);
+            $asset->objectIdentifiers = $objectIdentifiers;
+            $asset->objectIdentifierConfidences = $objectIdentifierConfidences;
+            $this->applyFaceGeometry($asset, $info);
+        }
     }
 
     /**
-     * The face boxes were always here — detect_objects rides along on the same /info call — but
-     * only count() was being read off them, so the arrangement was discarded. Keep it: the layout
-     * (portrait / pair / small_group / class_or_team / crowd) is what lets a public gallery demote
-     * the posed group shot, and it is the one signal for that which costs nothing extra and does
-     * not drift between model versions. See {@see FaceGeometry} for the geometry itself.
+     * Preserve face geometry from enriched or cached responses for gallery facets.
+     * Basic registration no longer requests detection.
      *
      * faceCount keeps its old meaning exactly — every box counts, never deduped by label, since 3
      * faces all labelled "face" must count as 3. It still powers the faceCount facet.
@@ -1029,10 +1011,9 @@ class AssetWorkflow
             return;
         }
 
-        // Thumbhash and pHash were computed in onDownload while the file was local.
-        // Only fall back to the archive URL fetch if they're missing (e.g. older assets).
+        // Pixel-derived enrichment is opt-in; registration does not need hashes.
         $asset->context ??= [];
-        $tasks = $asset->context['tasks'] ?? ['thumbhash', 'palette'];
+        $tasks = $asset->context['tasks'] ?? [];
 
         if (in_array('ocr', $tasks, true) && empty($asset->context['ocr'])) {
             $ocrSourceUrl = $asset->smallUrl ?? $asset->archiveUrl ?? null;
@@ -1055,7 +1036,7 @@ class AssetWorkflow
             }
         }
 
-        if (empty($asset->context['thumbhash']) && $asset->archiveUrl) {
+        if (in_array('thumbhash', $tasks, true) && empty($asset->context['thumbhash']) && $asset->archiveUrl) {
             $localForThumbhash = $this->localImagePath($asset, preferSmall: true);
             if (is_string($localForThumbhash) && $localForThumbhash !== '') {
                 $this->logger->info('onLocalAnalyze: thumbhash missing, using local small derivative');
@@ -1072,10 +1053,8 @@ class AssetWorkflow
             }
         }
 
-        // Colours are no longer computed here: imgproxy Pro's /info returns `average` and
-        // `dominant_colors` (see onInfo()), so only the pHash still needs a local file.
-        // docs/local-image-analysis.md documents the old local recipe.
-        if (empty($asset->context['phash']) && $asset->archiveUrl) {
+        // Compute pHash only when explicitly requested.
+        if (in_array('phash', $tasks, true) && empty($asset->context['phash']) && $asset->archiveUrl) {
             $localForPhash = $this->localImagePath($asset, preferSmall: true);
             $this->assetPreviewService->maybeComputePhash(
                 $asset,
@@ -1420,7 +1399,7 @@ class AssetWorkflow
 
         if (!isset($asset->context['tasks']) || !is_array($asset->context['tasks'])) {
             // OCR is opt-in: edge clients and newspaper providers can supply it.
-            $asset->context['tasks'] = ['thumbhash', 'palette'];
+            $asset->context['tasks'] = [];
         }
     }
 
