@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "635b022b8c3fa08facf4fcb0c34e2bf5",
+    "content-hash": "b7a87aee2e3e5c16eb053fb41b6939f0",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -62,16 +62,16 @@
         },
         {
             "name": "api-platform/core",
-            "version": "v4.3.18",
+            "version": "v4.3.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "df3b916f622f0f1458602f61a0f4a0e84eadf59e"
+                "reference": "f35c536838eaa51177885d592350523e695e2511"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/df3b916f622f0f1458602f61a0f4a0e84eadf59e",
-                "reference": "df3b916f622f0f1458602f61a0f4a0e84eadf59e",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/f35c536838eaa51177885d592350523e695e2511",
+                "reference": "f35c536838eaa51177885d592350523e695e2511",
                 "shasum": ""
             },
             "require": {
@@ -80,6 +80,7 @@
                 "php": ">=8.2",
                 "psr/cache": "^1.0 || ^2.0 || ^3.0",
                 "psr/container": "^1.0 || ^2.0",
+                "symfony/asset": "^6.4 || ^7.0 || ^8.0",
                 "symfony/deprecation-contracts": "^3.1",
                 "symfony/http-foundation": "^6.4.14 || ^7.0 || ^8.0",
                 "symfony/http-kernel": "^6.4.13 || ^7.0 || ^8.0",
@@ -161,7 +162,6 @@
                 "ramsey/uuid-doctrine": "^2.0",
                 "soyuka/pmu": "^0.2.0",
                 "soyuka/stubs-mongodb": "^1.0",
-                "symfony/asset": "^6.4 || ^7.0 || ^8.0",
                 "symfony/browser-kit": "^6.4 || ^7.0 || ^8.0",
                 "symfony/cache": "^6.4 || ^7.0 || ^8.0",
                 "symfony/config": "^6.4 || ^7.0 || ^8.0",
@@ -274,9 +274,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v4.3.18"
+                "source": "https://github.com/api-platform/core/tree/v4.3.19"
             },
-            "time": "2026-09-04T09:13:46+00:00"
+            "time": "2026-09-12T14:04:55+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -334,16 +334,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.394.10",
+            "version": "3.395.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "3b7cbf17b8ba568f77546d1e5edd3f2071861c8f"
+                "reference": "f5eda89b1f2ecd4aea56eb04d58874bad12ef02e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/3b7cbf17b8ba568f77546d1e5edd3f2071861c8f",
-                "reference": "3b7cbf17b8ba568f77546d1e5edd3f2071861c8f",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f5eda89b1f2ecd4aea56eb04d58874bad12ef02e",
+                "reference": "f5eda89b1f2ecd4aea56eb04d58874bad12ef02e",
                 "shasum": ""
             },
             "require": {
@@ -425,9 +425,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.394.10"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.395.1"
             },
-            "time": "2026-09-08T18:07:43+00:00"
+            "time": "2026-09-13T18:43:19+00:00"
         },
         {
             "name": "behat/mink",
@@ -5224,16 +5224,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.8.0",
+            "version": "v5.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f"
+                "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
-                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9e33da9553fe7786f0962b35f4e4ecf01be89def",
+                "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def",
                 "shasum": ""
             },
             "require": {
@@ -5275,9 +5275,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.8.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.9.0"
             },
-            "time": "2026-07-04T14:30:18+00:00"
+            "time": "2026-09-13T18:51:52+00:00"
         },
         {
             "name": "nyholm/psr7",
@@ -7226,16 +7226,16 @@
         },
         {
             "name": "roave/better-reflection",
-            "version": "6.72.0",
+            "version": "6.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/BetterReflection.git",
-                "reference": "b34deeed26ec22233b1a776591ef45abc154a17d"
+                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/b34deeed26ec22233b1a776591ef45abc154a17d",
-                "reference": "b34deeed26ec22233b1a776591ef45abc154a17d",
+                "url": "https://api.github.com/repos/Roave/BetterReflection/zipball/a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
+                "reference": "a6a93a3bd7681627f2750bfa8f41e586d32dc67d",
                 "shasum": ""
             },
             "require": {
@@ -7249,7 +7249,7 @@
             },
             "require-dev": {
                 "phpbench/phpbench": "^1.7.0",
-                "phpunit/phpunit": "^13.2.4"
+                "phpunit/phpunit": "^13.3.2"
             },
             "suggest": {
                 "composer/composer": "Required to use the ComposerSourceLocator"
@@ -7289,9 +7289,9 @@
             "description": "Better Reflection - an improved code reflection API",
             "support": {
                 "issues": "https://github.com/Roave/BetterReflection/issues",
-                "source": "https://github.com/Roave/BetterReflection/tree/6.72.0"
+                "source": "https://github.com/Roave/BetterReflection/tree/6.73.0"
             },
-            "time": "2026-07-22T18:50:32+00:00"
+            "time": "2026-09-09T19:57:09+00:00"
         },
         {
             "name": "stof/doctrine-extensions-bundle",
@@ -7448,16 +7448,16 @@
         },
         {
             "name": "survos/ai-workflow-bundle",
-            "version": "2.28.1",
+            "version": "2.28.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/ai-workflow-bundle.git",
-                "reference": "eed14b5a2ec737b49e6c86fcf156f257b9f12981"
+                "reference": "6675415283fa5f180445f285a18650376aebabb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/ai-workflow-bundle/zipball/eed14b5a2ec737b49e6c86fcf156f257b9f12981",
-                "reference": "eed14b5a2ec737b49e6c86fcf156f257b9f12981",
+                "url": "https://api.github.com/repos/survos/ai-workflow-bundle/zipball/6675415283fa5f180445f285a18650376aebabb6",
+                "reference": "6675415283fa5f180445f285a18650376aebabb6",
                 "shasum": ""
             },
             "require": {
@@ -7512,7 +7512,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/ai-workflow-bundle/issues",
-                "source": "https://github.com/survos/ai-workflow-bundle/tree/2.28.1"
+                "source": "https://github.com/survos/ai-workflow-bundle/tree/2.28.3"
             },
             "funding": [
                 {
@@ -7520,7 +7520,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-11T09:30:29+00:00"
+            "time": "2026-09-12T23:20:30+00:00"
         },
         {
             "name": "survos/api-grid-bundle",
@@ -7973,16 +7973,16 @@
         },
         {
             "name": "survos/crawler-bundle",
-            "version": "2.17.5",
+            "version": "2.27.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/crawler-bundle.git",
-                "reference": "5faba1c0ebec1a9be9e7b490198d1d7bb3177b9c"
+                "reference": "31aa8a4165376ba2e6188fe1f0fe8975d4e60d3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/crawler-bundle/zipball/5faba1c0ebec1a9be9e7b490198d1d7bb3177b9c",
-                "reference": "5faba1c0ebec1a9be9e7b490198d1d7bb3177b9c",
+                "url": "https://api.github.com/repos/survos/crawler-bundle/zipball/31aa8a4165376ba2e6188fe1f0fe8975d4e60d3c",
+                "reference": "31aa8a4165376ba2e6188fe1f0fe8975d4e60d3c",
                 "shasum": ""
             },
             "require": {
@@ -8040,7 +8040,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/crawler-bundle/issues",
-                "source": "https://github.com/survos/crawler-bundle/tree/2.17.5"
+                "source": "https://github.com/survos/crawler-bundle/tree/2.27.20"
             },
             "funding": [
                 {
@@ -8048,7 +8048,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-07-28T12:30:31+00:00"
+            "time": "2026-09-10T10:59:16+00:00"
         },
         {
             "name": "survos/data-bundle",
@@ -8113,16 +8113,16 @@
         },
         {
             "name": "survos/data-contracts",
-            "version": "2.27.7",
+            "version": "2.28.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/data-contracts.git",
-                "reference": "1effeaa387ce5b2681f18120d0fa89cc9547f044"
+                "reference": "c3795f36508b6d1c47426ad02236a5aeaa56cc77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/data-contracts/zipball/1effeaa387ce5b2681f18120d0fa89cc9547f044",
-                "reference": "1effeaa387ce5b2681f18120d0fa89cc9547f044",
+                "url": "https://api.github.com/repos/survos/data-contracts/zipball/c3795f36508b6d1c47426ad02236a5aeaa56cc77",
+                "reference": "c3795f36508b6d1c47426ad02236a5aeaa56cc77",
                 "shasum": ""
             },
             "require": {
@@ -8151,7 +8151,7 @@
             "description": "Shared data vocabularies, content metadata, and item DTO contracts for Survos data/media/import packages.",
             "support": {
                 "issues": "https://github.com/survos/data-contracts/issues",
-                "source": "https://github.com/survos/data-contracts/tree/2.27.7"
+                "source": "https://github.com/survos/data-contracts/tree/2.28.5"
             },
             "funding": [
                 {
@@ -8159,20 +8159,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-08T01:37:26+00:00"
+            "time": "2026-09-13T11:54:31+00:00"
         },
         {
             "name": "survos/dataset-bundle",
-            "version": "2.27.0",
+            "version": "2.28.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/dataset-bundle.git",
-                "reference": "9d0ea74c6380e710e8ba1e8860b20665ce856c70"
+                "reference": "5c4637c916d6b6cb7d4c708e509b99385f8457bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/dataset-bundle/zipball/9d0ea74c6380e710e8ba1e8860b20665ce856c70",
-                "reference": "9d0ea74c6380e710e8ba1e8860b20665ce856c70",
+                "url": "https://api.github.com/repos/survos/dataset-bundle/zipball/5c4637c916d6b6cb7d4c708e509b99385f8457bc",
+                "reference": "5c4637c916d6b6cb7d4c708e509b99385f8457bc",
                 "shasum": ""
             },
             "require": {
@@ -8227,7 +8227,7 @@
             "description": "Shared data directory conventions and path utilities for dataset-driven apps (APP_DATA_DIR).",
             "support": {
                 "issues": "https://github.com/survos/dataset-bundle/issues",
-                "source": "https://github.com/survos/dataset-bundle/tree/2.27.0"
+                "source": "https://github.com/survos/dataset-bundle/tree/2.28.5"
             },
             "funding": [
                 {
@@ -8235,7 +8235,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-07T13:49:17+00:00"
+            "time": "2026-09-13T11:54:00+00:00"
         },
         {
             "name": "survos/doc-bundle",
@@ -8579,16 +8579,16 @@
         },
         {
             "name": "survos/iiif-bundle",
-            "version": "2.24.7",
+            "version": "2.28.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/iiif-bundle.git",
-                "reference": "200a1e46123c30e2e5730decf1742f32f6a1f518"
+                "reference": "3d6cbcebada4a2250e92fd820992706dcc06def7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/iiif-bundle/zipball/200a1e46123c30e2e5730decf1742f32f6a1f518",
-                "reference": "200a1e46123c30e2e5730decf1742f32f6a1f518",
+                "url": "https://api.github.com/repos/survos/iiif-bundle/zipball/3d6cbcebada4a2250e92fd820992706dcc06def7",
+                "reference": "3d6cbcebada4a2250e92fd820992706dcc06def7",
                 "shasum": ""
             },
             "require": {
@@ -8642,7 +8642,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/iiif-bundle/issues",
-                "source": "https://github.com/survos/iiif-bundle/tree/2.24.7"
+                "source": "https://github.com/survos/iiif-bundle/tree/2.28.3"
             },
             "funding": [
                 {
@@ -8650,7 +8650,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-16T12:08:15+00:00"
+            "time": "2026-09-12T23:20:02+00:00"
         },
         {
             "name": "survos/imgproxy-bundle",
@@ -13576,21 +13576,21 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "v4.0.2",
+            "version": "v4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "c012c6aba13129eb02aa7dd61e66e720911d8598"
+                "reference": "a22de65db405738364af77310761fdd0dce7a40e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/c012c6aba13129eb02aa7dd61e66e720911d8598",
-                "reference": "c012c6aba13129eb02aa7dd61e66e720911d8598",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/a22de65db405738364af77310761fdd0dce7a40e",
+                "reference": "a22de65db405738364af77310761fdd0dce7a40e",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.0",
-                "monolog/monolog": "^3.5",
+                "monolog/monolog": "^3.12",
                 "php": ">=8.2",
                 "symfony/config": "^7.3 || ^8.0",
                 "symfony/dependency-injection": "^7.3 || ^8.0",
@@ -13631,7 +13631,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/monolog-bundle/issues",
-                "source": "https://github.com/symfony/monolog-bundle/tree/v4.0.2"
+                "source": "https://github.com/symfony/monolog-bundle/tree/v4.1.0"
             },
             "funding": [
                 {
@@ -13651,7 +13651,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-02T18:27:21+00:00"
+            "time": "2026-09-10T19:32:07+00:00"
         },
         {
             "name": "symfony/notifier",
@@ -19263,16 +19263,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "14.3.2",
+            "version": "14.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "93d62632fb675b76c9b941fdcfcfa10ffb9dea75"
+                "reference": "f8640c238e930b914d0098a1edbad6652e61a64a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/93d62632fb675b76c9b941fdcfcfa10ffb9dea75",
-                "reference": "93d62632fb675b76c9b941fdcfcfa10ffb9dea75",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/f8640c238e930b914d0098a1edbad6652e61a64a",
+                "reference": "f8640c238e930b914d0098a1edbad6652e61a64a",
                 "shasum": ""
             },
             "require": {
@@ -19291,7 +19291,7 @@
                 "theseer/tokenizer": "^2.0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^13.3.2"
+                "phpunit/phpunit": "^13.3.3"
             },
             "suggest": {
                 "ext-pcov": "PHP extension that provides line coverage",
@@ -19329,7 +19329,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.2"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.3.3"
             },
             "funding": [
                 {
@@ -19349,7 +19349,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-04T03:46:43+00:00"
+            "time": "2026-09-10T13:08:32+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -21156,32 +21156,32 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.67.0",
+            "version": "1.68.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "6ce8b313845f16bcf385ee3cb31d8b24e30d5516"
+                "reference": "1b0fb459594fdeb1d183065451c5e954babeb16c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/6ce8b313845f16bcf385ee3cb31d8b24e30d5516",
-                "reference": "6ce8b313845f16bcf385ee3cb31d8b24e30d5516",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/1b0fb459594fdeb1d183065451c5e954babeb16c",
+                "reference": "1b0fb459594fdeb1d183065451c5e954babeb16c",
                 "shasum": ""
             },
             "require": {
                 "composer-runtime-api": "^2.1",
                 "doctrine/inflector": "^2.0",
                 "nikic/php-parser": "^5.0",
-                "php": ">=8.1",
-                "symfony/config": "^6.4|^7.0|^8.0",
-                "symfony/console": "^6.4|^7.0|^8.0",
-                "symfony/dependency-injection": "^6.4|^7.0|^8.0",
+                "php": ">=8.2",
+                "symfony/config": "^7.4|^8.1",
+                "symfony/console": "^7.4|^8.1",
+                "symfony/dependency-injection": "^7.4|^8.1",
                 "symfony/deprecation-contracts": "^2.2|^3",
-                "symfony/filesystem": "^6.4|^7.0|^8.0",
-                "symfony/finder": "^6.4|^7.0|^8.0",
-                "symfony/framework-bundle": "^6.4|^7.0|^8.0",
-                "symfony/http-kernel": "^6.4|^7.0|^8.0",
-                "symfony/process": "^6.4|^7.0|^8.0"
+                "symfony/filesystem": "^7.4|^8.1",
+                "symfony/finder": "^7.4|^8.1",
+                "symfony/framework-bundle": "^7.4|^8.1",
+                "symfony/http-kernel": "^7.4|^8.1",
+                "symfony/process": "^7.4|^8.1"
             },
             "conflict": {
                 "doctrine/doctrine-bundle": "<2.10",
@@ -21192,11 +21192,12 @@
                 "doctrine/doctrine-bundle": "^2.10|^3.0",
                 "doctrine/orm": "^2.15|^3",
                 "doctrine/persistence": "^3.1|^4.0",
-                "symfony/http-client": "^6.4|^7.0|^8.0",
-                "symfony/phpunit-bridge": "^6.4.1|^7.0|^8.0",
-                "symfony/security-core": "^6.4|^7.0|^8.0",
-                "symfony/security-http": "^6.4|^7.0|^8.0",
-                "symfony/yaml": "^6.4|^7.0|^8.0",
+                "symfony/doctrine-bridge": "^7.4|^8.1",
+                "symfony/http-client": "^7.4|^8.1",
+                "symfony/phpunit-bridge": "^7.4|^8.1",
+                "symfony/security-core": "^7.4|^8.1",
+                "symfony/security-http": "^7.4|^8.1",
+                "symfony/yaml": "^7.4|^8.1",
                 "twig/twig": "^3.0|^4.x-dev"
             },
             "type": "symfony-bundle",
@@ -21231,7 +21232,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.67.0"
+                "source": "https://github.com/symfony/maker-bundle/tree/1.68.0"
             },
             "funding": [
                 {
@@ -21251,7 +21252,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-03-18T13:39:06+00:00"
+            "time": "2026-09-12T21:13:48+00:00"
         },
         {
             "name": "symfony/phpunit-bridge",

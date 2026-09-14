@@ -46,7 +46,7 @@ final class BackgroundFailureNotifierTest extends TestCase
     public function testNothingIsSentWhenNoDsnIsConfigured(): void
     {
         $chatter = new RecordingChatter();
-        $listener = new BackgroundFailureNotifier($chatter, new NullLogger(), ntfyDsn: '');
+        $listener = new BackgroundFailureNotifier(static fn (): ChatterInterface => $chatter, new NullLogger(), ntfyDsn: '');
         $listener(self::event(willRetry: false));
 
         self::assertSame([], $chatter->sent, 'an unconfigured laptop must not attempt to notify');
@@ -67,7 +67,7 @@ final class BackgroundFailureNotifierTest extends TestCase
 
     private function notifier(ChatterInterface $chatter): BackgroundFailureNotifier
     {
-        return new BackgroundFailureNotifier($chatter, new NullLogger(), ntfyDsn: 'ntfy://default/ssai-alerts');
+        return new BackgroundFailureNotifier(static fn (): ChatterInterface => $chatter, new NullLogger(), ntfyDsn: 'ntfy://default/ssai-alerts');
     }
 
     private static function event(bool $willRetry): WorkerMessageFailedEvent
