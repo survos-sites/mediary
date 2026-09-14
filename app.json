@@ -34,10 +34,6 @@
         {
             "command": "php -d memory_limit=2G bin/console messenger:consume asset.archive  --time-limit 270",
             "schedule": "*/5 * * * *"
-        },
-        {
-            "command": "php -d memory_limit=2G bin/console messenger:consume meili  --time-limit 270",
-            "schedule": "*/5 * * * *"
         }
     ],
     "repository": "https://github.com/survos-sites/media",
