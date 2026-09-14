@@ -62,7 +62,7 @@
         "survos/field-bundle": ">=2.24.37",
         "survos/google-sheets-bundle": "^2.0.83",
         "survos/iiif-bundle": "^2.28.3",
-        "survos/imgproxy-bundle": "^2.24.24",
+        "survos/imgproxy-bundle": "^2.28.6",
         "survos/js-twig-bundle": "^2.18.18",
         "survos/meili-bundle": "^2.26.9",
         "survos/search-bundle": "^2.24.21",

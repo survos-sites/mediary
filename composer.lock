@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7a87aee2e3e5c16eb053fb41b6939f0",
+    "content-hash": "da5403a48f97ed128049f5f95ff91b11",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -8654,16 +8654,16 @@
         },
         {
             "name": "survos/imgproxy-bundle",
-            "version": "2.24.24",
+            "version": "2.28.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/imgproxy-bundle.git",
-                "reference": "539c0e0dfa3dfc0c9aa51ab1ac6e9f1df4fa744a"
+                "reference": "a9e699d3b719dac8ed1b97cae54a93a9e1a2d344"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/imgproxy-bundle/zipball/539c0e0dfa3dfc0c9aa51ab1ac6e9f1df4fa744a",
-                "reference": "539c0e0dfa3dfc0c9aa51ab1ac6e9f1df4fa744a",
+                "url": "https://api.github.com/repos/survos/imgproxy-bundle/zipball/a9e699d3b719dac8ed1b97cae54a93a9e1a2d344",
+                "reference": "a9e699d3b719dac8ed1b97cae54a93a9e1a2d344",
                 "shasum": ""
             },
             "require": {
@@ -8676,6 +8676,7 @@
                 "symfony/http-client-contracts": "^3.5",
                 "symfony/http-kernel": "^8.1",
                 "symfony/serializer": "^8.1",
+                "symfony/ux-twig-component": "^3.0",
                 "twig/twig": "^3.14|^4.0"
             },
             "require-dev": {
@@ -8709,7 +8710,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/imgproxy-bundle/issues",
-                "source": "https://github.com/survos/imgproxy-bundle/tree/2.24.24"
+                "source": "https://github.com/survos/imgproxy-bundle/tree/2.28.6"
             },
             "funding": [
                 {
@@ -8717,7 +8718,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-20T16:47:08+00:00"
+            "time": "2026-09-14T15:56:03+00:00"
         },
         {
             "name": "survos/import-bundle",
