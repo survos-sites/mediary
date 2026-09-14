@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Survos\DataContracts\Vocabulary\MediaSyncKeys;
+use Survos\DataContracts\Vocabulary\OcrProvider;
 use Survos\StateBundle\Message\TransitionMessage;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -128,6 +129,33 @@ final class AssetRegistry
                     $asset->sourceMeta[$key] = $value;
                 }
             }
+        }
+
+        // Adopt OCR the producer already has rather than regenerating it. A newspaper harvester
+        // holds publisher ALTO for every page — produced from the scanning master, with word
+        // coordinates — so re-OCRing a derivative JPEG here is slower and worse. Recording the
+        // provider is what lets the triage step tell "has no OCR yet" from "has better OCR than we
+        // could make", which the previously hardcoded 'ai-tools' could not express.
+        //
+        // First writer wins: a re-sync must not overwrite OCR, and locally generated OCR is not
+        // clobbered either — MediaSyncLocalCommand exists to clear it deliberately.
+        $suppliedOcr = $contextHints[MediaSyncKeys::OCR_TEXT] ?? null;
+        if (is_string($suppliedOcr) && trim($suppliedOcr) !== '' && $asset->localOcrText === null) {
+            $provider = $contextHints[MediaSyncKeys::OCR_PROVIDER] ?? null;
+            $confidence = $contextHints[MediaSyncKeys::OCR_CONFIDENCE] ?? null;
+
+            $asset->localOcrText = trim($suppliedOcr);
+            $asset->localOcrProvider = is_string($provider) && $provider !== '' ? $provider : OcrProvider::ALTO;
+            $asset->localOcrModel = is_string($contextHints[MediaSyncKeys::OCR_MODEL] ?? null)
+                ? $contextHints[MediaSyncKeys::OCR_MODEL]
+                : null;
+            $asset->localOcrSourceUrl = is_string($contextHints[MediaSyncKeys::OCR_SOURCE_URL] ?? null)
+                ? $contextHints[MediaSyncKeys::OCR_SOURCE_URL]
+                : null;
+            $asset->localOcrConfidence = is_numeric($confidence) ? (float) $confidence : null;
+            $asset->localOcrAt = new \DateTimeImmutable();
+            $asset->localOcrStatus = 200;
+            $asset->localOcrError = null;
         }
 
         // Promote the dataset key (provider/code) to its own column — it's the
