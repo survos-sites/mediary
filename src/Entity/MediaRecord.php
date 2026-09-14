@@ -29,6 +29,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     ]
 )]
 #[MeiliIndex(
+    autoIndex: false,
     sortable: ['createdAt', 'childCount', 'pageCount'],
     filterable: ['marking', 'sourceMime', 'extension'],
     searchable: ['recordKey', 'label', 'ocrText', 'filename'],
