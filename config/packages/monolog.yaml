@@ -45,6 +45,13 @@ when@prod:
             # `deduplication` on purpose: NotifierHandler has no throttling of its
             # own, and one bad deploy emitting the same error per request would
             # otherwise buzz hundreds of times. Same error within the window = one push.
+            # The filter matters: DeduplicationHandler is an unbounded BufferHandler at DEBUG, so
+            # without it every record a process logs is held until exit. Harmless per request;
+            # a 1M-asset elastic:index:rebuild ran out of memory at ~180k documents.
+            ntfy_errors:
+                type: filter
+                min_level: error
+                handler: ntfy_deduplicated
             ntfy_deduplicated:
                 type: deduplication
                 handler: ntfy
