@@ -21,5 +21,8 @@ inspector:
         - 'doctrine*'
         - 'd:*'
         - 'schedule:run'
+        # Bulk index builds run a query and a bulk request per page for a million assets; tracing
+        # every one as a segment exhausted 1G at 155k documents in production.
+        - 'elastic:*'
         - 'debug*'
         - 'make*'
