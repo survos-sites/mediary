@@ -60,5 +60,28 @@ or image probe is touched. Folio's SQLite regression verifies distinct PDF page
 texts and the combined search transcript, with unchanged image OCR behavior.
 Harvest rebuilt 10,076 page records for the existing 889 correspondence folders.
 
-The full production queue/callback run has not been performed: publishing was left
-to the user. No collection-wide OCR was dispatched during development.
+## Activation (2026-09-15)
+
+Deployed Mediary commit `19e433b` with data-contracts 2.30.0 and PDF Tools
+commit `10d88c0` to fsn1. Production workers and the web endpoint passed deploy
+health checks; production PDF OCR has not yet been exercised end-to-end.
+
+Harvest currently uses local Mediary on :8010 with callbacks to :8011. The real
+ANB-C-10 pilot completed OCR, saved seven page claims and one combined transcript,
+and delivered the completion callback. The rebuilt Folio and local Museado show
+seven distinct page texts. Its source archive URL is the original Na Bolom S3 PDF.
+
+Enabled NBCORR_PDF_OCR locally and registered all 889 folders (10,076 pages).
+Local Mediary uses PDF Tools on :5001 with Spanish/English recognition; workers
+are supervised and collection processing is underway. PDF Tools must remain running.
+
+Fixed two integration gaps: Harvest read a different claims database, and automatic
+enrichment/periodic previews bypassed the command's claims refresh. Development
+now reads the same Mediary over its authenticated claims API; both build paths
+refresh claims before conversion. A failed fetch now stops the build.
+
+PDF page thumbnails render with the existing PDF.js document instead of sending
+PDF URLs to imgproxy. Mono commit `d876d758` contains that fix; Museado commit
+`f0f513b` connects PDF paging, the URL, thumbnails and the transcript. These last
+viewer changes are local and still need the next library release/deployment.
+
