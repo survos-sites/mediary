@@ -82,7 +82,9 @@ final class AssetAiExecutor
         // killed its AI task outright. Nothing was wrong: the same
         // archive.storage archived 66 masters in that same window, and a HEAD on
         // those exact missing keys returns a clean 404 from the CLI.
-        if (!$force) {
+        // PDF Tools caches each page operation. Re-entering that task also records
+        // its claims after an interrupted DB write; a sidecar hit alone cannot do so.
+        if (!$force && $task !== PdfOcrTask::TASK) {
             try {
                 if (null !== ($cached = $this->sidecar->read($asset->id, $task))) {
                     return ['ok' => true, 'cached' => true, 'response' => $cached];
@@ -156,6 +158,7 @@ final class AssetAiExecutor
                     'err' => $e->getMessage(),
                     'exception' => $e,
                 ]);
+                throw $e;
             }
         }
 

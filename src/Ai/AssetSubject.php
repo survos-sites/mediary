@@ -104,6 +104,10 @@ final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterf
     /** @return array<string,mixed> */
     public function getWorkflowContext(): array
     {
-        return array_merge($this->asset->context ?? [], $this->context);
+        $hints = [];
+        if (isset($this->asset->sourceMeta[MediaSyncKeys::OCR_LANGUAGE])) {
+            $hints[MediaSyncKeys::OCR_LANGUAGE] = $this->asset->sourceMeta[MediaSyncKeys::OCR_LANGUAGE];
+        }
+        return array_merge($hints, $this->asset->context ?? [], $this->context);
     }
 }

@@ -11,6 +11,7 @@ use App\Message\WarmImgproxyCacheMessage;
 use Survos\DataContracts\Dto\MediaEnrichment;
 use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
+use App\Service\PdfToolsClient;
 use App\Service\ClaimSearchSync;
 use App\Service\EdgeAnalysisService;
 use App\Service\IiifManifestService;
@@ -116,6 +117,7 @@ class AssetWorkflow
         private readonly AsyncQueueLocator                     $asyncQueueLocator,
         private readonly StorageService $storageService,
         private readonly AssetRegistry $assetRegistry,
+        private readonly PdfToolsClient $pdfTools,
         private readonly ImgproxyUrlBuilder $imgproxyUrlBuilder,
         private readonly IiifManifestService $iiifManifestService,
         private readonly EdgeAnalysisService $edgeAnalysisService,
@@ -129,6 +131,8 @@ class AssetWorkflow
         #[Target('archive.storage')]  private readonly ?FilesystemOperator $archiveStorage = null,
         private ?GoogleDriveService $driveService = null,
         iterable $taskServices = [],
+        #[Autowire('%env(default::MEDIARY_OWNED_PDF_HOSTS)%')]
+        private readonly ?string $ownedPdfHosts = null,
     ) {
         foreach ($taskServices as $task) {
             if ($task instanceof AiTaskInterface) {
@@ -575,6 +579,19 @@ class AssetWorkflow
     public function onArchive(TransitionEvent $event): void
     {
         $asset = $this->getAsset($event);
+        $ownedHosts = $this->ownedPdfHosts === null ? [] : array_map('trim', explode(',', strtolower($this->ownedPdfHosts)));
+        if ($this->looksLikePdf($asset->originalUrl)
+            && parse_url($asset->originalUrl, PHP_URL_SCHEME) === 'https'
+            && in_array(strtolower((string) parse_url($asset->originalUrl, PHP_URL_HOST)), $ownedHosts, true)) {
+            // These hosts are operator-configured durable source stores, not caller hints.
+            // PDF Tools validates/caches the document; there is no second archive upload.
+            $this->applyPdfMetadata($asset, $this->pdfTools->register($asset->originalUrl));
+            $asset->archiveUrl = $asset->originalUrl;
+            $asset->storageKey = null;
+            $asset->storageBackend = 'source';
+            $this->em->flush();
+            return;
+        }
         if ($this->archiveStorage === null) {
             throw new RuntimeException('archiveStorage (museado) is not configured.');
         }
@@ -743,6 +760,11 @@ class AssetWorkflow
     public function onInfo(TransitionEvent $event): void
     {
         $asset = $this->getAsset($event);
+        if ($this->looksLikePdf($asset->originalUrl)) {
+            $this->applyPdfMetadata($asset, $this->pdfTools->register($asset->archiveUrl ?? $asset->originalUrl));
+            $this->em->flush();
+            return;
+        }
         // /info runs against the s3:// master once it's archived; falls back to
         // the original URL only if the archive step hasn't run.
         $source = $asset->storageKey
@@ -785,6 +807,17 @@ class AssetWorkflow
         $this->applyInfoMetadata($asset, $info);
 
         $this->em->flush();
+    }
+
+    private function applyPdfMetadata(Asset $asset, array $file): void
+    {
+        $asset->mime = 'application/pdf';
+        $asset->ext = 'pdf';
+        $asset->size = $file['bytes'];
+        $asset->statusCode = 200;
+        $asset->context ??= [];
+        $asset->context['sha256'] = $file['sha256'];
+        $asset->context['pdf'] = $file;
     }
 
     /** @param array<string, mixed> $info */
