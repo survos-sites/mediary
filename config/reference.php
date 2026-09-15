@@ -1325,6 +1325,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type MonologConfig = array{
  *     use_microseconds?: scalar|Param|null, // Default: true
+ *     timezone?: string|Param, // The timezone used for the timestamp of every log record (e.g. "UTC" or "Europe/Paris"). Defaults to the PHP default timezone. // Default: null
  *     channels?: list<scalar|Param|null>,
  *     handlers?: array<string, array{ // Default: []
  *         type?: scalar|Param|null,
@@ -1336,6 +1337,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         interactive_only?: bool|Param, // Default: false
  *         app_name?: scalar|Param|null, // Default: null
  *         include_stacktraces?: bool|Param, // Default: false
+ *         base_path?: scalar|Param|null, // Default: null
  *         process_psr_3_messages?: array{
  *             enabled?: bool|Param|null, // Default: null
  *             date_format?: scalar|Param|null,
@@ -1347,7 +1349,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         use_locking?: bool|Param, // Default: false
  *         filename_format?: scalar|Param|null, // Default: "{filename}-{date}"
  *         date_format?: scalar|Param|null, // Default: "Y-m-d"
- *         ident?: scalar|Param|null, // Default: false
+ *         ident?: scalar|Param|null, // Default: "php"
  *         logopts?: scalar|Param|null, // Default: 1
  *         facility?: scalar|Param|null, // Default: "user"
  *         max_files?: scalar|Param|null, // Default: 0
@@ -1384,6 +1386,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         title?: scalar|Param|null, // Default: null
  *         host?: scalar|Param|null, // Default: null
  *         port?: scalar|Param|null, // Default: 514
+ *         rfc?: scalar|Param|null, // Default: 1
  *         config?: list<scalar|Param|null>,
  *         members?: list<scalar|Param|null>,
  *         connection_string?: scalar|Param|null,
@@ -1394,6 +1397,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         connection_timeout?: scalar|Param|null,
  *         persistent?: bool|Param,
  *         message_type?: scalar|Param|null, // Default: 0
+ *         expand_newlines?: bool|Param, // Default: false
  *         parse_mode?: scalar|Param|null, // Default: null
  *         disable_webpage_preview?: bool|Param|null, // Default: null
  *         disable_notification?: bool|Param|null, // Default: null
@@ -1440,7 +1444,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             database?: scalar|Param|null, // Default: 0
  *             key_name?: scalar|Param|null, // Default: "monolog_redis"
  *         },
- *         predis?: Param|string|array{
+ *         predis?: Param|string|array{ // Deprecated: The "predis" option is deprecated and ignored, use the "redis" option to configure the Predis client.
  *             id?: scalar|Param|null,
  *             host?: scalar|Param|null,
  *         },
@@ -1449,6 +1453,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         subject?: scalar|Param|null,
  *         content_type?: scalar|Param|null, // Default: null
  *         headers?: list<scalar|Param|null>,
+ *         parameters?: list<scalar|Param|null>,
  *         mailer?: scalar|Param|null, // Default: null
  *         email_prototype?: Param|string|array{
  *             id?: scalar|Param|null,
@@ -2043,6 +2048,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         policy?: mixed,
  *         middleware?: mixed,
  *         parameters?: array<string, array{ // Default: []
+ *             class?: scalar|Param|null, // The parameter class for a named global parameter entry.
  *             key?: mixed,
  *             schema?: mixed,
  *             open_api?: mixed,
@@ -2127,93 +2133,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     cache?: array{
  *         pool?: scalar|Param|null, // Cache pool to use for worker cache. // Default: "cache.app"
  *         expired_worker_ttl?: int|Param, // How long to keep expired workers in cache (in seconds). // Default: 3600
- *     },
- * }
- * @psalm-type SurvosMeiliConfig = array{
- *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
- *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/meili"
- *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
- *     core_name?: scalar|Param|null, // Default: "core"
- *     enabled?: bool|Param, // Default: true
- *     meiliUiUrl?: scalar|Param|null, // Base URL of the Meilisearch UI (riccox). Used to generate per-index links. Override via MEILI_UI_URL env var. // Default: "http://127.0.0.1:24900/ins/0"
- *     host?: scalar|Param|null, // Default: "%env(default::MEILI_SERVER)%"
- *     apiKey?: scalar|Param|null, // Default: "%env(default::MEILI_ADMIN_KEY)%"
- *     transport?: scalar|Param|null, // Default: "%env(default::MEILI_TRANSPORT)%"
- *     searchKey?: scalar|Param|null, // Default: "%env(default::MEILI_SEARCH_KEY)%"
- *     meiliPrefix?: scalar|Param|null, // Default: "%env(default::MEILI_PREFIX)%"
- *     translationStyle?: scalar|Param|null, // Default: "simple"
- *     passLocale?: bool|Param, // Default: false
- *     multiLingual?: bool|Param, // turn on multi-lingual indexing // Default: false
- *     maxValuesPerFacet?: int|Param, // Default: 1000
- *     tools?: list<array{ // Default: []
- *         label?: scalar|Param|null,
- *         url?: scalar|Param|null,
- *     }>,
- *     embedders?: array<string, array{ // Default: []
- *         source?: scalar|Param|null,
- *         model?: scalar|Param|null,
- *         apiKey?: scalar|Param|null, // Default: null
- *         for?: scalar|Param|null, // Default: null
- *         template?: scalar|Param|null, // Default: null
- *         documentTemplateMaxBytes?: int|Param, // Default: 4096
- *         maxTokensPerDoc?: int|Param, // Default: null
- *         examples?: list<scalar|Param|null>,
- *     }>,
- *     pricing?: array{
- *         embedders?: array<string, scalar|Param|null>,
- *     },
- *     meili_settings?: array{
- *         typoTolerance?: array{
- *             enabled?: bool|Param, // Default: true
- *             oneTypo?: int|Param, // Default: 5
- *             twoTypos?: int|Param, // Default: 9
- *             disableOnWords?: list<scalar|Param|null>,
- *             disableOnAttributes?: list<scalar|Param|null>,
- *             disableOnNumbers?: bool|Param, // Default: false
- *         },
- *         faceting?: array{
- *             maxValuesPerFacet?: int|Param, // Default: 1000
- *             sortFacetValuesBy?: array<string, scalar|Param|null>,
- *         },
- *         pagination?: array{
- *             maxTotalHits?: int|Param, // Default: 1000
- *         },
- *         facetSearch?: bool|Param, // Default: true
- *         prefixSearch?: scalar|Param|null, // Default: "indexingTime"
- *     },
- *     entity_dirs?: list<scalar|Param|null>,
- *     file_proxy?: array{
- *         enabled?: bool|Param, // Default: true
- *         allow_hidden?: bool|Param, // Default: false
- *         cache_control?: scalar|Param|null, // Default: "private, max-age=60"
- *         roots?: list<scalar|Param|null>,
- *     },
- *     chat?: array{
- *         workspaces?: array<string, array{ // Default: []
- *             source?: scalar|Param|null, // LLM provider: openAi | azureOpenAi | mistral | gemini | vLlm // Default: "openAi"
- *             apiKey?: scalar|Param|null, // Provider API key (use %env(OPENAI_API_KEY)%) // Default: null
- *             model?: scalar|Param|null, // Model sent in each completion request (not stored in workspace settings) // Default: "gpt-4o-mini"
- *             baseUrl?: scalar|Param|null, // Default: null
- *             orgId?: scalar|Param|null, // Default: null
- *             projectId?: scalar|Param|null, // Default: null
- *             apiVersion?: scalar|Param|null, // Default: null
- *             deploymentId?: scalar|Param|null, // Default: null
- *             label?: scalar|Param|null, // Human-readable label used in dynamic prompts (defaults to indexName) // Default: null
- *             curatorName?: scalar|Param|null, // Optional explicit curator display name for this workspace template // Default: null
- *             curatorNameByIndex?: list<scalar|Param|null>,
- *             detailUrlPattern?: scalar|Param|null, // URL pattern for item detail pages; use {id} as placeholder e.g. /product/{id} // Default: null
- *             schemaUrl?: scalar|Param|null, // Optional OpenAPI schema URL used to explain field meanings in collection overview responses // Default: null
- *             examples?: list<scalar|Param|null>,
- *             examplesByIndex?: list<list<scalar|Param|null>>,
- *             prompts?: array{ // Static prompt overrides — these win over dynamic template rendering
- *                 system?: scalar|Param|null, // Default: null
- *                 searchFilterParam?: scalar|Param|null, // Default: null
- *                 searchDescription?: scalar|Param|null, // Default: null
- *                 searchQParam?: scalar|Param|null, // Default: null
- *                 searchIndexUidParam?: scalar|Param|null, // Pin the index UID — prevents Meilisearch generating a full enum of all indexes, which blows the OpenAI context limit. // Default: null
- *             },
- *             indexes?: list<scalar|Param|null>,
- *         }>,
  *     },
  * }
  * @psalm-type SurvosCodeConfig = array{
@@ -3048,6 +2967,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  *     default_adapter?: scalar|Param|null, // Default: "default"
+ *     public_searches?: list<scalar|Param|null>,
+ *     entity_adapters?: array<string, scalar|Param|null>,
  *     index_prefix?: scalar|Param|null, // Prefix applied to every Elasticsearch index name, once, by ElasticIndexNameResolver. Reuses MEILI_PREFIX so one app has one index namespace across both engines. Leaving it unset is an error the first time a name is resolved: bare index names share a flat cluster namespace with every other app on the node. Set it to an empty string to share deliberately. // Default: "%env(default::MEILI_PREFIX)%"
  *     adapters?: array<string, Param|string|array{ // Default: {"default":{"dsn":"doctrine://default"}}
  *         dsn?: scalar|Param|null,
@@ -3134,6 +3055,25 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         autostart?: bool|Param, // Default: true
  *     }>,
  * }
+ * @psalm-type SurvosElasticConfig = array{
+ *     spool_dir?: scalar|Param|null, // Where postFlush writes the ids awaiting reindex. // Default: "%kernel.project_dir%/var/elastic-spool"
+ *     spool_enabled?: bool|Param, // Turn the Doctrine listener off for bulk imports that reindex explicitly afterwards. // Default: true
+ *     async?: bool|Param, // Dispatch reindex work through Messenger. With this off (or with no bus installed) the listener writes a JSONL spool for elastic:spool:flush instead -- the right mode for bulk imports. // Default: true
+ *     batch_size?: int|Param, // Ids per message. One huge flush becomes several bounded jobs. // Default: 500
+ *     handler_batch_size?: int|Param, // ReindexDocuments messages the worker collects before reconciling them in one query and bulk request per class. // Default: 50
+ *     handler_idle_timeout?: int|Param, // Seconds of worker idleness after which a partial batch is reconciled. 0 waits for a full batch. // Default: 1
+ *     analysis?: array{ // Text analysis. Without it every text field uses the "standard" analyzer, which does no stemming and no accent folding -- searches work but are markedly worse, and any comparison against Meilisearch is unfair. index.analysis is a STATIC setting, so changing this needs elastic:index:rebuild.
+ *         language?: scalar|Param|null, // Elasticsearch stemmer language: english, hungarian, spanish, german, french, ... Null leaves the default analyzer in place. // Default: null
+ *         ascii_folding?: bool|Param, // Fold accents so "Kovacs" matches "Kovács". Applies only when a language is set. // Default: true
+ *     },
+ *     index_pattern?: scalar|Param|null, // Which cluster indices the admin page considers this app's, e.g. "kpa_*". The cluster index namespace is flat and shared by every app pointed at the node, so this is how the page finds indices this app owns but never declared -- a leftover from a rename, a locale variant. Defaults to survos_search.index_prefix + "*", so it tracks exactly what this app writes; set it only to widen or narrow that deliberately. // Default: null
+ *     elasticvue_url?: scalar|Param|null, // Elasticvue (https://elasticvue.com) — the closest equivalent to the riccox Meilisearch UI. Point this at a self-hosted instance (docker run -p 8080:8080 cars10/elasticvue) or https://app.elasticvue.com. Null hides the menu link. Note that Elasticvue talks to Elasticsearch from the browser, so the node needs http.cors.enabled unless it is proxied. // Default: null
+ *     kibana_url?: scalar|Param|null, // Browser-facing Kibana base URL (including any space/base path). In debug, null defaults to localhost:5601 only when all ES connections are loopback; otherwise the link is hidden. // Default: null
+ *     server_url?: scalar|Param|null, // The Elasticsearch node itself, for a direct link in the admin menu. Null hides it. // Default: null
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/admin/elastic"
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -3163,7 +3103,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_google_sheets?: SurvosGoogleSheetsConfig,
  *     survos_crawler?: SurvosCrawlerConfig,
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *     survos_meili?: SurvosMeiliConfig,
  *     survos_ez?: SurvosEzConfig,
  *     survos_doc?: SurvosDocConfig,
  *     survos_iiif?: SurvosIiifConfig,
@@ -3186,6 +3125,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_search?: SurvosSearchConfig,
  *     survos_fetch?: SurvosFetchConfig,
  *     ov_json_rpc_api?: OvJsonRpcApiConfig,
+ *     survos_elastic?: SurvosElasticConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -3219,7 +3159,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_google_sheets?: SurvosGoogleSheetsConfig,
  *         survos_crawler?: SurvosCrawlerConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *         survos_meili?: SurvosMeiliConfig,
  *         survos_code?: SurvosCodeConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
@@ -3245,6 +3184,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_fetch?: SurvosFetchConfig,
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
+ *         survos_elastic?: SurvosElasticConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -3275,7 +3215,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_google_sheets?: SurvosGoogleSheetsConfig,
  *         survos_crawler?: SurvosCrawlerConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *         survos_meili?: SurvosMeiliConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
  *         survos_iiif?: SurvosIiifConfig,
@@ -3298,6 +3237,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_search?: SurvosSearchConfig,
  *         survos_fetch?: SurvosFetchConfig,
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
+ *         survos_elastic?: SurvosElasticConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -3329,7 +3269,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_google_sheets?: SurvosGoogleSheetsConfig,
  *         survos_crawler?: SurvosCrawlerConfig,
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
- *         survos_meili?: SurvosMeiliConfig,
  *         survos_code?: SurvosCodeConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
@@ -3355,6 +3294,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_fetch?: SurvosFetchConfig,
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
+ *         survos_elastic?: SurvosElasticConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

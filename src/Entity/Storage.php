@@ -7,7 +7,6 @@ use App\Repository\StorageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Survos\MeiliBundle\Metadata\MeiliIndex;
 use function Symfony\Component\String\u;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -22,7 +21,6 @@ use ApiPlatform\Metadata\GetCollection;
         new GetCollection(),
     ]
 )]
-#[MeiliIndex(chats: ['meili_assistant'])]
 class Storage implements \Stringable
 {
     #[ORM\Column(length: 255, nullable: true)]

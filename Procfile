@@ -15,7 +15,8 @@ web: mediary-web
 # Under on-failure every worker below dies for good one hour after deploy and never
 # returns -- visible as `Status <worker> 1: missing` while web keeps running and the
 # queues silently grow.
-meili: php -d memory_limit=768M bin/console messenger:consume meili --time-limit=3600 --memory-limit=640M
+# Batches Asset reindex messages from elastic-bundle's Doctrine listener into bulk requests.
+elastic: php -d memory_limit=768M bin/console messenger:consume elastic --time-limit=3600 --memory-limit=640M
 info: php -d memory_limit=768M bin/console messenger:consume asset.info --time-limit=3600 --memory-limit=640M
 archive: php -d memory_limit=768M bin/console messenger:consume asset.archive --time-limit=3600 --memory-limit=640M
 ocr: php -d memory_limit=768M bin/console messenger:consume asset.local.ocr --time-limit=3600 --memory-limit=640M

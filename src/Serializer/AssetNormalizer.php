@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerAwareTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Expands Asset::$aiCompleted into clean top-level fields for Meilisearch
+ * Expands Asset::$aiCompleted into clean top-level fields for search
  * indexing and API Platform serialization.
  *
  * The entity itself stores only the raw pipeline blobs (aiQueue, aiCompleted,
@@ -74,7 +74,7 @@ final class AssetNormalizer implements NormalizerInterface, NormalizerAwareInter
 
         // ThumbHash for the blur placeholder that stands in until $thumb loads. Promoted
         // out of context['info'] for the same reason smallUrl is: clients (api-grid rows,
-        // Meilisearch hits) render from this payload and should not have to know that
+        // search hits) render from this payload and should not have to know that
         // imgproxy's /info response is nested under `context`.
         //
         // Hex-encoded — that is imgproxy's encoding, NOT the unpadded base64 that
@@ -202,7 +202,7 @@ final class AssetNormalizer implements NormalizerInterface, NormalizerAwareInter
         // ── Safety ────────────────────────────────────────────────────────────
         $out['aiSafety'] = $byTask['keywords']['safety'] ?? null;
 
-        // Drop nulls to keep the Meilisearch document lean.
+        // Drop nulls to keep the search document lean.
         return array_filter($out, fn($v) => $v !== null && $v !== [] && $v !== '');
     }
 }

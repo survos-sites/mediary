@@ -33,11 +33,9 @@ final class IiifController extends AbstractController
     #[Route('/iiif', name: 'iiif_browse', options: ['expose' => true], methods: ['GET'])]
     public function browse(): Response
     {
-        $items = $this->iiifManifestRepository->findBy([], ['createdAt' => 'DESC']);
-
-        return $this->render('iiif/browse.html.twig', [
-            'items' => $items,
-        ]);
+        // The api_grid component pages through the API itself; loading every manifest here (96k in
+        // production) only exhausted memory.
+        return $this->render('iiif/browse.html.twig');
     }
 
     #[Route('/iiif/show/{id}', name: 'iiif_show', options: ['expose' => true], methods: ['GET'])]

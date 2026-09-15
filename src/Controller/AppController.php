@@ -29,7 +29,7 @@ final class AppController extends AbstractController
         return new Response('OK', 200);
     }
 
-    #[Route('/home', name: 'app_app')]
+    // Admin-only: the template extends EasyAdmin's layout, which has no context outside a dashboard.
     #[AdminRoute('/stats', name: 'stats')]
     public function index(): Response
     {
@@ -50,9 +50,7 @@ final class AppController extends AbstractController
     #[Route('/browse-assets', name: 'app_browse_assets')]
     public function browseAssets(): Response
     {
-        return $this->redirectToRoute('meili_insta', [
-            'indexName' => 'asset',
-        ]);
+        return $this->redirectToRoute('app_image_search');
     }
 
     //create a test route

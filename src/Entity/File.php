@@ -15,8 +15,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Survos\FieldBundle\Attribute\RouteIdentity;
 use Survos\FieldBundle\Entity\RouteIdentityTrait;
 use Survos\FieldBundle\Entity\RouteParametersInterface;
-use Survos\MeiliBundle\Metadata\Fields;
-use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\Tree\Traits\TreeTrait;
 use Survos\Tree\TreeInterface;
 use Survos\StateBundle\Traits\MarkingInterface;
@@ -38,15 +36,6 @@ use ApiPlatform\Serializer\Filter\PropertyFilter;
 #[ORM\Entity(repositoryClass: FileRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_STORAGE_PATH', fields: ['storage', 'path'])]
 #[RouteIdentity(field: 'id')]
-#[MeiliIndex(
-    chats: ['meili_assistant'],
-    persisted: new Fields(
-        fields: ['id','fileSize', 'listingCount', 'dirCount', 'fileCount', 'type'],
-        groups: ['file.read','minimum','search']
-    ),
-    sortable: ['listingCount','dirCount','fileCount'],
-    filterable: ['fileSize','listingCount','type']
-)]
 class File implements \Stringable, TreeInterface, MarkingInterface,RouteParametersInterface
 {
     use TreeTrait;

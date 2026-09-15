@@ -19,7 +19,7 @@ when@dev: &mcp
             mediary:
                 # 0.13 makes a server declare what it exposes; 0.12 published everything
                 # it discovered, and "*" is that same behaviour. The tools come from
-                # bundles (survos/meili-bundle's five, incl. meili_search_index), not
+                # bundles (meili-bundle's search tools are gone with it), not
                 # from src/ -- no app class carries an MCP attribute.
                 registry: '*'
                 transports:

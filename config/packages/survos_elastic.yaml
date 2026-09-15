@@ -1,0 +1,7 @@
+survos_elastic:
+    # index.analysis is static: changing it needs `elastic:index:rebuild`.
+    analysis:
+        language: english
+        ascii_folding: true
+    # Messages the worker merges into one reconcile per class; see config/packages/messenger.yaml.
+    handler_batch_size: 100

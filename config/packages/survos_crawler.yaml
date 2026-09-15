@@ -9,7 +9,6 @@ survos_crawler:
     max_per_route : 3
     routes_to_ignore :
         - 'app_logout'
-        - 'meili-media'
         #media is not set correctly yet
         - 'media_symfony_crud_index'
         #registration require the buolt User to have the cdoe and approx set ...
@@ -28,6 +27,6 @@ survos_crawler:
         - 'media/browse/*'
         - '/media/browse/*'
         - 'media/index*'
-        # EasyAdmin CRUD autocomplete endpoints (meili_admin_*_autocomplete) require
+        # EasyAdmin CRUD autocomplete endpoints (ez_admin_*_autocomplete) require
         # originatingPage/propertyName context params; probing them bare 500s by design.
         - '/ez/.*/autocomplete'

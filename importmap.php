@@ -25,9 +25,7 @@
 return [
     'app' => ['path' => './assets/app.js', 'entrypoint' => true],
     'admin' => ['path' => './assets/admin.js', 'entrypoint' => true],
-    'meili' => ['path' => './assets/meili.js', 'entrypoint' => true],
     '@survos/js-twig/generated/fos_routes.js' => ['path' => './var/js_twig_bundle/generated/fos_routes.js'],
-    '@survos/meili/styles/chat.css' => ['path' => './vendor/survos/meili-bundle/assets/styles/chat.css', 'type' => 'css'],
     '@survos/simple-datatables/style.css' => ['path' => './vendor/survos/simple-datatables-bundle/assets/style.css', 'type' => 'css'],
     '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
     '@hotwired/stimulus' => ['version' => '3.2.2'],
@@ -129,8 +127,6 @@ return [
     '@babel/runtime/helpers/objectWithoutProperties' => ['version' => '7.29.2'],
     'htm' => ['version' => '3.1.1'],
     'instantsearch.css/themes/algolia.min.css' => ['version' => '8.19.0', 'type' => 'css'],
-    '@meilisearch/instant-meilisearch' => ['version' => '0.31.3'],
-    'meilisearch' => ['version' => '0.60.0'],
     '@stimulus-components/dialog' => ['version' => '1.0.1'],
     '@andypf/json-viewer' => ['version' => '2.8.0'],
     'pretty-print-json' => ['version' => '3.0.8'],

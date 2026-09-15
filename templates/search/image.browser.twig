@@ -1,0 +1,17 @@
+{% set title = hit.claimCaption|default(hit.aiTitle|default(hit.title|default(hit.filename|default('Untitled')))) %}
+{% set prose = hit.claimProse|default(hit.aiDescription|default(hit.description|default(''))) %}
+<article class="im-card">
+    <a class="im-thumb" href="{{ path('asset_show', {id: hit.id}) }}">
+        {% if hit.thumb %}<img src="{{ hit.thumb|e }}" alt="" loading="lazy" decoding="async" onerror="this.hidden=true">{% endif %}
+    </a>
+    <div class="im-card-body">
+        <div class="im-meta">{{ hit.provider|default('')|e }}{% if hit.dataset %} · {{ hit.dataset|e }}{% endif %}{% if hit.claimType %} · {{ hit.claimType|e }}{% endif %}</div>
+        <h2>{% if hit._highlightResult.claimCaption is defined %}{{ hit._highlightResult.claimCaption.value|raw }}{% elseif hit._highlightResult.aiTitle is defined %}{{ hit._highlightResult.aiTitle.value|raw }}{% else %}{{ title|e }}{% endif %}</h2>
+        <p>{{ prose|e }}</p>
+        <div class="im-tags">{% for s in hit.claimSubjects|default(hit.classification|default([]))|slice(0, 4) %}<span>{{ s|e }}</span>{% endfor %}</div>
+    </div>
+    <footer class="im-card-footer">
+        <span>{% if hit.width and hit.height %}{{ hit.width|e }}×{{ hit.height|e }}{% endif %}{% if hit.faceCount %} · {{ hit.faceCount|e }} faces{% endif %}</span>
+        <a href="{{ path('asset_show', {id: hit.id}) }}">Details <span aria-hidden="true">↗</span></a>
+    </footer>
+</article>

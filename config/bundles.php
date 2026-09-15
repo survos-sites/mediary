@@ -33,7 +33,6 @@ return [
     Survos\GoogleSheetsBundle\SurvosGoogleSheetsBundle::class => ['all' => true],
     Survos\CrawlerBundle\SurvosCrawlerBundle::class => ['all' => true],
     Zenstruck\Messenger\Monitor\ZenstruckMessengerMonitorBundle::class => ['all' => true],
-    Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
     Survos\BabelBundle\SurvosBabelBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
     Survos\EzBundle\SurvosEzBundle::class => ['all' => true],
@@ -67,4 +66,5 @@ return [
     Survos\SupervisorBundle\SurvosSupervisorBundle::class => ['dev' => true, 'test' => true],
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['all' => true],
+    Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
 ];

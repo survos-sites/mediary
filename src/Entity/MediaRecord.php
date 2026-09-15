@@ -12,9 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Survos\MeiliBundle\Metadata\Facet;
-use Survos\MeiliBundle\Metadata\Fields;
-use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\StateBundle\Traits\MarkingTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -27,17 +24,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [
         new GetCollection(),
     ]
-)]
-#[MeiliIndex(
-    autoIndex: false,
-    sortable: ['createdAt', 'childCount', 'pageCount'],
-    filterable: ['marking', 'sourceMime', 'extension'],
-    searchable: ['recordKey', 'label', 'ocrText', 'filename'],
-    persisted: new Fields(
-        groups: ['media_record.read'],
-        fields: ['id', 'recordKey', 'label', 'sourceUrl', 'sourceMime', 'filename', 'extension', 'pageCount', 'firstPageAssetId', 'childCount', 'marking', 'createdAt'],
-    ),
-    ui: ['columns' => 3],
 )]
 final class MediaRecord implements MarkingInterface, \Stringable
 {
@@ -62,7 +48,6 @@ final class MediaRecord implements MarkingInterface, \Stringable
 
     #[ORM\Column(type: Types::STRING, length: 128, nullable: true)]
     #[Groups(['media_record.read'])]
-    #[Facet()]
     public ?string $sourceMime = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -94,7 +79,6 @@ final class MediaRecord implements MarkingInterface, \Stringable
     }
 
     #[Groups(['media_record.read'])]
-    #[Facet()]
     public ?string $extension {
         get {
             $value = $this->sourceMeta['extension'] ?? null;

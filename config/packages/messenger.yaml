@@ -28,10 +28,6 @@ framework:
             # DOCTRINE_MESSENGER_TRANSPORT_DSN is kept defined alongside it so any single
             # transport can be flipped back to Doctrine for debugging without touching
             # anything else.
-            meili:
-                dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    queue_name: meili
             cache_warm:
                 dsn: '%env(DOCTRINE_MESSENGER_TRANSPORT_DSN)%'
                 options:
@@ -43,7 +39,7 @@ framework:
             sync: 'sync://'
             # Outbound asset.analyzed notifications. Its own queue for two reasons: a
             # `media:replay-webhooks` backfill enqueues hundreds of thousands of these and must
-            # not bury the meili or cache_warm queues behind them, and delivery is the one kind
+            # not bury the elastic or cache_warm queues behind them, and delivery is the one kind
             # of work here that depends on someone else's uptime — so it is the one that will
             # sit in retry, and that has to be drainable (and pausable) on its own.
             # On AMQP: `media:replay-webhooks` enqueues hundreds of thousands of these, which is
@@ -84,10 +80,26 @@ framework:
                     delay: 5000
                     multiplier: 4
                     max_delay: 3600000
+            # Asset reindex ids from elastic-bundle's Doctrine listener: one small message per
+            # flush, and a flush per workflow transition. On AMQP because that burst is what
+            # the Doctrine transport (and Meilisearch behind it, before this) choked on. The handler batches
+            # (survos_elastic.handler_batch_size), and a batch handler holds acknowledgements
+            # until it flushes, so prefetch must cover a whole batch.
+            elastic:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_RABBITMQ)%/elastic'
+                options:
+                    prefetch_count: 200
+                    delay:
+                        durable: true
+                retry_strategy:
+                    max_retries: 5
+                    delay: 2000
+                    multiplier: 3
 
         routing:
 #            Survos\StorageBundle\Message\DirectoryListingMessage: listing
-            Survos\MeiliBundle\Message\BatchIndexEntitiesMessage: meili
             App\Message\WarmImgproxyCacheMessage: cache_warm
+            Survos\ElasticBundle\Message\ReindexDocuments: elastic
+            Survos\ElasticBundle\Message\RemoveDocuments: elastic
             # Symfony's own message, dispatched by App\Service\AssetNotifier::notify().
             Symfony\Component\Webhook\Messenger\SendWebhookMessage: webhook

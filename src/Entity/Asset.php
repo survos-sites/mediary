@@ -15,8 +15,6 @@ use Survos\FieldBundle\Attribute\RouteIdentity;
 use Survos\FieldBundle\Entity\RouteIdentityTrait;
 use Survos\FieldBundle\Entity\RouteParametersInterface;
 use Survos\FieldBundle\Enum\Widget;
-use Survos\MeiliBundle\Metadata\Fields;
-use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Survos\DataContracts\Util\MediaIdentity;
 use Survos\StateBundle\Traits\MarkingInterface;
 use Survos\StateBundle\Traits\MarkingTrait;
@@ -45,33 +43,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     // deserializes the arguments into a fresh entity and serializes that straight back,
     // so `get_asset` returned the id it was given with every other field empty. A wrong
     // answer, not an error. meili_search_index already covers asset lookup over MCP.
-)]
-#[MeiliIndex(
-    autoIndex: false, // disabled 2026-07-24: per-transition flush → per-transition dispatch was flooding the meili doctrine:// transport at 15K+ assets; re-enable once dispatch is batched to terminal states only
-#    chats: ['meili_assistant'],
-    sortable: ['createdAt', 'aiTokensTotal', 'size', 'width', 'height', 'faceCount'],
-    filterable: ['provider', 'dataset', 'mime', 'clients', 'marking',
-        'ext', 'type', 'publisher', 'reuse',
-//        'aiDocumentType', 'aiDocumentSubtype',
-        'subjects', 'classification', 'objectIdentifiers', 'faceCount',
-//                 'aiKeywords', 'aiPeople', 'aiPlaces', 'aiOrganisations', 'aiSafety'
-    ],
-    searchable: ['title', 'description', 'filename', 'subjects', 'classification', 'objectIdentifiers', 'publisher', 'aiTitle', 'aiDescription', 'aiOcrText', 'aiKeywords',
-                  'aiPeople', 'aiPlaces', 'aiSubjects'],
-    persisted: new Fields(
-        groups: ['asset.read'],
-        fields: ['id', 'provider', 'dataset',
-            'originalUrl', 'archiveUrl',
-        'mime', 'ext', 'filename', 'type', 'reuse', 'publisher', 'subjects', 'classification', 'objectIdentifiers', 'objectIdentifierConfidences',
-        'size', 'width', 'height',
-        'title', 'description', 'thumb', 'smallUrl',
-        'createdAt', 'marking', 'mediaRecordId', 'storageKey',
-                  'aiDocumentType'],
-    ),
-    prompts: [
-        'system' => 'You are assisting with media assets. Always use tool-backed search results from this index and always include [id:{value}] where {value} is the Asset primary key field {{ primaryKey }}.',
-    ],
-    ui: ['columns' => 4, 'cardClass' => 'asset-card'],
 )]
 // Route identity: the 16-hex `id` is the whole URL key (erp.entityId → id), so
 // menus, link helpers and the state-bundle workflow component can address assets.
@@ -124,7 +95,7 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
     /**
      * imgproxy /info classification labels (e.g. "Person", "Dress").
      *
-     * Promoted from the cached /info blob so Doctrine and Meili can facet it.
+     * Promoted from the cached /info blob so Doctrine and Elasticsearch can facet it.
      */
     #[ORM\Column(type: Types::JSON, nullable: true, options: ['jsonb' => true])]
     #[Groups(['asset.read'])]

@@ -278,6 +278,9 @@
     "survos/doc-bundle": {
         "version": "2.0.61"
     },
+    "survos/elastic-bundle": {
+        "version": "2.30.1"
+    },
     "survos/ez-bundle": {
         "version": "2.0.61"
     },
@@ -313,9 +316,6 @@
     },
     "survos/mcp-bundle": {
         "version": "dev-main"
-    },
-    "survos/meili-bundle": {
-        "version": "1.5.600"
     },
     "survos/sais-bundle": {
         "version": "1.5.421"

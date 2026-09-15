@@ -61,7 +61,7 @@ final class AssetLookupTool
     private function findByKeyword(string $query): ?Asset
     {
         // Simple LIKE search on originalUrl as a lightweight fallback.
-        // Replace with Meilisearch once integrated.
+        // Replace with the Elasticsearch image index (App\Search\ImageSearch).
         $qb = $this->assetRepository->createQueryBuilder('a')
             ->where('a.originalUrl LIKE :q')
             ->setParameter('q', '%' . addcslashes($query, '%_') . '%')

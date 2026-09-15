@@ -1,5 +1,11 @@
 survos_search:
+    # Searches the browser may query through /instant-search.
+    public_searches: [image]
+    index_prefix: '%env(SEARCH_INDEX_PREFIX)%'
     adapters:
+        # Elasticsearch: the pan-image search (App\Search\ImageSearch). Index lifecycle and
+        # Doctrine sync live in survos/elastic-bundle.
+        es: '%env(ELASTICSEARCH_DSN)%'
         # Generic Doctrine adapter (LIKE matching) used by the auto-entity searches.
         default: '%env(SEARCH_DEFAULT_DSN)%'
         # Real full-text adapter for AssetSearch. postgres-bm25:// on PostgreSQL,

@@ -50,28 +50,6 @@
                 "autoimport": []
             }
         },
-        "@survos/meili-bundle": {
-            "insta": {
-                "enabled": true,
-                "fetch": "eager",
-                "autoimport": {
-                    "instantsearch.css/themes/algolia.min.css": false,
-                    "pretty-print-json/dist/css/pretty-print-json.min.css": true
-                }
-            },
-            "json": {
-                "enabled": true,
-                "fetch": "lazy",
-                "autoimport": []
-            },
-            "chat": {
-                "enabled": true,
-                "fetch": "lazy",
-                "autoimport": {
-                    "@survos/meili/styles/chat.css": true
-                }
-            }
-        },
         "@survos/search-bundle": {
             "ux-search": {
                 "enabled": true,
@@ -85,6 +63,10 @@
                 "fetch": "eager"
             },
             "ux-search-range-slider": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "instantsearch": {
                 "enabled": true,
                 "fetch": "eager"
             }

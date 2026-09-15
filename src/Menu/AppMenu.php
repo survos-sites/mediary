@@ -53,7 +53,7 @@ final class AppMenu implements KnpMenuHelperInterface
 
         $recordsMenu = $this->addSubmenu($menu, 'Records', icon: 'records');
         $this->add($recordsMenu, 'media_record_browse', label: 'Browse Records');
-        $this->add($recordsMenu, 'meili_insta', ['indexName' => 'mediarecord'], label: 'Search Records');
+        $this->add($recordsMenu, 'media_record_browse', label: 'Browse Records');
 
         $this->add($menu, 'iiif_browse', label: 'IIIF', icon: 'iiif');
         $this->add($menu, 'survos_state_workflow_dashboard', label: 'Summary', icon: 'summary');
