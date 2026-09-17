@@ -18,57 +18,6 @@ framework:
 
         failure_transport: failed
         transports:
-            # Limit reserved bulk work; AI handlers flush partial batches when idle.
-            asset.ai.task:
-                options:
-                    prefetch_count: 10
-                    queues:
-                        asset.ai.task:
-                            arguments: { x-max-priority: 3 }
-            # Native priorities on each existing stage queue. Existing classic queues
-            # must be drained/deleted and recreated before enabling these declarations.
-            asset.archive:
-                options:
-                    queues:
-                        asset.archive:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
-            asset.info:
-                options:
-                    queues:
-                        asset.info:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
-            asset.iiif:
-                options:
-                    queues:
-                        asset.iiif:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
-            asset.triage:
-                options:
-                    queues:
-                        asset.triage:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
-            asset.analyze:
-                options:
-                    queues:
-                        asset.analyze:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
-            asset.local.ocr:
-                options:
-                    queues:
-                        asset.local.ocr:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
-            asset.delete:
-                options:
-                    queues:
-                        asset.delete:
-                            arguments: { x-max-priority: 3 }
-                    prefetch_count: 1
             # These stay on Doctrine, matching packages. The AMQP move here is state-bundle's
             # per-transition dynamic queues (survos_state.queue_driver: rabbitmq), which use
             # jwage/phpamqplib-messenger's dsn/vhost/exchange convention -- NOT the

@@ -23,12 +23,17 @@ final readonly class AssetPriorityMiddleware implements MiddlewareInterface
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
     {
         $message = $envelope->getMessage();
+        // A TransportNamesStamp is an override, not a requirement: an asset transition routed by
+        // framework.messenger.routing carries none, and requiring one meant those dispatches --
+        // the ordinary path -- were published at priority 0 while only explicitly-stamped ones
+        // were prioritized. Absent a stamp the message is going to its configured transport, which
+        // is a priority queue, so stamp it. `sync` is still excluded: there is no broker there, and
+        // an AmqpStamp on a synchronously handled message is meaningless.
         $transport = $envelope->last(TransportNamesStamp::class);
         if (!$envelope->last(ReceivedStamp::class)
             && $message instanceof TransitionMessage
             && is_a($message->className, Asset::class, true)
-            && $transport !== null
-            && !in_array('sync', $transport->getTransportNames(), true)) {
+            && ($transport === null || !in_array('sync', $transport->getTransportNames(), true))) {
             $asset = $this->em->find(Asset::class, $message->id);
             $priority = $asset?->context[CollectionPriority::CONTEXT_KEY] ?? null;
             if (in_array($priority, [CollectionPriority::HIGH, CollectionPriority::NORMAL, CollectionPriority::BULK], true)) {

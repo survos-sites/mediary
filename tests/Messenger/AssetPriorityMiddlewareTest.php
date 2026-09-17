@@ -39,6 +39,11 @@ final class AssetPriorityMiddlewareTest extends TestCase
             $sync = $envelope->withoutAll(TransportNamesStamp::class)->with(new TransportNamesStamp(['sync']));
             self::assertSame($sync, $middleware->handle($sync, $stack));
         }
+        // The ordinary path: routed by framework.messenger.routing, so no TransportNamesStamp.
+        // Requiring one published every such transition at priority 0.
+        $routed = new Envelope(new TransitionMessage('test', Asset::class, 'archive', 'asset'));
+        self::assertSame(3, $middleware->handle($routed, $stack)->last(AmqpStamp::class)->getAttributes()['priority']);
+
         $asset->context = [];
         self::assertSame($envelope, $middleware->handle($envelope, $stack));
     }

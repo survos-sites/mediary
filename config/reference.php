@@ -1775,6 +1775,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     workflow_paths?: list<scalar|Param|null>,
  *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"
  *     queue_driver?: "doctrine"|"rabbitmq"|Param, // Default: "doctrine"
+ *     max_priority?: int|Param, // Default: null
+ *     prefetch_count?: int|Param, // Default: null
+ *     queue_options?: array<string, array{ // Default: []
+ *         max_priority?: int|Param,
+ *         prefetch_count?: int|Param,
+ *     }>,
  *     retry_strategy?: array{
  *         max_retries?: int|Param, // Default: 3
  *         delay?: int|Param, // Default: 1000
@@ -2228,6 +2234,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         },
  *         header?: array{
  *             locale_switcher?: bool|Param, // Default: true
+ *             layout?: "stacked"|"compact"|Param, // stacked: NAVBAR_MENU gets its own row under the brand. compact: brand, every nav slot and the right-hand tools share one row. // Default: "stacked"
  *             container?: scalar|Param|null, // Default: "container-fluid"
  *             auth?: array{
  *                 enabled?: bool|Param, // Default: true
