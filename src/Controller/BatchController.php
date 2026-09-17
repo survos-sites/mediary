@@ -7,6 +7,7 @@ use App\Entity\Asset;
 use App\Entity\MediaRecord;
 use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
+use App\Service\CollectionPriority;
 use App\Workflow\AssetFlow;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -33,9 +34,9 @@ final class BatchController implements LoggerAwareInterface
 
     /** POST: Symfony deserializes + validates the JSON body straight into the DTO. */
     #[Route('/{client}/batch', methods: ['POST'])]
-    public function post(string $client, #[MapRequestPayload] BatchPayloadDto $payload): JsonResponse
+    public function post(string $client, #[MapRequestPayload] BatchPayloadDto $payload, Request $request): JsonResponse
     {
-        return $this->handle($client, $payload);
+        return $this->handle($client, $payload, CollectionPriority::resolve($request->getPayload()->all()));
     }
 
     /** GET: debug single-URL registration via ?url=…&callback_url=… */
@@ -51,7 +52,7 @@ final class BatchController implements LoggerAwareInterface
         ));
     }
 
-    private function handle(string $client, BatchPayloadDto $payload): JsonResponse
+    private function handle(string $client, BatchPayloadDto $payload, string $priority = CollectionPriority::NORMAL): JsonResponse
     {
         $this->logger->warning(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
 
@@ -108,6 +109,10 @@ final class BatchController implements LoggerAwareInterface
 
         foreach ($urls as $url) {
             $asset = $assets[$url];
+            $asset->context ??= [];
+            $asset->context[CollectionPriority::CONTEXT_KEY] = CollectionPriority::promote(
+                $asset->context[CollectionPriority::CONTEXT_KEY] ?? null, $priority,
+            );
 
             // Where to publish completion. Last writer wins — unlike source
             // metadata, this is not provenance, it is a live routing decision
