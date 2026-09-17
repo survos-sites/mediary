@@ -44,7 +44,7 @@ final class AssetPresigner
 
         try {
             $request = $this->s3->createPresignedRequest(
-                $this->s3->getCommand('GetObject', ['Bucket' => $this->bucket, 'Key' => $key]),
+                $this->s3->getCommand('GetObject', ['Bucket' => $asset->storageBucket ?? $this->bucket, 'Key' => $key]),
                 sprintf('+%d seconds', $ttlSeconds),
             );
 

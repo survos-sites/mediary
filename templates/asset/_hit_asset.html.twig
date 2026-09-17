@@ -49,7 +49,7 @@
         {% endif %}>
         {# Render via imgproxy from the canonical master, not a stored derivative. #}
         {% set thumbSource = asset.storageKey
-            ? 's3://museado/' ~ asset.storageKey
+            ? 's3://' ~ (asset.storageBucket ?? 'museado') ~ '/' ~ asset.storageKey
             : (asset.archiveUrl ?: asset.originalUrl)
         %}
         {% if isVideo %}

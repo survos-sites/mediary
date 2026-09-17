@@ -411,6 +411,14 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
     #[Groups(['asset.read'])]
     public ?string $storageKey = null;
 
+    /**
+     * Bucket holding storageKey when it is not our archive bucket: a private source bucket
+     * (MEDIARY_SOURCE_BUCKETS) whose object is used in place, never copied. Null = archive bucket.
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['asset.read'])]
+    public ?string $storageBucket = null;
+
     /** URL of archived original (object storage) */
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['asset.read'])] // for now, maybe removed after debugging

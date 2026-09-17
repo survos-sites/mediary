@@ -215,7 +215,13 @@ final class AssetRegistry
 
     public function s3Url(Asset $asset)
     {
-        return sprintf("%s/%s/%s", $this->s3Endpoint, $this->s3Bucket, $asset->storageKey);
+        return sprintf("%s/%s/%s", $this->s3Endpoint, $this->bucket($asset), $asset->storageKey);
+    }
+
+    /** Where storageKey lives: a source bucket used in place (SourceBuckets), else our archive. */
+    public function bucket(Asset $asset): string
+    {
+        return $asset->storageBucket ?? $this->s3Bucket;
     }
 
     /**
@@ -226,7 +232,7 @@ final class AssetRegistry
      */
     public function s3SourceUrl(Asset $asset): string
     {
-        return sprintf('s3://%s/%s', $this->s3Bucket, $asset->storageKey);
+        return sprintf('s3://%s/%s', $this->bucket($asset), $asset->storageKey);
     }
 
     /** @param array<string,mixed> $contextHints */
@@ -459,7 +465,8 @@ final class AssetRegistry
         }
 
         if ($asset->storageKey) {
-            $source = $this->s3Url($asset);
+            // A source bucket is private, so imgproxy must read it over S3, not the HTTP URL.
+            $source = $asset->storageBucket !== null ? $this->s3SourceUrl($asset) : $this->s3Url($asset);
         } elseif (is_string($asset->archiveUrl) && $asset->archiveUrl !== '') {
             $source = $asset->archiveUrl;
         } else {

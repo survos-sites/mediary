@@ -66,6 +66,8 @@ use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Twig\Environment as TwigEnvironment;
 use Survos\GoogleSheetsBundle\Service\GoogleDriveService;
 use App\Service\OcrService;
+use App\Service\AssetPresigner;
+use App\Service\SourceBuckets;
 use App\Workflow\AssetFlow as WF;
 use Survos\DataContracts\Vocabulary\OcrProvider;
 
@@ -128,6 +130,8 @@ class AssetWorkflow
         private readonly ClaimSearchSync $claimSearchSync,
         private readonly AssetNotifier $assetNotifier,
         private readonly TwigEnvironment $twig,
+        private readonly SourceBuckets $sourceBuckets,
+        private readonly AssetPresigner $presigner,
         #[Target('archive.storage')]  private readonly ?FilesystemOperator $archiveStorage = null,
         private ?GoogleDriveService $driveService = null,
         iterable $taskServices = [],
@@ -451,8 +455,10 @@ class AssetWorkflow
         $asset = $this->getAsset($event);
         $id = $asset->id;
 
-        // Remove the archived master from storage if we put one there.
+        // Remove the archived master from storage if we put one there. A source-bucket object is
+        // not ours: it is the only remote copy of the original.
         if ($this->archiveStorage !== null
+            && $asset->storageBucket === null
             && $asset->storageKey
             && $this->archiveStorage->fileExists($asset->storageKey)
         ) {
@@ -590,6 +596,10 @@ class AssetWorkflow
             $asset->storageKey = null;
             $asset->storageBackend = 'source';
             $this->em->flush();
+            return;
+        }
+        if ($source = $this->sourceBuckets->resolve($asset->originalUrl)) {
+            $this->useSourceObject($asset, $source['bucket'], $source['key']);
             return;
         }
         if ($this->archiveStorage === null) {
@@ -737,6 +747,36 @@ class AssetWorkflow
         $asset->size = $bytes;
         $asset->archiveUrl = $this->assetRegistry->s3Url($asset); // public HTTP URL for browsers
 
+        $this->em->flush();
+        $this->warmThumbnailCache($asset);
+    }
+
+    /**
+     * The master is already durable in a private source bucket (SourceBuckets): point the asset at
+     * it instead of copying it into ours. A HEAD with our keys stands in for the download, and a
+     * missing object fails the same way a 404 from a URL does.
+     */
+    private function useSourceObject(Asset $asset, string $bucket, string $key): void
+    {
+        $head = $this->sourceBuckets->head($bucket, $key);
+        $asset->statusCode = $head === null ? 404 : 200;
+        if ($head === null) {
+            $this->em->flush();
+            $this->messageBus->dispatch(new TransitionMessage($asset->id, Asset::class, WF::TRANSITION_ARCHIVE_FAILED, WF::WORKFLOW_NAME));
+
+            throw new UnrecoverableMessageHandlingException(sprintf('Source object s3://%s/%s not found for asset %s', $bucket, $key, $asset->id));
+        }
+        $asset->storageBucket = $bucket;
+        $asset->storageKey = $key;
+        $asset->storageBackend = 'source';
+        $asset->size = $head['size'];
+        $asset->mime ??= $head['mime'];
+        $asset->ext = strtolower(pathinfo($key, PATHINFO_EXTENSION)) ?: null;
+        // The object's location, not a link anyone can open: the bucket is private.
+        $asset->archiveUrl = $this->assetRegistry->s3Url($asset);
+        $this->logger->info('archive[{id}]: source object s3://{bucket}/{key} used in place ({bytes} bytes, no copy)', [
+            'id' => $asset->id, 'bucket' => $bucket, 'key' => $key, 'bytes' => $head['size'],
+        ]);
         $this->em->flush();
         $this->warmThumbnailCache($asset);
     }
@@ -1049,7 +1089,7 @@ class AssetWorkflow
         $tasks = $asset->context['tasks'] ?? [];
 
         if (in_array('ocr', $tasks, true) && empty($asset->context['ocr'])) {
-            $ocrSourceUrl = $asset->smallUrl ?? $asset->archiveUrl ?? null;
+            $ocrSourceUrl = $asset->smallUrl ?? $this->effectiveArchiveUrl($asset);
             if ($ocrSourceUrl) {
                 $ocrTmp = tempnam(sys_get_temp_dir(), 'asset_ocr_');
                 if ($ocrTmp !== false) {
@@ -1069,7 +1109,7 @@ class AssetWorkflow
             }
         }
 
-        if (in_array('thumbhash', $tasks, true) && empty($asset->context['thumbhash']) && $asset->archiveUrl) {
+        if (in_array('thumbhash', $tasks, true) && empty($asset->context['thumbhash']) && ($archiveUrl = $this->effectiveArchiveUrl($asset))) {
             $localForThumbhash = $this->localImagePath($asset, preferSmall: true);
             if (is_string($localForThumbhash) && $localForThumbhash !== '') {
                 $this->logger->info('onLocalAnalyze: thumbhash missing, using local small derivative');
@@ -1079,7 +1119,7 @@ class AssetWorkflow
                 unset($pixels);
             } else {
                 $this->logger->info('onLocalAnalyze: thumbhash missing, fetching from archive URL (fallback)');
-                [$tw, $th, $pixels] = $this->assetPreviewService->resizeForThumbHashFromUrl($asset->archiveUrl);
+                [$tw, $th, $pixels] = $this->assetPreviewService->resizeForThumbHashFromUrl($archiveUrl);
                 $hash = Thumbhash::RGBAToHash($tw, $th, $pixels, 192, 192);
                 $asset->context['thumbhash'] = Thumbhash::convertHashToString($hash);
                 unset($pixels);
@@ -1087,12 +1127,12 @@ class AssetWorkflow
         }
 
         // Compute pHash only when explicitly requested.
-        if (in_array('phash', $tasks, true) && empty($asset->context['phash']) && $asset->archiveUrl) {
+        if (in_array('phash', $tasks, true) && empty($asset->context['phash']) && ($archiveUrl = $this->effectiveArchiveUrl($asset))) {
             $localForPhash = $this->localImagePath($asset, preferSmall: true);
             $this->assetPreviewService->maybeComputePhash(
                 $asset,
                 self::THUMBHASH_PRESET,
-                $localForPhash ?? $asset->archiveUrl
+                $localForPhash ?? $archiveUrl
             );
         }
 
@@ -1450,7 +1490,7 @@ class AssetWorkflow
             return 'file://' . $localPath;
         }
 
-        foreach ([$asset->archiveUrl, $asset->originalUrl, $asset->smallUrl] as $candidate) {
+        foreach ([$this->effectiveArchiveUrl($asset), $asset->originalUrl, $asset->smallUrl] as $candidate) {
             if (is_string($candidate) && filter_var($candidate, FILTER_VALIDATE_URL)) {
                 return $candidate;
             }
@@ -1802,6 +1842,10 @@ class AssetWorkflow
     {
         if (!$asset->storageKey) {
             return $asset->archiveUrl;
+        }
+        if ($asset->storageBucket !== null) {
+            // Private source bucket: the stored archiveUrl answers 403, so hand out a signed one.
+            return $this->presigner->archiveUrl($asset);
         }
 
         $computed = $this->assetRegistry->s3Url($asset);
