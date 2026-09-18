@@ -54,7 +54,7 @@
         "survos/command-bundle": "^2.18.18",
         "survos/crawler-bundle": "^2.29.1",
         "survos/data-bundle": "^2.10.25",
-        "survos/data-contracts": "^2.30.0",
+        "survos/data-contracts": "^2.31.7",
         "survos/dataset-bundle": "^2.31.1",
         "survos/doc-bundle": "^2.30.2",
         "survos/elastic-bundle": "^2.30.2",
