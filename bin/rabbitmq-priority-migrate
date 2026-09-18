@@ -59,8 +59,8 @@ def ctl_queues():
         _ctl_queues = {}
         for q in json.loads(out[out.index('['):]):
             args = q.get('arguments') or {}
-            if isinstance(args, list):  # [[key, value], ...] on some rabbitmqctl versions
-                args = {k: v for k, v in args}
+            if isinstance(args, list):  # [[key, type, value], ...] from rabbitmqctl
+                args = {row[0]: row[-1] for row in args}
             _ctl_queues[q['name']] = {'messages': q['messages'], 'consumers': q['consumers'], 'arguments': args}
     return _ctl_queues
 
@@ -117,10 +117,18 @@ if not a.apply:
     print(f'\n{len(todo)} queue(s) to recreate, {sum(l["messages"] for *_, l in todo)} message(s) dropped. Dry run -- pass --apply.')
     sys.exit(0)
 
-for queue, transport, want, _ in todo:
+# Delete everything first, then one setup-transports: each console call can be a slow
+# `dokku run`, and cron-started consumers must not re-attach mid-migration.
+for queue, _, _, _ in todo:
     delete_queue(queue)
-    console('messenger:setup-transports', transport)
+    print(f'{queue}: deleted')
+console('messenger:setup-transports')
+failed = []
+for queue, _, want, _ in todo:
     now = live_queue(queue)
     if now is None or any((now.get('arguments') or {}).get(k) != v for k, v in want.items()):
-        sys.exit(f'!! {queue} was not recreated with {json.dumps(want)}')
-    print(f'{queue}: recreated {json.dumps(now.get("arguments"))}')
+        failed.append(queue)
+    else:
+        print(f'{queue}: recreated {json.dumps(now.get("arguments"))}')
+if failed:
+    sys.exit(f'!! not recreated with the declared arguments: {", ".join(failed)}')

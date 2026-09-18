@@ -632,6 +632,10 @@ class AssetWorkflow
         // ever hits the origin server again.
         $response = $this->httpClient->request('GET', $url, [
             'timeout' => $this->serviceHttpTimeoutSeconds,
+            // Bytes verbatim, so no transfer encoding wanted -- and some library-host WAFs
+            // (washingtonpublib.libraryhost.com, from datacenter IPs) answer the bare
+            // "Accept-Encoding: gzip" Symfony sends by default with 429 + Retry-After: 10.
+            'headers' => ['Accept-Encoding' => 'identity'],
         ]);
         $status = $response->getStatusCode();
         $asset->statusCode = $status;
