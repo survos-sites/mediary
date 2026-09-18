@@ -101,13 +101,47 @@ final class AssetSubject implements WorkflowSubjectInterface, ImageSubjectInterf
         return $this->asset->originalUrl;
     }
 
-    /** @return array<string,mixed> */
+    /**
+     * Task context: the item's catalogue facts first (from the producer's source claims), then the
+     * asset's own context, then runtime hints -- later wins.
+     *
+     * The facts (title, caption, date, creator, place) reached mediary as source claims and were
+     * stored in sourceMeta, where no AI task looked: observe's existing_metadata was empty for every
+     * harvest item, and fortepan_curation_score called newspaper photos "amateur" for want of a
+     * creator. AbstractPromptTask::knownFacts() reads these keys.
+     *
+     * @return array<string,mixed>
+     */
     public function getWorkflowContext(): array
     {
-        $hints = [];
+        $hints = $this->knownFacts();
         if (isset($this->asset->sourceMeta[MediaSyncKeys::OCR_LANGUAGE])) {
             $hints[MediaSyncKeys::OCR_LANGUAGE] = $this->asset->sourceMeta[MediaSyncKeys::OCR_LANGUAGE];
         }
         return array_merge($hints, $this->asset->context ?? [], $this->context);
+    }
+
+    /** @return array<string, string|list<string>> */
+    private function knownFacts(): array
+    {
+        $keyFor = [
+            'dcterms:title' => 'title',
+            'dcterms:abstract' => 'caption',
+            'dcterms:description' => 'description',
+            'dcterms:date' => 'date',
+            'dcterms:creator' => 'creator',
+            'dcterms:spatial' => 'place',
+            'dcterms:isPartOf' => 'collection',
+        ];
+        $facts = [];
+        foreach ((array) ($this->asset->sourceMeta[MediaSyncKeys::SOURCE_CLAIMS] ?? []) as $claim) {
+            $key = $keyFor[$claim['predicate'] ?? ''] ?? null;
+            $value = $claim['value'] ?? null;
+            if ($key !== null && is_scalar($value) && trim((string) $value) !== '') {
+                $facts[$key][] = (string) $value;
+            }
+        }
+
+        return array_map(static fn (array $v): string|array => count($v) === 1 ? $v[0] : array_values(array_unique($v)), $facts);
     }
 }
