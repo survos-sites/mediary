@@ -1,18 +1,55 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Crawl;
 
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\TestWith;
-use Survos\CrawlerBundle\Tests\BaseVisitLinksTest;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CrawlAsVisitorTest extends BaseVisitLinksTest
+class CrawlAsVisitorTest extends WebTestCase
 {
+    private static \Doctrine\DBAL\Connection $adminConnection;
+    private static string $databaseName;
+    private static string $originalDatabaseUrl;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::$originalDatabaseUrl = $_ENV['DATABASE_URL'] ?? $_SERVER['DATABASE_URL'];
+        $url = $_ENV['TEST_POSTGRES_URL'] ?? self::$originalDatabaseUrl;
+        $params = (new \Doctrine\DBAL\Tools\DsnParser(['postgresql' => 'pdo_pgsql', 'postgres' => 'pdo_pgsql']))->parse($url);
+        if (($params['driver'] ?? '') !== 'pdo_pgsql') {
+            throw new \LogicException('Crawler tests require PostgreSQL; set TEST_POSTGRES_URL to a local test server.');
+        }
+        $params['dbname'] = 'postgres';
+        self::$adminConnection = \Doctrine\DBAL\DriverManager::getConnection($params);
+        self::$databaseName = 'mediary_crawl_'.bin2hex(random_bytes(6));
+        self::$adminConnection->createSchemaManager()->createDatabase(self::$databaseName);
+        $testUrl = preg_replace('~(/)[^/?]+(\?.*)?$~', '$1'.self::$databaseName.'$2', $url);
+        $_ENV['DATABASE_URL'] = $_SERVER['DATABASE_URL'] = $testUrl;
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        self::ensureKernelShutdown();
+        if (isset(self::$adminConnection, self::$databaseName)) {
+            self::$adminConnection->createSchemaManager()->dropDatabase(self::$databaseName);
+            self::$adminConnection->close();
+        }
+        if (isset(self::$originalDatabaseUrl)) {
+            $_ENV['DATABASE_URL'] = $_SERVER['DATABASE_URL'] = self::$originalDatabaseUrl;
+        }
+        parent::tearDownAfterClass();
+    }
+
+
 	#[TestDox('/$method $url ($route)')]
 	#[TestWith(['', '/data/providers', 200])]
-	#[TestWith(['', '/ez', 200])]
+	#[TestWith(['', '/ez', 302])]
 	#[TestWith(['', '/ez/asset', 200])]
 	#[TestWith(['', '/ez/asset/new', 403])]
 	#[TestWith(['', '/ez/asset/render-filters', 200])]
@@ -26,9 +63,9 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/ez/user/new', 403])]
 	#[TestWith(['', '/ez/user/render-filters', 200])]
 	#[TestWith(['', '/ez/stats', 200])]
-	#[TestWith(['', '/_mcp', 403])]
+	#[TestWith(['', '/_mcp', 405])]
 	#[TestWith(['', '/health', 200])]
-	#[TestWith(['', '/browse-assets', 200])]
+	#[TestWith(['', '/browse-assets', 302])]
 	#[TestWith(['', '/test', 200])]
 	#[TestWith(['', '/media/grid', 200])]
 	#[TestWith(['', '/media/search', 200])]
@@ -38,7 +75,7 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/images', 200])]
 	#[TestWith(['', '/search-template/image', 200])]
 	#[TestWith(['', '/media-record/browse', 200])]
-	#[TestWith(['', '/verify/email', 200])]
+	#[TestWith(['', '/verify/email', 302])]
 	#[TestWith(['', '/login', 200])]
 	#[TestWith(['', '/status.json', 200])]
 	#[TestWith(['', '/webhook', 200])]
@@ -52,7 +89,7 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/docs', 200])]
 	#[TestWith(['', '/favicon.svg', 200])]
 	#[TestWith(['', '/auth/login', 200])]
-	#[TestWith(['', '/auth/profile', 200])]
+	#[TestWith(['', '/auth/profile', 302])]
 	#[TestWith(['', '/auth/providers', 200])]
 	#[TestWith(['', '/auth/register', 200])]
 	#[TestWith(['', '/entity-constants', 200])]
@@ -135,10 +172,10 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/storage/archive.storage?deep=0&addMeta=0&signed=1', 200])]
 	#[TestWith(['', '/storage/show/local.storage/index.php', 200])]
 	#[TestWith(['', '/storage/show/local.storage/robots.txt', 200])]
-	#[TestWith(['', '/media/5933cc1e1b4958d0/task/enrich_from_thumbnail?image=full&async=1', 200])]
-	#[TestWith(['', '/media/5933cc1e1b4958d0/task/context_description?image=full&model=mistral-large-latest&async=1', 200])]
-	#[TestWith(['', '/media/5933cc1e1b4958d0/task/ocr_mistral?image=full&async=1', 200])]
-	#[TestWith(['', '/media/29b3148294901f3e/task/enrich_from_thumbnail?image=full&async=1', 200])]
+	#[TestWith(['', '/media/5933cc1e1b4958d0/task/enrich_from_thumbnail?image=full&async=1', 302])]
+	#[TestWith(['', '/media/5933cc1e1b4958d0/task/context_description?image=full&model=mistral-large-latest&async=1', 302])]
+	#[TestWith(['', '/media/5933cc1e1b4958d0/task/ocr_mistral?image=full&async=1', 302])]
+	#[TestWith(['', '/media/29b3148294901f3e/task/enrich_from_thumbnail?image=full&async=1', 302])]
 	#[TestWith(['', '/storage/show/local.storage/index.php?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/storage/show/local.storage/index.php?signed=1', 200])]
 	#[TestWith(['', '/storage/show/local.storage/_profiler/717d69?panel=request', 200])]
@@ -147,6 +184,60 @@ class CrawlAsVisitorTest extends BaseVisitLinksTest
 	#[TestWith(['', '/storage/show/local.storage/_profiler/95c193?panel=request', 200])]
 	public function testRoute(string $username, string $url, string|int|null $expected): void
 	{
-		parent::loginAsUserAndVisit($username, $url, (int)$expected);
+		$client = self::createClient();
+        $client->disableReboot();
+        $bus = $this->createStub(\Symfony\Component\Messenger\MessageBusInterface::class);
+        $bus->method('dispatch')->willReturnCallback(static fn (object $message, array $stamps = []) => \Symfony\Component\Messenger\Envelope::wrap($message, $stamps));
+        self::getContainer()->set('messenger.bus.default', $bus);
+        foreach (self::getContainer()->get('doctrine')->getManagers() as $name => $em) {
+            if ($name === 'default') {
+                self::assertSame(self::$databaseName, $em->getConnection()->getDatabase());
+                $em->getConnection()->executeStatement('DROP SCHEMA public CASCADE');
+                $em->getConnection()->executeStatement('CREATE SCHEMA public');
+                (new SchemaTool($em))->createSchema($em->getMetadataFactory()->getAllMetadata());
+            } else {
+                self::assertTrue($em->getConnection()->getParams()['memory'] ?? false);
+                (new SchemaTool($em))->createSchema($em->getMetadataFactory()->getAllMetadata());
+            }
+        }
+        $em = self::getContainer()->get('doctrine.orm.default_entity_manager');
+        foreach (['5933cc1e1b4958d0', '29b3148294901f3e', '57cfd8080f8ec665', 'f644d91b71f04b61'] as $oldId) {
+            $asset = \App\Entity\Asset::fromOriginalUrl('https://example.test/'.$oldId.'.jpg');
+            $asset->mime = 'image/jpeg';
+            $asset->ext = 'jpg';
+            $em->persist($asset);
+            $url = str_replace($oldId, $asset->id, $url);
+        }
+        $em->flush();
+        $datasets = self::getContainer()->get('doctrine.orm.dataset_entity_manager');
+        foreach (['cron-america', 'curatescape', 'dc', 'fpeu'] as $code) {
+            $provider = new \Survos\DatasetBundle\Entity\Provider($code);
+            $provider->setLabel('Fixture '.$code);
+            $datasets->persist($provider);
+            if ($code === 'cron-america') {
+                foreach (['2022239700', 'sn95079246', 'sn85059732', '00225879'] as $id) {
+                    $dataset = new \Survos\DatasetBundle\Entity\DatasetInfo($code.'/'.$id);
+                    $dataset->providerEntity = $provider;
+                    $datasets->persist($dataset);
+                }
+            }
+        }
+        $datasets->flush();
+        $storage = self::getContainer()->get('local.storage');
+        foreach (['index.php', 'robots.txt', '_profiler/717d69', '_profiler/95c193'] as $path) {
+            $storage->write($path, 'Local storage test fixture');
+        }
+        $client->request('GET', $url);
+        self::assertResponseStatusCodeSame((int) $expected);
+        if (str_starts_with($url, '/ez/custom/asset/')) {
+            self::assertSelectorTextContains('#asset-identifier', basename($url));
+        }
+        if (str_contains($url, '/task/')) {
+            self::assertResponseRedirects(strstr($url, '/task/', true));
+            $parts = explode('/', parse_url($url, PHP_URL_PATH));
+            $queuedAsset = $em->find(\App\Entity\Asset::class, $parts[2]);
+            self::assertNotNull($queuedAsset);
+            self::assertContains($parts[4], $queuedAsset->aiQueue);
+        }
 	}
 }

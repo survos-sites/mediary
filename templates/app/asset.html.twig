@@ -1,9 +1,18 @@
-{#{% extends 'base.html.twig' %}#}
 {% extends '@EasyAdmin/layout.html.twig' %}
 
-{% block title %}Asset{% endblock %}
+{% block title %}Asset {{ asset.id }}{% endblock %}
 
 {% block main %}
-
-    {{ dump(asset) }}
+    <h1>Asset</h1>
+    <dl class="row">
+        <dt class="col-sm-3">Identifier</dt>
+        <dd class="col-sm-9" id="asset-identifier">{{ asset.id }}</dd>
+        <dt class="col-sm-3">Original URL</dt>
+        <dd class="col-sm-9 text-break">{{ asset.originalUrl }}</dd>
+        <dt class="col-sm-3">Media type</dt>
+        <dd class="col-sm-9">{{ asset.mime ?? 'Unknown' }}</dd>
+        <dt class="col-sm-3">Workflow state</dt>
+        <dd class="col-sm-9">{{ asset.marking }}</dd>
+    </dl>
+    <a class="btn btn-primary" href="{{ path('asset_show', {id: asset.id}) }}">View asset details</a>
 {% endblock %}

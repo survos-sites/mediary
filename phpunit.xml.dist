@@ -5,19 +5,21 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         testdox="true"
+         testdox="false"
          bootstrap="tests/bootstrap.php"
          failOnDeprecation="true"
+         failOnWarning="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
 >
     <php>
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
+        <env name="SEARCH_DEFAULT_DSN" value="doctrine://default" force="true"/>
+        <env name="CLAIMS_DATABASE_URL" value="sqlite:///:memory:" force="true"/>
+        <env name="DOCTRINE_MESSENGER_TRANSPORT_DSN" value="doctrine://default" force="true"/>
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="BROWSER_ALWAYS_START_WEBSERVER" value="1"/>
-        <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
 <!--        <env name="SMOKE_TESTING_ROUTES_METHODS" value="false" />-->
         <server name="SMOKE_TESTING_ROUTES_METHODS" value="off" />
         <server name="APP_DEBUG" value="false"/> <!-- set this to false on your CI to speed up tests by 2x -->

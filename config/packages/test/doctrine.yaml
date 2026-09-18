@@ -1,0 +1,8 @@
+doctrine:
+    dbal:
+        connections:
+            default:
+                dbname_suffix: ""
+            dataset:
+                path: null
+                memory: true
