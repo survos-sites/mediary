@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""
+Recreate RabbitMQ queues whose declared arguments changed (x-max-priority, see
+docs/collection-priority.md).
+
+RabbitMQ cannot change a queue's arguments in place (406 PRECONDITION_FAILED on declare, which
+surfaces as a 500 from /harvest/batch), so every transport queue whose live arguments differ from
+what messenger config declares is deleted and recreated with `messenger:setup-transports`.
+Messages still queued are dropped: anything lost is re-dispatched from the client side.
+
+Refuses queues with consumers attached (stop the workers first). Only the named vhost is touched.
+Dry run by default; pass --apply.
+
+    bin/rabbitmq-priority-migrate                 # local dev, report only
+    bin/rabbitmq-priority-migrate --apply
+    bin/rabbitmq-priority-migrate --mgmt http://127.0.0.1:15672 --vhost mediary --user guest --password guest --apply
+
+--console lets the desired config come from elsewhere, e.g. the prod container:
+    --console "dokku run mediary php bin/console"
+"""
+import argparse, base64, json, shlex, subprocess, sys, urllib.error, urllib.parse, urllib.request
+
+p = argparse.ArgumentParser()
+p.add_argument('--mgmt', default='http://127.0.0.1:15672')
+p.add_argument('--vhost', default='mediary')
+p.add_argument('--user', default='guest')
+p.add_argument('--password', default='guest')
+p.add_argument('--console', default='php bin/console')
+p.add_argument('--apply', action='store_true')
+a = p.parse_args()
+
+auth = 'Basic ' + base64.b64encode(f'{a.user}:{a.password}'.encode()).decode()
+vh = urllib.parse.quote(a.vhost, safe='')
+
+
+def api(method, path):
+    req = urllib.request.Request(a.mgmt.rstrip('/') + '/api' + path, method=method, headers={'Authorization': auth})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        raw = r.read()
+        return json.loads(raw) if raw else None
+
+
+def live_queue(name):
+    try:
+        return api('GET', f'/queues/{vh}/{urllib.parse.quote(name, safe="")}')
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
+def console(*args):
+    return subprocess.run(shlex.split(a.console) + list(args), capture_output=True, text=True, check=True).stdout
+
+
+out = console('debug:config', 'framework', 'messenger.transports', '--format=json')
+transports = json.loads(out[out.index('{'):])
+
+todo = []
+for transport, cfg in sorted(transports.items()):
+    if not isinstance(cfg, dict):
+        continue
+    for queue, qcfg in ((cfg.get('options') or {}).get('queues') or {}).items():
+        want = (qcfg or {}).get('arguments') or {}
+        live = live_queue(queue)
+        if live is None:
+            continue  # setup-transports creates it fresh
+        have = live.get('arguments') or {}
+        if all(have.get(k) == v for k, v in want.items()):
+            continue
+        todo.append((queue, transport, want, live))
+        print(f'{queue:32} msgs={live["messages"]:<6} consumers={live.get("consumers", 0)}  live={json.dumps(have)} -> want={json.dumps(want)}')
+
+if not todo:
+    print('All transport queues already match their declared arguments.')
+    sys.exit(0)
+busy = [q for q, _, _, live in todo if live.get('consumers', 0)]
+if busy:
+    sys.exit(f'!! stop the workers first; consumers attached to: {", ".join(busy)}')
+if not a.apply:
+    print(f'\n{len(todo)} queue(s) to recreate, {sum(l["messages"] for *_, l in todo)} message(s) dropped. Dry run -- pass --apply.')
+    sys.exit(0)
+
+for queue, transport, want, _ in todo:
+    api('DELETE', f'/queues/{vh}/{urllib.parse.quote(queue, safe="")}')
+    console('messenger:setup-transports', transport)
+    now = live_queue(queue)
+    if now is None or any((now.get('arguments') or {}).get(k) != v for k, v in want.items()):
+        sys.exit(f'!! {queue} was not recreated with {json.dumps(want)}')
+    print(f'{queue}: recreated {json.dumps(now.get("arguments"))}')
