@@ -94,6 +94,7 @@
         "symfony/process": "^8.1.7",
         "symfony/property-access": "^8.1.4",
         "symfony/property-info": "^8.1.7",
+        "symfony/rate-limiter": "^8.1",
         "symfony/redis-messenger": "^8.1.7",
         "symfony/runtime": "^8.1.0",
         "symfony/security-bundle": "^8.1.7",

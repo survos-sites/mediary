@@ -34,5 +34,8 @@ framework:
         app: cache.adapter.apcu
 
         # Namespaced pools use the above "app" backend by default
-        #pools:
-            #my.dedicated.cache: null
+        pools:
+            # Per-host token buckets for source fetches (App\Service\SourceRateLimiter). The one
+            # cache that must be shared across worker containers, so Postgres rather than APCu.
+            cache.source_rate:
+                adapter: cache.adapter.doctrine_dbal

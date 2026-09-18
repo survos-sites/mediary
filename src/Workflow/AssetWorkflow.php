@@ -68,12 +68,17 @@ use Survos\GoogleSheetsBundle\Service\GoogleDriveService;
 use App\Service\OcrService;
 use App\Service\AssetPresigner;
 use App\Service\SourceBuckets;
+use App\Service\SourceRateLimiter;
+use Survos\DataContracts\Vocabulary\MediaSyncKeys;
 use App\Workflow\AssetFlow as WF;
 use Survos\DataContracts\Vocabulary\OcrProvider;
 
 //#[Workflow(name: WF::WORKFLOW_NAME, supports: [Asset::class])]
 class AssetWorkflow
 {
+    /** Attempts per archive fetch that a source 429 is waited out inline before messenger's retry takes over. */
+    private const int SOURCE_429_ATTEMPTS = 3;
+
     const THUMBHASH_PRESET = 'thumb';
 
     /**
@@ -132,6 +137,7 @@ class AssetWorkflow
         private readonly TwigEnvironment $twig,
         private readonly SourceBuckets $sourceBuckets,
         private readonly AssetPresigner $presigner,
+        private readonly SourceRateLimiter $sourceRateLimiter,
         #[Target('archive.storage')]  private readonly ?FilesystemOperator $archiveStorage = null,
         private ?GoogleDriveService $driveService = null,
         iterable $taskServices = [],
@@ -630,14 +636,31 @@ class AssetWorkflow
         // local copy, no re-encode (bytes verbatim, so any embedded metadata is
         // preserved). imgproxy then reads it via s3://, so no downstream call
         // ever hits the origin server again.
-        $response = $this->httpClient->request('GET', $url, [
-            'timeout' => $this->serviceHttpTimeoutSeconds,
-            // Bytes verbatim, so no transfer encoding wanted -- and some library-host WAFs
-            // (washingtonpublib.libraryhost.com, from datacenter IPs) answer the bare
-            // "Accept-Encoding: gzip" Symfony sends by default with 429 + Retry-After: 10.
-            'headers' => ['Accept-Encoding' => 'identity'],
-        ]);
-        $status = $response->getStatusCode();
+        // Paced per source host across every archive worker (SourceRateLimiter). A 429 despite the
+        // pacing is waited out here, inline, rather than redelivered: a delayed redelivery
+        // declares a delay queue, which is exactly what took this worker down before (see the
+        // 404/410 note below).
+        $rate = $asset->sourceMeta[MediaSyncKeys::SOURCE_RATE] ?? null;
+        for ($attempt = 1; ; $attempt++) {
+            $this->sourceRateLimiter->waitFor($url, is_numeric($rate) ? (float) $rate : null);
+            $response = $this->httpClient->request('GET', $url, [
+                'timeout' => $this->serviceHttpTimeoutSeconds,
+                // Bytes verbatim, so no transfer encoding wanted -- and some library-host WAFs
+                // (washingtonpublib.libraryhost.com, from datacenter IPs) answer the bare
+                // "Accept-Encoding: gzip" Symfony sends by default with 429 + Retry-After: 10.
+                'headers' => ['Accept-Encoding' => 'identity'],
+            ]);
+            $status = $response->getStatusCode();
+            if ($status !== 429 || $attempt >= self::SOURCE_429_ATTEMPTS) {
+                break;
+            }
+            $retryAfter = (int) ($response->getHeaders(false)['retry-after'][0] ?? 0);
+            $response->cancel();
+            $this->logger->info('archive[{id}]: 429 from source, waiting {s}s (attempt {n})', [
+                'id' => $asset->id, 's' => $retryAfter ?: 10, 'n' => $attempt,
+            ]);
+            sleep(min(max($retryAfter, 10), 60));
+        }
         $asset->statusCode = $status;
         if ($status !== 200) {
             // Persist the status before throwing. A dead source URL is a fact about the asset that
