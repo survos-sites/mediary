@@ -1,3 +1,10 @@
+{
+	servers {
+		# Dokku's nginx terminates TLS before forwarding over the Docker bridge.
+		trusted_proxies static private_ranges
+	}
+}
+
 :{$PORT:80} {
 	root * /app/public
 

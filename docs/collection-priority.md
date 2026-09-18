@@ -21,6 +21,11 @@ by changing the asset's context alone. Legacy unstamped messages have priority 0
 
 ## Queue migration and workers
 
+Production currently retains classic queue declarations while its existing backlog drains.
+`max_priority: 3` is enabled in dev only; production deliveries retain the previous
+FIFO behavior, and message priority stamps remain available for the later migration.
+Do not enable priority in production until the queue migration below is complete.
+
 The asset stage queues declare `x-max-priority: 3`. RabbitMQ classic queues cannot
 change this argument in place: stop publishers/consumers and drain or explicitly
 purge and delete the old queues, then recreate using messenger:setup-transports.
