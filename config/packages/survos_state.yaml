@@ -20,7 +20,8 @@ survos_state:
     #
     # The stage queues already exist as classic queues, and RabbitMQ will not redefine one in
     # place: drain and delete them before deploying this, or queue_declare answers 406
-    # PRECONDITION_FAILED. See docs/collection-priority.md.
+    # PRECONDITION_FAILED. bin/rabbitmq-priority-migrate does that. See docs/collection-priority.md.
+    max_priority: 3
     # One delivery in flight per stage worker, so a high-priority arrival waits for at most one
     # job. The batched AI handler is the exception: it wants a batch's worth.
     prefetch_count: 1
@@ -32,13 +33,6 @@ survos_state:
     # in minutes to hours. Off, every ai_task is its own message and runs one sync call, exactly as
     # before. See docs/ai-batching.md.
     batch_enabled: '%env(bool:MEDIARY_AI_BATCH)%'
-
-# Production still has classic queues, including an asset.info backlog. Keep
-# consuming them without redeclaring immutable arguments until they are drained
-# and migrated as described in docs/collection-priority.md.
-when@dev:
-    survos_state:
-        max_priority: 3
 
 # NOTE: no when@dev override on purpose. There is a RabbitMQ running locally
 # (survos_rabbitmq, rabbitmq:4-management), and dev deliberately exercises the SAME driver as
