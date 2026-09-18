@@ -7765,16 +7765,16 @@
         },
         {
             "name": "survos/ai-workflow-bundle",
-            "version": "2.28.3",
+            "version": "2.31.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/ai-workflow-bundle.git",
-                "reference": "6675415283fa5f180445f285a18650376aebabb6"
+                "reference": "e38c21473cf6a7fb214f5ca55a31ffe8a1992e27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/ai-workflow-bundle/zipball/6675415283fa5f180445f285a18650376aebabb6",
-                "reference": "6675415283fa5f180445f285a18650376aebabb6",
+                "url": "https://api.github.com/repos/survos/ai-workflow-bundle/zipball/e38c21473cf6a7fb214f5ca55a31ffe8a1992e27",
+                "reference": "e38c21473cf6a7fb214f5ca55a31ffe8a1992e27",
                 "shasum": ""
             },
             "require": {
@@ -7829,7 +7829,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/ai-workflow-bundle/issues",
-                "source": "https://github.com/survos/ai-workflow-bundle/tree/2.28.3"
+                "source": "https://github.com/survos/ai-workflow-bundle/tree/2.31.9"
             },
             "funding": [
                 {
@@ -7837,7 +7837,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-12T23:20:30+00:00"
+            "time": "2026-09-18T23:22:44+00:00"
         },
         {
             "name": "survos/api-grid-bundle",

@@ -177,6 +177,9 @@
             "config/routes/ov_json_rpc_api.yaml"
         ]
     },
+    "pentiminax/ux-datatables": {
+        "version": "v1.0.0"
+    },
     "php-http/discovery": {
         "version": "1.20",
         "recipe": {
