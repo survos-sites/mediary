@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3fa5b318a49fc02aee7a9c1c9675bd8",
+    "content-hash": "93c0cf79013a91836e884a933d79e585",
     "packages": [
         {
             "name": "api-platform/core",
@@ -7765,16 +7765,16 @@
         },
         {
             "name": "survos/ai-workflow-bundle",
-            "version": "2.31.9",
+            "version": "2.31.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/ai-workflow-bundle.git",
-                "reference": "e38c21473cf6a7fb214f5ca55a31ffe8a1992e27"
+                "reference": "993bdb022188f53fda69e1de4102e3d1d20f550d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/ai-workflow-bundle/zipball/e38c21473cf6a7fb214f5ca55a31ffe8a1992e27",
-                "reference": "e38c21473cf6a7fb214f5ca55a31ffe8a1992e27",
+                "url": "https://api.github.com/repos/survos/ai-workflow-bundle/zipball/993bdb022188f53fda69e1de4102e3d1d20f550d",
+                "reference": "993bdb022188f53fda69e1de4102e3d1d20f550d",
                 "shasum": ""
             },
             "require": {
@@ -7829,7 +7829,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/ai-workflow-bundle/issues",
-                "source": "https://github.com/survos/ai-workflow-bundle/tree/2.31.9"
+                "source": "https://github.com/survos/ai-workflow-bundle/tree/2.31.11"
             },
             "funding": [
                 {
@@ -7837,7 +7837,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-09-18T23:22:44+00:00"
+            "time": "2026-09-19T10:34:06+00:00"
         },
         {
             "name": "survos/api-grid-bundle",
