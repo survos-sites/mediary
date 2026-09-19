@@ -26,8 +26,11 @@ survos_state:
     # job. The batched AI handler is the exception: it wants a batch's worth.
     prefetch_count: 1
     queue_options:
+        # As large as the ai_task batch (#[Transition(batch: 500)]): the batch handler can only group
+        # the messages it holds unacked, so a prefetch of 10 capped every provider job at 10
+        # (omeka/wej, 2026-09-19: 100 requests went out as 11 jobs).
         asset.ai.task:
-            prefetch_count: 10
+            prefetch_count: 500
 
     # Provider batch APIs for AI tasks (ai_task is #[Transition(batch: 500)]): half price, results
     # in minutes to hours. Off, every ai_task is its own message and runs one sync call, exactly as

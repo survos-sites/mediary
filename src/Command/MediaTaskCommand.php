@@ -61,8 +61,8 @@ final class MediaTaskCommand
     public function __invoke(
         SymfonyStyle $io,
 
-        #[Argument('Asset URL (http/https) or 16-char hex asset ID')]
-        string $image,
+        #[Argument('Asset URL (http/https) or 16-char hex asset ID (omit with --dataset)')]
+        ?string $image = null,
 
         #[Argument('Task name to run directly (e.g. ocr, classify, basic_description). Omit to use --next or --all.')]
         ?string $task = null,
@@ -89,9 +89,27 @@ final class MediaTaskCommand
         bool $json = false,
         #[Option('Force re-run, bypassing the sidecar cache')]
         bool $force = false,
-        #[Option('Queue the named task through the asset workflow (ai_task -- batched when MEDIARY_AI_BATCH=1) instead of running it here')]
-        bool $enqueue = false,
+        #[Option('Queue this task through the asset workflow (ai_task -- batched when MEDIARY_AI_BATCH=1) instead of running anything here')]
+        ?string $enqueue = null,
+        #[Option('With --enqueue: every asset of this dataset (e.g. omeka/wej) instead of one')]
+        ?string $dataset = null,
     ): int {
+        if ($enqueue !== null && !$this->taskRegistry->has($enqueue)) {
+            $io->error(sprintf('Unknown task "%s".', $enqueue));
+            return Command::FAILURE;
+        }
+        if ($dataset !== null) {
+            if ($enqueue === null) {
+                $io->error('--dataset only works with --enqueue=<task>.');
+                return Command::FAILURE;
+            }
+            return $this->enqueueDataset($io, $dataset, $enqueue);
+        }
+        if ($image === null) {
+            $io->error('Give an asset URL or ID, or --dataset with --enqueue.');
+            return Command::FAILURE;
+        }
+
         // ── 1. Resolve asset ──────────────────────────────────────────────────
         $asset = $this->resolveAsset($image);
 
@@ -119,17 +137,13 @@ final class MediaTaskCommand
         // The sync paths below always win over batching (they are the debugging paths); this is
         // the way to put a task on the ordinary ai_task transition, where the batch submitter
         // picks it up.
-        if ($enqueue) {
-            if ($task === null || !$this->taskRegistry->has($task)) {
-                $io->error('--enqueue needs a known task name.');
-                return Command::FAILURE;
-            }
+        if ($enqueue !== null) {
             if ($asset->aiLocked) {
                 $io->error('Asset is AI-locked (a batch or task is in flight); not queueing.');
                 return Command::FAILURE;
             }
-            $this->runner->enqueue($asset, [$task]);
-            $io->success(sprintf('Queued %s on %s (aiQueue: %s).', $task, $asset->id, implode(', ', $asset->aiQueue)));
+            $this->runner->enqueue($asset, [$enqueue]);
+            $io->success(sprintf('Queued %s on %s (aiQueue: %s).', $enqueue, $asset->id, implode(', ', $asset->aiQueue)));
 
             return Command::SUCCESS;
         }
@@ -214,6 +228,42 @@ final class MediaTaskCommand
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
+
+    /**
+     * Queue one task on every asset of a dataset, in one pass -- fast enough that the ai worker
+     * fills whole provider batches instead of trickling out jobs of a few. Skips assets that are
+     * AI-locked (a batch in flight) or already have the task queued.
+     */
+    private function enqueueDataset(SymfonyStyle $io, string $dataset, string $task): int
+    {
+        $query = $this->assetRepository->createQueryBuilder('a')
+            ->select('a.id')
+            ->where('a.dataset = :dataset')->setParameter('dataset', $dataset)
+            ->orderBy('a.id')
+            ->getQuery();
+        $ids = array_column($query->getArrayResult(), 'id');
+        if ($ids === []) {
+            $io->warning(sprintf('No assets for dataset %s.', $dataset));
+            return Command::SUCCESS;
+        }
+
+        $queued = $skipped = 0;
+        foreach ($io->progressIterate($ids) as $i => $id) {
+            $asset = $this->assetRepository->find($id);
+            if ($asset === null || $asset->aiLocked || in_array($task, $asset->aiQueue, true)) {
+                ++$skipped;
+                continue;
+            }
+            $this->runner->enqueue($asset, [$task]);
+            ++$queued;
+            if ($i % 200 === 199) {
+                $this->entityManager->clear();
+            }
+        }
+        $io->success(sprintf('Queued %s on %d asset(s) of %s; skipped %d (locked or already queued).', $task, $queued, $dataset, $skipped));
+
+        return Command::SUCCESS;
+    }
 
     private function resolveAsset(string $imageRef): ?Asset
     {
