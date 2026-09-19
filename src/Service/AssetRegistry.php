@@ -129,12 +129,6 @@ final class AssetRegistry
                     $asset->sourceMeta[$key] = $value;
                 }
             }
-            // Except the producer's catalogue claims: they are its CURRENT assertions about the
-            // item (a re-crawl adds the caption, a fix corrects the date), and AI tasks read them
-            // as known facts (AssetSubject). First-writer-wins froze the first, thinnest version.
-            if (isset($contextHints[MediaSyncKeys::SOURCE_CLAIMS]) && $contextHints[MediaSyncKeys::SOURCE_CLAIMS] !== []) {
-                $asset->sourceMeta[MediaSyncKeys::SOURCE_CLAIMS] = $contextHints[MediaSyncKeys::SOURCE_CLAIMS];
-            }
         }
 
         // Adopt OCR the producer already has rather than regenerating it. A newspaper harvester

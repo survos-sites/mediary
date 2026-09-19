@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Ai;
 
 use App\Entity\Asset;
+use App\Entity\MediaRecord;
+use Survos\ClaimsBundle\Repository\ClaimRepository;
 use App\Service\ClaimSearchSync;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -32,7 +34,44 @@ final class AssetAiExecutor
         private readonly ?ClaimSearchSync $claimSearchSync = null,
         private readonly ?EntityManagerInterface $em = null,
         private readonly ?ImgproxyUrlBuilder $imageUrls = null,
+        private readonly ?ClaimRepository $claims = null,
     ) {
+    }
+
+    /** dcterms predicates of the producer's @import claims -> the task-context keys AbstractPromptTask::knownFacts() reads. */
+    private const array FACT_KEYS = [
+        'dcterms:title' => 'title',
+        'dcterms:abstract' => 'caption',
+        'dcterms:description' => 'description',
+        'dcterms:date' => 'date',
+        'dcterms:creator' => 'creator',
+        'dcterms:spatial' => 'place',
+        'dcterms:isPartOf' => 'collection',
+    ];
+
+    /**
+     * The item's catalogue facts, from the claims the producer sent with the batch. Those are
+     * stored as @import claims on the asset's MediaRecord (BatchController::sourceClaimItem), and
+     * the ingestor replaces the previous run, so this is always the producer's latest. Without
+     * this, observe and fortepan_curation_score saw no title, date, place or creator at all -- the
+     * curation score called newspaper photographs "amateur".
+     *
+     * @return array<string, string|list<string>>
+     */
+    private function knownFacts(Asset $asset): array
+    {
+        if ($this->claims === null || $asset->mediaRecord === null) {
+            return [];
+        }
+        $facts = [];
+        foreach ($this->claims->findForSubjectAndSource(MediaRecord::class, $asset->mediaRecord->id, '@import', $asset->dataset) as $claim) {
+            $key = self::FACT_KEYS[$claim->predicate] ?? null;
+            if ($key !== null && is_scalar($claim->value) && trim((string) $claim->value) !== '') {
+                $facts[$key][] = (string) $claim->value;
+            }
+        }
+
+        return array_map(static fn (array $v): string|array => count($v) === 1 ? $v[0] : array_values(array_unique($v)), $facts);
     }
 
     /**
@@ -69,7 +108,7 @@ final class AssetAiExecutor
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'task handler not found'];
         }
 
-        $subject = new AssetSubject($asset, $context, $this->imageUrls);
+        $subject = new AssetSubject($asset, $context, $this->imageUrls, $this->knownFacts($asset));
         if (!$taskObj->supports($subject)) {
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'not supported for this asset'];
         }
