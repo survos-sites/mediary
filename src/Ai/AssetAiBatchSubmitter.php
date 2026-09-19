@@ -51,6 +51,7 @@ final class AssetAiBatchSubmitter
         private readonly AssetPresigner $presigner,
         private readonly EntityManagerInterface $em,
         private readonly LoggerInterface $logger,
+        private readonly AssetAiExecutor $executor,
     ) {
     }
 
@@ -124,11 +125,17 @@ final class AssetAiBatchSubmitter
         // than at the source: mediary already downloaded these bytes, and sources are not
         // reliably fetchable by a third party (Mistral cannot fetch archive.org IIIF at all).
         // Transient -- never written back to asset.context, which would persist a signed URL.
-        $presigned = $this->presigner->archiveUrl($asset);
-        if ($presigned !== null) {
-            $context['image_url'] = $presigned;
+        //
+        // Only when the task needs it, though: a vision task on the AI thumbnail (imgproxy over our
+        // S3 copy, public and non-expiring) batches as-is, and a presigned master would both send
+        // the full-size image and can expire before the provider reaches the job (up to 24 h).
+        $subject = $this->executor->subjectFor($asset, $context);
+        if (!$taskObj->supportsBatch($subject)) {
+            $presigned = $this->presigner->archiveUrl($asset);
+            if ($presigned !== null) {
+                $subject = $this->executor->subjectFor($asset, ['image_url' => $presigned] + $context);
+            }
         }
-        $subject = new AssetSubject($asset, $context);
         if (!$taskObj->supports($subject) || !$taskObj->supportsBatch($subject)) {
             return null;
         }

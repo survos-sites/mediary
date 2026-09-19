@@ -83,7 +83,7 @@ final class AssetAiBatchApplier
         }
 
         try {
-            $subject = new AssetSubject($asset, $asset->context ?? []);
+            $subject = $this->executor->subjectFor($asset, $asset->context ?? []);
             $response = $this->executor->record($asset, $batch->task, $subject, $taskObj->batchResult($subject, $result->body));
 
             return ['cached' => false, 'response' => $response, 'batch' => $batch->id];

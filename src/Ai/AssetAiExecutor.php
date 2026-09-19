@@ -38,6 +38,18 @@ final class AssetAiExecutor
     ) {
     }
 
+    /**
+     * The one way to build an asset's AI subject -- sync run(), batch submit and batch apply all
+     * use it, so a batched task sees the same image (the imgproxy AI thumbnail) and the same known
+     * facts as a synchronous one.
+     *
+     * @param array<string,mixed> $context runtime hints
+     */
+    public function subjectFor(Asset $asset, array $context = []): AssetSubject
+    {
+        return new AssetSubject($asset, $context, $this->imageUrls, $this->knownFacts($asset));
+    }
+
     /** dcterms predicates of the producer's @import claims -> the task-context keys AbstractPromptTask::knownFacts() reads. */
     private const array FACT_KEYS = [
         'dcterms:title' => 'title',
@@ -108,7 +120,7 @@ final class AssetAiExecutor
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'task handler not found'];
         }
 
-        $subject = new AssetSubject($asset, $context, $this->imageUrls, $this->knownFacts($asset));
+        $subject = $this->subjectFor($asset, $context);
         if (!$taskObj->supports($subject)) {
             return ['ok' => false, 'cached' => false, 'response' => [], 'reason' => 'not supported for this asset'];
         }

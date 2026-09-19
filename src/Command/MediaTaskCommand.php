@@ -89,6 +89,8 @@ final class MediaTaskCommand
         bool $json = false,
         #[Option('Force re-run, bypassing the sidecar cache')]
         bool $force = false,
+        #[Option('Queue the named task through the asset workflow (ai_task -- batched when MEDIARY_AI_BATCH=1) instead of running it here')]
+        bool $enqueue = false,
     ): int {
         // ── 1. Resolve asset ──────────────────────────────────────────────────
         $asset = $this->resolveAsset($image);
@@ -111,6 +113,25 @@ final class MediaTaskCommand
             $asset->aiLocked = false;
             $this->entityManager->flush();
             $io->comment('Asset unlocked.');
+        }
+
+        // ── 2b. Queue one task through the workflow ──────────────────────────
+        // The sync paths below always win over batching (they are the debugging paths); this is
+        // the way to put a task on the ordinary ai_task transition, where the batch submitter
+        // picks it up.
+        if ($enqueue) {
+            if ($task === null || !$this->taskRegistry->has($task)) {
+                $io->error('--enqueue needs a known task name.');
+                return Command::FAILURE;
+            }
+            if ($asset->aiLocked) {
+                $io->error('Asset is AI-locked (a batch or task is in flight); not queueing.');
+                return Command::FAILURE;
+            }
+            $this->runner->enqueue($asset, [$task]);
+            $io->success(sprintf('Queued %s on %s (aiQueue: %s).', $task, $asset->id, implode(', ', $asset->aiQueue)));
+
+            return Command::SUCCESS;
         }
 
         // ── 3. Optional pipeline enqueue ──────────────────────────────────────
