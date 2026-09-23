@@ -1,2 +1,28 @@
 survos_claims:
     entity_manager: claims
+
+    # USD per 1M tokens, used by `claims:usage` to cost a run.
+    #
+    # THESE ARE LIST PRICES, ENTERED BY HAND -- verify them against the provider
+    # dashboards before quoting a number to anyone. They are config precisely so they
+    # can be corrected without a code change: rates move, and they differ by account
+    # and commitment. A model with no entry here still reports its tokens; only the
+    # cost column goes blank, which is the honest answer for "we don't know the rate".
+    #
+    # Keys are matched against ClaimRun.model by exact match, then longest prefix, so
+    # one alias entry covers the dated builds a provider actually reports
+    # ("gpt-4o-mini-2024-07-18" matches "gpt-4o-mini").
+    model_rates:
+        gpt-4o-mini:
+            input: 0.15
+            output: 0.60
+        gpt-4o:
+            input: 2.50
+            output: 10.00
+        mistral-small:
+            input: 0.10
+            output: 0.30
+        # Mistral OCR is priced per page, not per token, and reports no usage at all --
+        # so it costs per_call and would otherwise show as 0.00 rather than as spend.
+        mistral-ocr:
+            per_call: 0.001

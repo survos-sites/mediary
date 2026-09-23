@@ -2351,6 +2351,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     reader_only?: bool|Param, // Reader-only consumer: read mediary's central claims via ClaimReader, do NOT map the Claim entity (no local claim table) or register the writer services. Default false = writer (entities + ingestor). // Default: false
  *     entity_manager?: scalar|Param|null, // Writer EM for the Claim/ClaimRun entities. Default "default" = the app DB (current behavior). Set to a named EM (e.g. "claims", backed by CLAIMS_DATABASE_URL) to write claims to a SHARED central DB instead. The named EM must be defined in the app doctrine config (connection only — the bundle maps the entities to it). // Default: "default"
  *     list_predicates?: list<scalar|Param|null>,
+ *     model_rates?: array<string, array{ // Default: []
+ *         input?: float|Param, // USD per 1M input tokens. // Default: 0.0
+ *         output?: float|Param, // USD per 1M output tokens. // Default: 0.0
+ *         per_call?: float|Param, // USD per call, for page/request-priced models (Mistral OCR) that report no tokens. // Default: 0.0
+ *     }>,
  *     reader?: "dbal"|"api"|Param, // How ClaimReaderInterface reaches the central claims store. "dbal" (default) opens a Postgres connection from CLAIMS_DATABASE_URL — the app needs network access to the DB, a readonly role, and a credential to rotate. "api" calls mediary over HTTP instead, so only mediary touches the database and a reader app holds a URL + token. Writers are unaffected: ClaimIngestor always writes over the EM. // Default: "dbal"
  *     api?: array{ // Settings for reader: api. Ignored when reader: dbal.
  *         base_uri?: scalar|Param|null, // Mediary base URI, e.g. https://mediary.survos.com. Empty leaves ApiClaimReader::isAvailable() false so callers degrade instead of erroring. // Default: null
