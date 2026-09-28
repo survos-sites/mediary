@@ -86,7 +86,7 @@ class AssetWorkflow
      * no archiveUrl to report — see onCompleted(). `analyzed` is deliberately absent: it is a
      * waypoint on the way to `complete`, not a destination.
      */
-    private const TERMINAL_PLACES = [WF::PLACE_COMPLETE, WF::PLACE_FAILED, WF::PLACE_DELETED];
+    private const TERMINAL_PLACES = [WF::PLACE_COMPLETE, WF::PLACE_FAILED, WF::PLACE_DELETED, WF::PLACE_PROBED];
 
     private const CANONICAL_MAX_EDGE = 3000;
     private const CANONICAL_WEBP_QUALITY = 82;
@@ -580,6 +580,88 @@ class AssetWorkflow
                 'message' => $e->getMessage(),
             ]);
             $this->em->flush();
+        }
+    }
+
+    /**
+     * Check a reference-only source in place: one ranged GET for the first KiB, never the master.
+     *
+     * Records what a caller needs before publishing the link — statusCode, the type sniffed from
+     * the bytes, the total size from Content-Range, and Last-Modified/ETag under context['probe'] —
+     * and the transition lands in PLACE_PROBED, a terminal place, so the callback fires.
+     *
+     * The bytes decide the type, not the header: NARA's medialive sends real JPEGs and PDFs with no
+     * Content-Type at all, and answers a path it does not have with its HTML app shell and a 200.
+     * A server that ignores Range still costs only the first chunk: the stream is cut after 1 KiB.
+     *
+     * A gone source (any 4xx but 429) or a non-media body is a finding, not an error: the probe
+     * completes, and PLACE_PROBED's guarded `next` (probe_failed) moves the asset to `failed`. At
+     * NARA's scale — most of its URLs are withdrawn — throwing here would fill the failed transport
+     * with hundreds of thousands of rows. Only 5xx and an exhausted 429 throw, and are retried.
+     */
+    #[AsTransitionListener(WF::WORKFLOW_NAME, AssetFlow::TRANSITION_PROBE)]
+    public function onProbe(TransitionEvent $event): void
+    {
+        $asset = $this->getAsset($event);
+        $url = $asset->originalUrl;
+        $rate = $asset->sourceMeta[MediaSyncKeys::SOURCE_RATE] ?? null;
+
+        for ($attempt = 1; ; $attempt++) {
+            $this->sourceRateLimiter->waitFor($url, is_numeric($rate) ? (float) $rate : null);
+            $response = $this->httpClient->request('GET', $url, [
+                'timeout' => $this->serviceHttpTimeoutSeconds,
+                'headers' => ['Range' => 'bytes=0-1023', 'Accept-Encoding' => 'identity'],
+            ]);
+            $status = $response->getStatusCode();
+            if ($status !== 429 || $attempt >= self::SOURCE_429_ATTEMPTS) {
+                break;
+            }
+            $retryAfter = (int) ($response->getHeaders(false)['retry-after'][0] ?? 0);
+            $response->cancel();
+            sleep(min(max($retryAfter, 10), 60));
+        }
+
+        $headers = $response->getHeaders(false);
+        $head = '';
+        if ($status < 400) {
+            foreach ($this->httpClient->stream($response) as $chunk) {
+                $head .= $chunk->getContent();
+                if (strlen($head) >= 1024 || $chunk->isLast()) {
+                    break;
+                }
+            }
+        }
+        $response->cancel();
+
+        $headerType = isset($headers['content-type'][0]) ? strtolower(trim(explode(';', $headers['content-type'][0])[0])) : null;
+        $sniffed = $head !== '' ? (new \finfo(FILEINFO_MIME_TYPE))->buffer($head) : null;
+        // finfo says octet-stream when it cannot tell; the header is then the better guess.
+        $mime = $sniffed !== null && $sniffed !== false && $sniffed !== 'application/octet-stream' ? $sniffed : $headerType;
+        $total = null;
+        if (preg_match('#/(\d+)$#', (string) ($headers['content-range'][0] ?? ''), $m) === 1) {
+            $total = (int) $m[1];
+        } elseif ($status === 200 && isset($headers['content-length'][0])) {
+            $total = (int) $headers['content-length'][0];
+        }
+
+        $asset->statusCode = $status;
+        $asset->mime = $mime;
+        if ($total !== null) {
+            $asset->size = $total;
+        }
+        $asset->context['probe'] = array_filter([
+            'checkedAt' => (new \DateTimeImmutable())->format(DATE_ATOM),
+            'status' => $status,
+            'contentType' => $headerType,
+            'sniffed' => $sniffed ?: null,
+            'bytes' => $total,
+            'lastModified' => $headers['last-modified'][0] ?? null,
+            'etag' => $headers['etag'][0] ?? null,
+        ], static fn (mixed $v): bool => $v !== null);
+        $this->em->flush();
+
+        if ($status >= 500 || $status === 429) {
+            throw new RuntimeException(sprintf('probe[%s]: %s answered %d; will retry', $asset->id, $url, $status));
         }
     }
 

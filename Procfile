@@ -19,6 +19,7 @@ web: mediary-web
 elastic: php -d memory_limit=768M bin/console messenger:consume elastic --time-limit=3600 --memory-limit=640M
 info: php -d memory_limit=768M bin/console messenger:consume asset.info --time-limit=3600 --memory-limit=640M
 archive: php -d memory_limit=768M bin/console messenger:consume asset.archive --time-limit=3600 --memory-limit=640M
+probe: php -d memory_limit=256M bin/console messenger:consume asset.probe --time-limit=3600 --memory-limit=200M
 ocr: php -d memory_limit=768M bin/console messenger:consume asset.local.ocr --time-limit=3600 --memory-limit=640M
 iiif: php -d memory_limit=768M bin/console messenger:consume asset.iiif --time-limit=3600 --memory-limit=640M
 analyze: php -d memory_limit=768M bin/console messenger:consume asset.analyze --time-limit=3600 --memory-limit=640M

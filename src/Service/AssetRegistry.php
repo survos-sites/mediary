@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
+use Survos\DataContracts\Dto\BatchItemDto;
 use Survos\DataContracts\Vocabulary\MediaSyncKeys;
 use Survos\DataContracts\Vocabulary\OcrProvider;
 use Survos\StateBundle\Message\TransitionMessage;
@@ -180,6 +181,12 @@ final class AssetRegistry
                     static fn(mixed $task): bool => is_string($task) && !$asset->hasSuccessfulAiTask($task),
                 )));
             }
+        }
+
+        // The caller's current choice wins, but only when it states one: a hint-less re-registration
+        // (the analyzeUrl RPC) must not turn a reference-only asset back into an archived one.
+        if (array_key_exists(MediaSyncKeys::ARCHIVE, $contextHints)) {
+            $asset->archiveSource = BatchItemDto::fromArray($contextHints)->archive;
         }
 
         $this->attachMediaRecord($asset, $contextHints, $originalUrl);

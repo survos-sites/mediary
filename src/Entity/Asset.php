@@ -313,6 +313,14 @@ class Asset implements MarkingInterface, RouteParametersInterface, \Stringable
             || $this->iiifManifestEntity !== null;
     }
 
+    /**
+     * Whether the original is copied into our S3 (`archive`) or only referenced in place and checked
+     * (`probe`), from the caller's {@see \Survos\DataContracts\Dto\BatchItemDto::$archive}. The two
+     * transitions are guarded on it in opposite directions, so exactly one of them can leave `new`.
+     */
+    #[ORM\Column(options: ['default' => true])]
+    public bool $archiveSource = true;
+
     #[ORM\ManyToOne(targetEntity: MediaRecord::class, inversedBy: 'assets')]
     #[ORM\JoinColumn(name: 'media_record_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     public ?MediaRecord $mediaRecord = null;

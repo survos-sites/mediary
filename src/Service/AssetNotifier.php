@@ -58,6 +58,8 @@ final class AssetNotifier
         'path',
         'tenant',
         'image_id',
+        // A reference-only asset's findings (onProbe): what the caller has instead of an archiveUrl.
+        'probe',
     ];
 
     /** The `Webhook-Event` name clients match on. Mirrors MediaWebhookRequestParser::EVENT_ASSET_ANALYZED. */

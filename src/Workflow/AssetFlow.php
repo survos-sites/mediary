@@ -23,15 +23,25 @@ class AssetFlow
     #[Place(
         initial: true,
         info: 'Registered/added',
-        next: [self::TRANSITION_FETCH_IIIF, self::TRANSITION_ARCHIVE]
+        // archive and probe are guarded on subject.archiveSource in opposite directions, so after
+        // the optional manifest fetch exactly one of them runs. Their order here does not matter.
+        next: [self::TRANSITION_FETCH_IIIF, self::TRANSITION_ARCHIVE, self::TRANSITION_PROBE]
     )]
     public const PLACE_NEW = 'new';
 
     #[Place(
         info: 'Registered/added',
-        next: [self::TRANSITION_ARCHIVE, self::TRANSITION_QUEUE_AI]
+        next: [self::TRANSITION_ARCHIVE, self::TRANSITION_PROBE, self::TRANSITION_QUEUE_AI]
     )]
     public const PLACE_IIIF = 'iiif';
+
+    #[Place(
+        info: 'Source checked in place, not copied: HTTP status, type, byte size, Last-Modified. Terminal — the client is told.',
+        // A dead or non-media source moves on to `failed` by the guard alone: the probe always
+        // completes, so a gone URL costs no exception and no row in the failed transport.
+        next: [self::TRANSITION_PROBE_FAILED],
+    )]
+    public const PLACE_PROBED = 'probed';
 
     #[Place(
         info: 'Source master streamed into our S3 (museado). imgproxy reads it via s3://.',
@@ -105,12 +115,30 @@ class AssetFlow
         to: self::PLACE_ARCHIVED,
         info: 'Archive',
         description: 'Stream the source master straight into our S3 (museado) so imgproxy reads it via s3://. No local processing.',
+        guard: 'subject.archiveSource',
         async: true,
         // `next` lives on PLACE_ARCHIVED, NOT here. The Entered listener fires
         // with the subject already in the new place (correct marking, which
         // matters in sync mode); duplicating it here dispatched /info twice.
     )]
     public const TRANSITION_ARCHIVE = 'archive';
+
+    /**
+     * archive's twin for a source we reference instead of copying (BatchItemDto::$archive = false):
+     * one ranged request for the first bytes, never the master. It answers what the caller needs to
+     * publish a link — is the URL alive, and is it really an image/PDF/audio — and lands in a
+     * terminal place so the callback fires. Without it such an asset had no way out of `new`, and
+     * the client waited on it forever (every NARA asset on prod, 2026-09).
+     */
+    #[Transition(
+        from: [self::PLACE_NEW, self::PLACE_IIIF, self::PLACE_PROBED, self::PLACE_FAILED],
+        to: self::PLACE_PROBED,
+        info: 'Probe',
+        description: 'Ranged GET of the first bytes: status, sniffed type, total size, Last-Modified/ETag. No copy is kept.',
+        guard: 'not subject.archiveSource',
+        async: true,
+    )]
+    public const TRANSITION_PROBE = 'probe';
 
     #[Transition(
         from: [self::PLACE_ARCHIVED, self::PLACE_INFORMED, self::PLACE_FAILED],
@@ -229,6 +257,21 @@ class AssetFlow
         async: false,
     )]
     public const TRANSITION_ARCHIVE_FAILED = 'archive_failed';
+
+    /**
+     * The probe's own dead end: the source is gone, or answers with something that is not media —
+     * NARA's catalog serves its HTML app shell with a 200 for a path it does not have. Reached from
+     * PLACE_PROBED's `next`, on the facts onProbe recorded; nothing applies it by hand.
+     */
+    #[Transition(
+        from: [self::PLACE_PROBED],
+        to: self::PLACE_FAILED,
+        info: 'Probe failed',
+        description: 'Source missing (4xx) or not media (e.g. an HTML page served with 200)',
+        guard: 'not subject.archiveSource and (subject.statusCode >= 400 or subject.mime matches "#^text/html#")',
+        async: false,
+    )]
+    public const TRANSITION_PROBE_FAILED = 'probe_failed';
 
 //    #[Transition(
 //        from: self::PLACE_INFORMED,
