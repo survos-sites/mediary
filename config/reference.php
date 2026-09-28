@@ -2154,6 +2154,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         include?: list<scalar|Param|null>,
  *     },
  * }
+ * @psalm-type SurvosJsonlConfig = array{
+ *     compression_level?: int|Param, // Default: 1
+ * }
  * @psalm-type SurvosIiifConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: false
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
@@ -2945,6 +2948,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type SurvosImportConfig = array{
  *     dir?: scalar|Param|null, // Default directory for data files // Default: "data"
+ *     work_compression?: scalar|Param|null, // Dataset stage output (normalize, enrich, ai): false writes <core>.jsonl; 0-9 writes <core>.jsonl.gz at that gzip level // Default: false
  *     dto_namespace_roots?: list<scalar|Param|null>,
  *     dto_mappings?: array<string, scalar|Param|null>,
  * }
@@ -3144,6 +3148,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *     survos_ez?: SurvosEzConfig,
  *     survos_doc?: SurvosDocConfig,
+ *     survos_jsonl?: SurvosJsonlConfig,
  *     survos_iiif?: SurvosIiifConfig,
  *     survos_js_twig?: SurvosJsTwigConfig,
  *     survos_api_grid?: SurvosApiGridConfig,
@@ -3202,6 +3207,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_code?: SurvosCodeConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
@@ -3258,6 +3264,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         zenstruck_messenger_monitor?: ZenstruckMessengerMonitorConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
@@ -3314,6 +3321,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_code?: SurvosCodeConfig,
  *         survos_ez?: SurvosEzConfig,
  *         survos_doc?: SurvosDocConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_iiif?: SurvosIiifConfig,
  *         survos_js_twig?: SurvosJsTwigConfig,
  *         survos_api_grid?: SurvosApiGridConfig,
