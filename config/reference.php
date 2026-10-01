@@ -1983,12 +1983,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         max_delay?: int|Param, // Default: 0
  *     },
  * }
- * @psalm-type SurvosThumbHashConfig = array{
- *     direction?: scalar|Param|null, // Default: "LR"
- *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
- *     entities?: list<scalar|Param|null>,
- *     enabled?: bool|Param, // Default: true
- * }
  * @psalm-type SymfonycastsVerifyEmailConfig = array{
  *     lifetime?: int|Param, // The length of time in seconds that a signed URI is valid for after it is created. // Default: 3600
  * }
@@ -3401,7 +3395,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     nelmio_cors?: NelmioCorsConfig,
  *     survos_command?: SurvosCommandConfig,
  *     survos_state?: SurvosStateConfig,
- *     survos_thumb_hash?: SurvosThumbHashConfig,
  *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *     survos_tree?: SurvosTreeConfig,
  *     api_platform?: ApiPlatformConfig,
@@ -3481,7 +3474,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         survos_command?: SurvosCommandConfig,
  *         survos_state?: SurvosStateConfig,
- *         survos_thumb_hash?: SurvosThumbHashConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *         survos_tree?: SurvosTreeConfig,
  *         api_platform?: ApiPlatformConfig,
@@ -3561,7 +3553,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         survos_command?: SurvosCommandConfig,
  *         survos_state?: SurvosStateConfig,
- *         survos_thumb_hash?: SurvosThumbHashConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *         survos_tree?: SurvosTreeConfig,
  *         api_platform?: ApiPlatformConfig,
@@ -3639,7 +3630,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         nelmio_cors?: NelmioCorsConfig,
  *         survos_command?: SurvosCommandConfig,
  *         survos_state?: SurvosStateConfig,
- *         survos_thumb_hash?: SurvosThumbHashConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
  *         survos_tree?: SurvosTreeConfig,
  *         api_platform?: ApiPlatformConfig,

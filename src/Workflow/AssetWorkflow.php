@@ -23,7 +23,6 @@ use App\Service\ArchiveService;
 use App\Service\AiToolsObserveService;
 use App\Service\AiToolsOcrService;
 use App\Service\AtomicFileWriter;
-use App\Service\AssetPreviewService;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
@@ -46,8 +45,6 @@ use Survos\StateBundle\Message\BatchedTransitionMessage;
 use Survos\StateBundle\Message\TransitionMessage;
 use Survos\StateBundle\Service\AsyncQueueLocator;
 use Survos\StorageBundle\Service\StorageService;
-use Survos\ThumbHashBundle\Service\Thumbhash;
-use Survos\ThumbHashBundle\Service\ThumbHashService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -79,8 +76,6 @@ class AssetWorkflow
     /** Attempts per archive fetch that a source 429 is waited out inline before messenger's retry takes over. */
     private const int SOURCE_429_ATTEMPTS = 3;
 
-    const THUMBHASH_PRESET = 'thumb';
-
     /**
      * Places an asset comes to rest in. Reaching one fires the client callback even when there is
      * no archiveUrl to report — see onCompleted(). `analyzed` is deliberately absent: it is a
@@ -89,7 +84,6 @@ class AssetWorkflow
     private const TERMINAL_PLACES = [WF::PLACE_COMPLETE, WF::PLACE_FAILED, WF::PLACE_DELETED, WF::PLACE_PROBED];
 
     private const CANONICAL_MAX_EDGE = 3000;
-    private const CANONICAL_WEBP_QUALITY = 82;
     private ?float $sourceCooldownUntil = null;
     /** @var array<string, AiTaskInterface> */
     private array $aiTaskHandlers = [];
@@ -97,9 +91,7 @@ class AssetWorkflow
     public function __construct(
         private readonly AssetAiExecutor $executor,
         private readonly ArchiveService $archiveService,
-        private ThumbHashService $thumbHashService,
         private readonly AtomicFileWriter $atomicFileWriter,
-        private AssetPreviewService $assetPreviewService,
         private MessageBusInterface          $messageBus,
         private EntityManagerInterface                          $em,
         private AssetRepository                                 $assetRepo,
@@ -118,8 +110,6 @@ class AssetWorkflow
         private readonly bool                                  $paidAiToolsEnabled,
         #[Autowire('%kernel.project_dir%/public/temp')]
         private string                                         $tempDir,
-        #[Autowire('%env(default:media_canonical_dir_default:MEDIA_CANONICAL_DIR)%')]
-        private readonly string                                $canonicalDir,
         private readonly EntityManagerInterface                $entityManager,
         private readonly AsyncQueueLocator                     $asyncQueueLocator,
         private readonly StorageService $storageService,
@@ -1218,32 +1208,8 @@ class AssetWorkflow
             }
         }
 
-        if (in_array('thumbhash', $tasks, true) && empty($asset->context['thumbhash']) && ($archiveUrl = $this->effectiveArchiveUrl($asset))) {
-            $localForThumbhash = $this->localImagePath($asset, preferSmall: true);
-            if (is_string($localForThumbhash) && $localForThumbhash !== '') {
-                $this->logger->info('onLocalAnalyze: thumbhash missing, using local small derivative');
-                [$tw, $th, $pixels] = $this->resizeForThumbHash($localForThumbhash, 100);
-                $hash = Thumbhash::RGBAToHash($tw, $th, $pixels, 192, 192);
-                $asset->context['thumbhash'] = Thumbhash::convertHashToString($hash);
-                unset($pixels);
-            } else {
-                $this->logger->info('onLocalAnalyze: thumbhash missing, fetching from archive URL (fallback)');
-                [$tw, $th, $pixels] = $this->assetPreviewService->resizeForThumbHashFromUrl($archiveUrl);
-                $hash = Thumbhash::RGBAToHash($tw, $th, $pixels, 192, 192);
-                $asset->context['thumbhash'] = Thumbhash::convertHashToString($hash);
-                unset($pixels);
-            }
-        }
-
-        // Compute pHash only when explicitly requested.
-        if (in_array('phash', $tasks, true) && empty($asset->context['phash']) && ($archiveUrl = $this->effectiveArchiveUrl($asset))) {
-            $localForPhash = $this->localImagePath($asset, preferSmall: true);
-            $this->assetPreviewService->maybeComputePhash(
-                $asset,
-                self::THUMBHASH_PRESET,
-                $localForPhash ?? $archiveUrl
-            );
-        }
+        // Local pixel hashing is retired. Existing hashes remain historical data;
+        // imgproxy enrichment belongs in context['info'], never context['phash'].
 
         $this->em->flush();
 //        $this->em->detach($asset);
@@ -1784,59 +1750,6 @@ class AssetWorkflow
         return null;
     }
 
-    private function persistLocalDerivatives(Asset $asset, string $canonicalInputPath): string
-    {
-        if (!is_dir($this->canonicalDir) && !mkdir($this->canonicalDir, 0775, true) && !is_dir($this->canonicalDir)) {
-            throw new RuntimeException(sprintf('Unable to create canonical dir: %s', $this->canonicalDir));
-        }
-
-        $ext = $asset->ext ?: 'bin';
-        $canonicalPath = rtrim($this->canonicalDir, '/') . '/' . $asset->id . '.canonical.' . $ext;
-        if (!copy($canonicalInputPath, $canonicalPath)) {
-            throw new RuntimeException(sprintf('Failed to persist canonical file for asset %s', $asset->id));
-        }
-
-        $asset->localCanonicalFilename = $canonicalPath;
-        $asset->context ??= [];
-        $asset->context['local_canonical_filename'] = $canonicalPath;
-        $asset->context['canonical_probe'] = [
-            'mime' => $asset->mime,
-            'width' => $asset->width,
-            'height' => $asset->height,
-            'bytes' => filesize($canonicalPath) ?: null,
-            'path' => $canonicalPath,
-        ];
-
-        if (str_starts_with((string) $asset->mime, 'image/')) {
-            $smallPath = rtrim($this->canonicalDir, '/') . '/' . $asset->id . '.small.jpg';
-            try {
-                $img = new \Imagick($canonicalPath);
-                $img->thumbnailImage(1024, 1024, true);
-                $img->setImageFormat('jpg');
-                $img->setImageCompressionQuality(85);
-                $img->writeImage($smallPath);
-                $img->clear();
-                $asset->localSmallFilename = $smallPath;
-                $asset->context['local_small_filename'] = $smallPath;
-                $dims = getimagesize($smallPath);
-                $asset->context['small_probe'] = [
-                    'mime' => 'image/jpeg',
-                    'width' => is_array($dims) ? ($dims[0] ?? null) : null,
-                    'height' => is_array($dims) ? ($dims[1] ?? null) : null,
-                    'bytes' => filesize($smallPath) ?: null,
-                    'path' => $smallPath,
-                ];
-            } catch (\Throwable $e) {
-                $this->logger->warning('Failed creating local small derivative for {id}: {error}', [
-                    'id' => $asset->id,
-                    'error' => $e->getMessage(),
-                ]);
-            }
-        }
-
-        return $canonicalPath;
-    }
-
     /** @param array<string,mixed>|null $manifest */
     private function iiifMetadataMap(?array $manifest): array
     {
@@ -2209,123 +2122,6 @@ class AssetWorkflow
             'ext' => $asset->ext
         ];
 
-    }
-
-    private function buildCanonicalAsset(Asset $asset, string $sourcePath): string
-    {
-        $mime = is_string($asset->mime) ? trim($asset->mime) : '';
-        if ($mime === '' || !str_starts_with($mime, 'image/')) {
-            return $sourcePath;
-        }
-
-        try {
-            $image = new \Imagick($sourcePath);
-
-            // Keep animated/multi-frame payloads untouched for now.
-            if ($image->getNumberImages() > 1) {
-                $image->clear();
-                $image->destroy();
-                return $sourcePath;
-            }
-
-            $width = $image->getImageWidth();
-            $height = $image->getImageHeight();
-            $maxEdge = max($width, $height);
-            if ($maxEdge <= 0) {
-                $image->clear();
-                $image->destroy();
-                return $sourcePath;
-            }
-
-            $resized = false;
-            if ($maxEdge > self::CANONICAL_MAX_EDGE) {
-                $image->resizeImage(
-                    self::CANONICAL_MAX_EDGE,
-                    self::CANONICAL_MAX_EDGE,
-                    \Imagick::FILTER_LANCZOS,
-                    1,
-                    true
-                );
-                $resized = true;
-            }
-
-            $canonicalPath = $sourcePath . '.canonical.webp';
-            $image->stripImage();
-            $image->setImageFormat('webp');
-            $image->setOption('webp:method', '6');
-            $image->setImageCompressionQuality(self::CANONICAL_WEBP_QUALITY);
-            $image->writeImage($canonicalPath);
-            $image->clear();
-            $image->destroy();
-
-            if (!is_file($canonicalPath) || filesize($canonicalPath) === 0) {
-                return $sourcePath;
-            }
-
-            $sourceSize = filesize($sourcePath) ?: 0;
-            $canonicalSize = filesize($canonicalPath) ?: 0;
-            if (!$resized && $sourceSize > 0 && $canonicalSize > $sourceSize) {
-                @unlink($canonicalPath);
-                return $sourcePath;
-            }
-
-            $this->processLocalFile($canonicalPath, $asset);
-            $asset->ext = 'webp';
-            $asset->context ??= [];
-            $asset->context['canonical'] = [
-                'format' => 'webp',
-                'quality' => self::CANONICAL_WEBP_QUALITY,
-                'max_edge' => self::CANONICAL_MAX_EDGE,
-                'resized' => $resized,
-                'bytes' => $canonicalSize,
-            ];
-
-            return $canonicalPath;
-        } catch (\Throwable $e) {
-            $this->logger->warning('Canonical build failed for {id}: {error}', [
-                'id' => $asset->id,
-                'error' => $e->getMessage(),
-            ]);
-
-            return $sourcePath;
-        }
-    }
-
-    private function resizeForThumbHash(string $imagePath, int $size = 100): array
-    {
-        $image = new \Imagick($imagePath);
-
-        // Resize to fit within $size x $size, maintaining aspect ratio
-        // it's probably the reason analyze is slow, we _could_ call imgProxy with the file
-        // but seems like an optimization for later.  We could move it to after archive, too!
-        // but now we have the image locally.
-        // imgProxy now runs locally too, so this logic may need rethinking.
-        $image->thumbnailImage($size, $size, true);
-
-        // 100x100 is okay, this is a oneoff that's not saved.
-        // If you need exactly 192x192 with padding/centering:
-        // $image->setImageBackgroundColor('transparent');
-        // $image->extentImage($size, $size,
-        //     -($size - $image->getImageWidth()) / 2,
-        //     -($size - $image->getImageHeight()) / 2
-        // );
-        $width = $image->getImageWidth();
-        $height = $image->getImageHeight();
-
-        $pixels = [];
-        for ($y = 0; $y < $height; $y++) {
-            for ($x = 0; $x < $width; $x++) {
-
-                $pixel = $image->getImagePixelColor($x, $y);
-                $colors = $pixel->getColor(2);
-                $pixels[] = $colors['r'];
-                $pixels[] = $colors['g'];
-                $pixels[] = $colors['b'];
-                $pixels[] = $colors['a'];
-            }
-        }
-
-        return [$width, $height, $pixels];
     }
 
     /**

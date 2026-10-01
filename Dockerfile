@@ -2,7 +2,7 @@
 
 # Keep PHP in isolated FPM processes: native crashes in the threaded embedded
 # runtime took down every HTTP request during bulk registration.
-ARG FRANKENPHP_VERSION=1
+ARG FRANKENPHP_VERSION=1.12.7
 ARG PHP_VERSION=8.5.10
 
 FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php8.5 AS extension-installer
@@ -27,8 +27,7 @@ HEALTHCHECK CMD curl -fsS --max-time 10 "http://127.0.0.1:${PORT:-80}/" >/dev/nu
 WORKDIR /app
 
 # Derived by scanning composer.lock for every `ext-*` required by ANY package, not
-# just mediary's own composer.json require block -- that is always an undercount
-# (mediary declares 8, dependencies pull in 18 more). Everything omitted here is
+# just Mediary's own composer.json require block. Everything omitted here is
 # already compiled into the base image (ctype, dom, filter, iconv, json, libxml,
 # mbstring, pcre, pdo, phar, simplexml, tokenizer, xml, xmlwriter, zlib).
 #
@@ -36,8 +35,6 @@ WORKDIR /app
 #   redis  - mediary does NOT use Redis (cache is APCu, transports are doctrine://),
 #            but a dependency declares `ext-redis`, so composer install fails on
 #            platform requirements without it. Required to build, not to run.
-#   imagick- the expensive one in this list, ahead of intl. mediary is an image
-#            pipeline; this is not optional.
 #   sockets- required by php-amqplib (via jwage/phpamqplib-messenger), which is how
 #            the workflow transitions reach RabbitMQ. Composer fails the platform
 #            check on `ext-sockets` at BUILD time without it, so this is not
@@ -46,7 +43,6 @@ RUN install-php-extensions \
         apcu \
         exif \
         gd \
-        imagick \
         intl \
         opcache \
         pdo_pgsql \

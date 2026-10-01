@@ -9,8 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Survos\StateBundle\Service\EntityInterfaceDetector;
 use Survos\StateBundle\Service\WorkflowHelperService;
 use Survos\StateBundle\Traits\MarkingInterface;
-use Survos\ThumbHashBundle\Service\BlurService;
-use Survos\ThumbHashBundle\Service\ThumbHashService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
@@ -20,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
-use Thumbhash\Thumbhash;
 
 class ClientController extends AbstractController
 {
@@ -43,10 +40,6 @@ class ClientController extends AbstractController
         ]);
     }
 
-    /**
-     * @throws \ImagickException
-     * @throws \ImagickPixelException
-     */
     #[Route('/', name: 'app_homepage')]
     #[Template('homepage.html.twig')]
     public function home(ChartBuilderInterface $chartBuilder): array

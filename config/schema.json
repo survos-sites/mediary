@@ -16065,30 +16065,6 @@
                 },
                 "additionalProperties": false
             },
-            "survos_thumb_hash": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "direction": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "LR"
-                    },
-                    "base_layout": {
-                        "$ref": "#/$defs/types/scalar",
-                        "default": "base.html.twig"
-                    },
-                    "entities": {
-                        "$ref": "#/$defs/types/array_null",
-                        "items": {
-                            "$ref": "#/$defs/types/scalar"
-                        }
-                    },
-                    "enabled": {
-                        "$ref": "#/$defs/types/boolean",
-                        "default": true
-                    }
-                },
-                "additionalProperties": false
-            },
             "survos_tree": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -17983,9 +17959,6 @@
         "survos_tabler": {
             "$ref": "#/$defs/nodes/survos_tabler"
         },
-        "survos_thumb_hash": {
-            "$ref": "#/$defs/nodes/survos_thumb_hash"
-        },
         "survos_tree": {
             "$ref": "#/$defs/nodes/survos_tree"
         },
@@ -18220,9 +18193,6 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
-                "survos_thumb_hash": {
-                    "$ref": "#/$defs/nodes/survos_thumb_hash"
-                },
                 "survos_tree": {
                     "$ref": "#/$defs/nodes/survos_tree"
                 },
@@ -18454,9 +18424,6 @@
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
                 },
-                "survos_thumb_hash": {
-                    "$ref": "#/$defs/nodes/survos_thumb_hash"
-                },
                 "survos_tree": {
                     "$ref": "#/$defs/nodes/survos_tree"
                 },
@@ -18680,9 +18647,6 @@
                 },
                 "survos_tabler": {
                     "$ref": "#/$defs/nodes/survos_tabler"
-                },
-                "survos_thumb_hash": {
-                    "$ref": "#/$defs/nodes/survos_thumb_hash"
                 },
                 "survos_tree": {
                     "$ref": "#/$defs/nodes/survos_tree"

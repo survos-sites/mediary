@@ -1,3 +1,16 @@
+> **Retired in Mediary (2026-10-01).** Local PHP ThumbHash, pHash, canonical
+> conversion and derivative generation have been removed, along with Imagick and
+> their PHP packages. The `analyze` transition retains opt-in OCR; legacy `thumbhash`
+> and `phash` task flags no longer generate local hashes. Existing stored hashes and
+> webhook fields remain readable. New imgproxy results belong under `context.info`;
+> never put its `perceptual_hash` into the historical local `context.phash` field.
+>
+> Registration currently requests metadata only (`size`, `format`, `dimensions`,
+> `exif:1:1`). The earlier imgproxy native ThumbHash crash is separate from PHP:
+> do not restore `thumb_hash` automatically as part of this removal.
+>
+> The remainder is a historical recipe for other applications, not current Mediary behavior.
+
 # Local image analysis: what we compute, what imgProxy Pro computes
 
 mediary has historically had **two** image-analysis paths: local PHP running over a downloaded

@@ -341,9 +341,6 @@
     "survos/tabler-bundle": {
         "version": "2.0.117"
     },
-    "survos/thumb-hash-bundle": {
-        "version": "dev-main"
-    },
     "survos/tree-bundle": {
         "version": "1.5.523"
     },

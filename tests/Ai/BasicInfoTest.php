@@ -37,6 +37,30 @@ final class BasicInfoTest extends TestCase
         self::assertSame(0, $asset->faceCount);
     }
 
+    public function testAnalyzeRetiresLocalHashTasksWithoutChangingStoredHashes(): void
+    {
+        $reflection = new \ReflectionClass(AssetWorkflow::class);
+        $workflow = $reflection->newInstanceWithoutConstructor();
+        $em = $this->createMock(\Doctrine\ORM\EntityManagerInterface::class);
+        $em->expects(self::exactly(2))->method('flush');
+        $reflection->getProperty('em')->setValue($workflow, $em);
+
+        foreach ([[], ['phash' => 'legacy-phash', 'thumbhash' => 'legacy-thumbhash']] as $legacy) {
+            $asset = new Asset();
+            $asset->mime = 'image/jpeg';
+            $asset->archiveUrl = 'https://example.invalid/must-not-download.jpg';
+            $asset->context = $legacy + [
+                'tasks' => ['phash', 'thumbhash'],
+                'info' => ['perceptual_hash' => 'imgproxy-phash'],
+            ];
+            $expected = $asset->context;
+            $workflow->onLocalAnalyze(new \Symfony\Component\Workflow\Event\TransitionEvent(
+                $asset, new \Symfony\Component\Workflow\Marking(),
+            ));
+            self::assertSame($expected, $asset->context);
+        }
+    }
+
     private function apply(Asset $asset, array $info): void
     {
         $reflection = new \ReflectionClass(AssetWorkflow::class);

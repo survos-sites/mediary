@@ -144,7 +144,7 @@ class AssetFlow
         from: [self::PLACE_ARCHIVED, self::PLACE_INFORMED, self::PLACE_FAILED],
         to: self::PLACE_INFORMED,
         info: 'Info',
-        description: 'Call imgproxy PRO /info against the s3:// source: dimensions, byte size, format, thumbhash. No download.',
+        description: 'Call imgproxy PRO /info against the s3:// source: dimensions, byte size, format, EXIF. No download.',
         async: true,
         // note: this goes here and NOT in place, because PlaceEntered is called BEFORE onCompleted
         next: [self::TRANSITION_INFO_FAILED]
@@ -323,7 +323,7 @@ class AssetFlow
         from: [self::PLACE_INFORMED, self::PLACE_TRIAGED],
         to: self::PLACE_ANALYZED,
         info: 'Analyze',
-        description: 'Compute blurhash/thumbhash, color palette, pHash, media probe',
+        description: 'Run explicitly requested OCR; pixel analysis belongs to imgproxy',
         async: true,
 //        next: [self::TRANSITION_ARCHIVE]
     )]
