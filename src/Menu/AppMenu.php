@@ -10,7 +10,6 @@ use Survos\TablerBundle\Traits\KnpMenuHelperTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 final class AppMenu implements KnpMenuHelperInterface
 {
@@ -19,7 +18,6 @@ final class AppMenu implements KnpMenuHelperInterface
     public function __construct(
         #[Autowire('%kernel.environment%')] protected string $env,
         private Security $security,
-        private ?AuthorizationCheckerInterface $authorizationChecker = null
     ) {
     }
 
