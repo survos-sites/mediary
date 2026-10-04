@@ -296,6 +296,9 @@
     "survos/google-sheets-bundle": {
         "version": "1.5.529"
     },
+    "survos/grid-bundle": {
+        "version": "2.34.39"
+    },
     "survos/iiif-bundle": {
         "version": "1.0.0"
     },

@@ -6484,7 +6484,8 @@
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
                     "secret": {
-                        "$ref": "#/$defs/types/scalar"
+                        "$ref": "#/$defs/types/scalar",
+                        "description": "A secret that must not change. The options that sign data default to it and take a list of secrets to rotate theirs."
                     },
                     "http_method_override": {
                         "$ref": "#/$defs/types/boolean",
@@ -6869,6 +6870,22 @@
                     "uri_signer": {
                         "$ref": "#/$defs/types/object_null",
                         "properties": {
+                            "secret": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "#/$defs/types/array_null",
+                                        "items": {
+                                            "$ref": "#/$defs/types/scalar"
+                                        }
+                                    },
+                                    {
+                                        "type": [
+                                            "string"
+                                        ]
+                                    }
+                                ],
+                                "description": "Secret used to sign URIs, defaults to the \"kernel.secret\" parameter. List several to rotate it: the first one signs, all of them verify."
+                            },
                             "expiration": {
                                 "$ref": "#/$defs/types/integer_null",
                                 "default": null,
@@ -6877,6 +6894,7 @@
                         },
                         "additionalProperties": false,
                         "default": {
+                            "secret": [],
                             "expiration": null
                         },
                         "description": "URI signer configuration"
@@ -9458,6 +9476,22 @@
                                         "default": "messenger.transport.native_php_serializer",
                                         "description": "Service id to use as the default serializer for the transports."
                                     },
+                                    "signing_secret": {
+                                        "anyOf": [
+                                            {
+                                                "$ref": "#/$defs/types/array_null",
+                                                "items": {
+                                                    "$ref": "#/$defs/types/scalar"
+                                                }
+                                            },
+                                            {
+                                                "type": [
+                                                    "string"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "Secret used to sign messages, defaults to the \"kernel.secret\" parameter. List several to rotate it: the first one signs, all of them verify."
+                                    },
                                     "symfony_serializer": {
                                         "$ref": "#/$defs/types/object_null",
                                         "properties": {
@@ -9490,6 +9524,7 @@
                                 "additionalProperties": false,
                                 "default": {
                                     "default_serializer": "messenger.transport.native_php_serializer",
+                                    "signing_secret": [],
                                     "symfony_serializer": {
                                         "service": null,
                                         "format": "json",
@@ -9743,6 +9778,27 @@
                                                     ]
                                                 }
                                             ]
+                                        },
+                                        "messages": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/array_null",
+                                                    "items": {
+                                                        "$ref": "#/$defs/types/scalar"
+                                                    }
+                                                },
+                                                {
+                                                    "type": [
+                                                        "string"
+                                                    ]
+                                                }
+                                            ],
+                                            "description": "The classes or interfaces of the messages the application can dispatch on this bus, any message when empty."
+                                        },
+                                        "unwrap_exceptions": {
+                                            "$ref": "#/$defs/types/boolean",
+                                            "default": false,
+                                            "description": "Whether the application gets the exception of the failing handler instead of a HandlerFailedException when it dispatches a message."
                                         }
                                     },
                                     "additionalProperties": false,
@@ -9752,7 +9808,9 @@
                                             "allow_no_handlers": false,
                                             "allow_no_senders": true
                                         },
-                                        "middleware": []
+                                        "middleware": [],
+                                        "messages": [],
+                                        "unwrap_exceptions": false
                                     }
                                 },
                                 "default": {
@@ -9762,7 +9820,9 @@
                                             "allow_no_handlers": false,
                                             "allow_no_senders": true
                                         },
-                                        "middleware": []
+                                        "middleware": [],
+                                        "messages": [],
+                                        "unwrap_exceptions": false
                                     }
                                 }
                             }
@@ -9780,6 +9840,7 @@
                     "routing": [],
                     "serializer": {
                         "default_serializer": "messenger.transport.native_php_serializer",
+                        "signing_secret": [],
                         "symfony_serializer": {
                             "service": null,
                             "format": "json",
@@ -9799,7 +9860,9 @@
                                 "allow_no_handlers": false,
                                 "allow_no_senders": true
                             },
-                            "middleware": []
+                            "middleware": [],
+                            "messages": [],
+                            "unwrap_exceptions": false
                         }
                     }
                 }
@@ -12174,8 +12237,24 @@
                                             "description": "The user provider to load users from."
                                         },
                                         "secret": {
-                                            "$ref": "#/$defs/types/scalar",
-                                            "default": "%kernel.secret%"
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/array_null",
+                                                    "items": {
+                                                        "$ref": "#/$defs/types/scalar"
+                                                    },
+                                                    "minItems": 1
+                                                },
+                                                {
+                                                    "type": [
+                                                        "string"
+                                                    ]
+                                                }
+                                            ],
+                                            "default": [
+                                                "%kernel.secret%"
+                                            ],
+                                            "description": "Secret used to sign the links. List several to rotate it: the first one signs, all of them verify."
                                         },
                                         "always_use_default_target_path": {
                                             "$ref": "#/$defs/types/boolean",
@@ -12288,6 +12367,45 @@
                                             "$ref": "#/$defs/types/scalar",
                                             "description": "The OIDC client identifier."
                                         },
+                                        "client_certificate": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/object_null",
+                                                    "properties": {
+                                                        "certificate": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "description": "Path to the PEM file of the certificate."
+                                                        },
+                                                        "key": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "default": null,
+                                                            "description": "Path to the PEM file of the private key, when not in the certificate file."
+                                                        },
+                                                        "passphrase": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "default": null,
+                                                            "description": "Passphrase of the private key."
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "certificate"
+                                                    ],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": [
+                                                        "string"
+                                                    ]
+                                                }
+                                            ],
+                                            "description": "The TLS client certificate presented to the token and UserInfo endpoints.",
+                                            "examples": [
+                                                {
+                                                    "certificate": "%kernel.project_dir%/config/oidc/client.pem",
+                                                    "key": "%kernel.project_dir%/config/oidc/client.key"
+                                                }
+                                            ]
+                                        },
                                         "client_authentication": {
                                             "anyOf": [
                                                 {
@@ -12335,6 +12453,21 @@
                                                                             "minimum": 1,
                                                                             "default": 60,
                                                                             "description": "How long an assertion is valid, in seconds. It is built for one request and sent right away, so keep it short: it is the window a provider that does not track the \"jti\" would accept a captured assertion in."
+                                                                        },
+                                                                        "audience": {
+                                                                            "anyOf": [
+                                                                                {
+                                                                                    "enum": [
+                                                                                        "issuer",
+                                                                                        "token_endpoint"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "$ref": "#/$defs/types/param"
+                                                                                }
+                                                                            ],
+                                                                            "default": "issuer",
+                                                                            "description": "The audience of the assertion: the issuer of the provider, or its token endpoint for a provider that refuses the issuer."
                                                                         }
                                                                     },
                                                                     "required": [
@@ -12392,6 +12525,21 @@
                                                                             "minimum": 1,
                                                                             "default": 60,
                                                                             "description": "How long an assertion is valid, in seconds. It is built for one request and sent right away, so keep it short: it is the window a provider that does not track the \"jti\" would accept a captured assertion in."
+                                                                        },
+                                                                        "audience": {
+                                                                            "anyOf": [
+                                                                                {
+                                                                                    "enum": [
+                                                                                        "issuer",
+                                                                                        "token_endpoint"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "$ref": "#/$defs/types/param"
+                                                                                }
+                                                                            ],
+                                                                            "default": "issuer",
+                                                                            "description": "The audience of the assertion: the issuer of the provider, or its token endpoint for a provider that refuses the issuer."
                                                                         }
                                                                     },
                                                                     "required": [
@@ -12413,9 +12561,17 @@
                                                                 }
                                                             ]
                                                         },
+                                                        "tls_client_auth": {
+                                                            "$ref": "#/$defs/types/boolean",
+                                                            "description": "Authenticate with \"client_certificate\", issued by a certificate authority."
+                                                        },
+                                                        "self_signed_tls_client_auth": {
+                                                            "$ref": "#/$defs/types/boolean",
+                                                            "description": "Authenticate with \"client_certificate\", self-signed."
+                                                        },
                                                         "id": {
                                                             "$ref": "#/$defs/types/scalar",
-                                                            "description": "The id of a service implementing \"ClientAuthenticationInterface\", for a scheme Symfony does not ship, such as the \"tls_client_auth\" of RFC 8705, Section 2. The method it reports is only known once it is built, so the rules a public client cannot bend are then checked on the first request to this firewall instead of while the container compiles."
+                                                            "description": "The id of a service implementing \"ClientAuthenticationInterface\", for a scheme Symfony does not ship. The method it reports is only known once it is built, so the rules a public client cannot bend are then checked on the first request to this firewall instead of while the container compiles."
                                                         }
                                                     },
                                                     "additionalProperties": false
@@ -12430,6 +12586,57 @@
                                             "examples": [
                                                 {
                                                     "client_secret_basic": "%env(OIDC_CLIENT_SECRET)%"
+                                                }
+                                            ]
+                                        },
+                                        "dpop": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/object_null",
+                                                    "properties": {
+                                                        "key": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "description": "The private key the proofs are signed with, as a JSON-encoded JWK."
+                                                        },
+                                                        "algorithm": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "enum": [
+                                                                        "ES256",
+                                                                        "ES384",
+                                                                        "ES512",
+                                                                        "PS256",
+                                                                        "PS384",
+                                                                        "PS512",
+                                                                        "RS256",
+                                                                        "RS384",
+                                                                        "RS512"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "$ref": "#/$defs/types/param"
+                                                                }
+                                                            ],
+                                                            "default": "ES256",
+                                                            "description": "The algorithm the proofs are signed with, among the \"dpop_signing_alg_values_supported\" of the provider."
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "key"
+                                                    ],
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": [
+                                                        "string"
+                                                    ]
+                                                }
+                                            ],
+                                            "description": "Binds the tokens the provider issues to a key held by this client (DPoP); a token the provider did not bind is refused.",
+                                            "examples": [
+                                                {
+                                                    "key": "%env(OIDC_DPOP_KEY)%",
+                                                    "algorithm": "ES256"
                                                 }
                                             ]
                                         },
@@ -12595,6 +12802,48 @@
                                             "$ref": "#/$defs/types/scalar",
                                             "default": "/",
                                             "description": "Path or route to redirect to after OIDC logout."
+                                        },
+                                        "backchannel_logout": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/object_null",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "$ref": "#/$defs/types/boolean",
+                                                            "default": false
+                                                        },
+                                                        "path": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "default": "/oidc/backchannel-logout",
+                                                            "description": "Path where the OIDC provider posts its logout tokens."
+                                                        },
+                                                        "cache": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "default": "cache.app",
+                                                            "description": "Id of the cache pool remembering the ended provider sessions, shared by every server of the application."
+                                                        },
+                                                        "lifetime": {
+                                                            "$ref": "#/$defs/types/integer",
+                                                            "minimum": 1,
+                                                            "default": 86400,
+                                                            "description": "How long an ended provider session is remembered, in seconds; at least how long a session can stay idle."
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": [
+                                                        "boolean"
+                                                    ]
+                                                }
+                                            ],
+                                            "default": {
+                                                "enabled": false,
+                                                "path": "/oidc/backchannel-logout",
+                                                "cache": "cache.app",
+                                                "lifetime": 86400
+                                            },
+                                            "description": "Accept the logout tokens the OIDC provider posts when one of its sessions ends."
                                         }
                                     },
                                     "required": [
@@ -13488,6 +13737,67 @@
                                             },
                                             "additionalProperties": false,
                                             "description": "Declaring this node serves the RFC 9728 protected resource metadata document of the firewall at \"/.well-known/oauth-protected-resource\" and advertises its URL in the \"resource_metadata\" parameter of the \"WWW-Authenticate\" header, which is how a client discovers where to get a token this firewall accepts. The route is declared by the \"security.authenticator.access_token.route_loader\" service, which the application must import as it does for the logout routes; make sure it is reachable without a token."
+                                        },
+                                        "dpop": {
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/object_null",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "$ref": "#/$defs/types/boolean",
+                                                            "default": false
+                                                        },
+                                                        "algorithms": {
+                                                            "$ref": "#/$defs/types/array_null",
+                                                            "items": {
+                                                                "$ref": "#/$defs/types/scalar"
+                                                            },
+                                                            "minItems": 1,
+                                                            "default": [
+                                                                "ES256",
+                                                                "PS256",
+                                                                "RS256"
+                                                            ],
+                                                            "description": "The algorithms a proof may be signed with, announced in the challenge."
+                                                        },
+                                                        "cache": {
+                                                            "$ref": "#/$defs/types/scalar",
+                                                            "default": "cache.app",
+                                                            "description": "The cache pool proofs are remembered in to refuse a replay, shared by all the instances of the application."
+                                                        },
+                                                        "proof_lifetime": {
+                                                            "$ref": "#/$defs/types/integer",
+                                                            "minimum": 1,
+                                                            "default": 60,
+                                                            "description": "How long a proof is accepted after its \"iat\", in seconds."
+                                                        },
+                                                        "allowed_time_drift": {
+                                                            "$ref": "#/$defs/types/integer",
+                                                            "minimum": 0,
+                                                            "default": 5,
+                                                            "description": "Allowed time drift in seconds for the \"iat\" of a proof, both ways."
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                },
+                                                {
+                                                    "type": [
+                                                        "boolean"
+                                                    ]
+                                                }
+                                            ],
+                                            "default": {
+                                                "enabled": false,
+                                                "algorithms": [
+                                                    "ES256",
+                                                    "PS256",
+                                                    "RS256"
+                                                ],
+                                                "cache": "cache.app",
+                                                "proof_lifetime": 60,
+                                                "allowed_time_drift": 5
+                                            },
+                                            "description": "Accepts only the access tokens bound to a key the request proves it holds (DPoP), presented under the \"DPoP\" scheme."
                                         }
                                     },
                                     "required": [
@@ -13549,8 +13859,24 @@
                                     "$ref": "#/$defs/types/object_null",
                                     "properties": {
                                         "secret": {
-                                            "$ref": "#/$defs/types/scalar",
-                                            "default": "%kernel.secret%"
+                                            "anyOf": [
+                                                {
+                                                    "$ref": "#/$defs/types/array_null",
+                                                    "items": {
+                                                        "$ref": "#/$defs/types/scalar"
+                                                    },
+                                                    "minItems": 1
+                                                },
+                                                {
+                                                    "type": [
+                                                        "string"
+                                                    ]
+                                                }
+                                            ],
+                                            "default": [
+                                                "%kernel.secret%"
+                                            ],
+                                            "description": "Secret used to sign the cookies. List several to rotate it: the first one signs, all of them verify."
                                         },
                                         "service": {
                                             "$ref": "#/$defs/types/scalar"
@@ -14194,8 +14520,8 @@
                     },
                     "stimulus_controller": {
                         "$ref": "#/$defs/types/scalar",
-                        "default": "@survos/api-grid/api-grid",
-                        "description": "The stimulus controller to use, should extend @survos/api-grid/api-grid"
+                        "default": "survos--api-grid-bundle--api-grid",
+                        "description": "The stimulus controller to use, should extend survos--api-grid-bundle--api-grid"
                     },
                     "meiliHost": {
                         "$ref": "#/$defs/types/scalar",
@@ -14931,6 +15257,16 @@
                     "credentials",
                     "client_secret"
                 ],
+                "additionalProperties": false
+            },
+            "survos_grid": {
+                "$ref": "#/$defs/types/object_null",
+                "properties": {
+                    "stimulus_controller": {
+                        "$ref": "#/$defs/types/scalar",
+                        "default": "survos--grid-bundle--grid"
+                    }
+                },
                 "additionalProperties": false
             },
             "survos_iiif": {
@@ -16033,6 +16369,11 @@
                             "dark_mode": false,
                             "show_locale_dropdown": true
                         }
+                    },
+                    "auto_breadcrumbs": {
+                        "$ref": "#/$defs/types/boolean",
+                        "default": false,
+                        "description": "Build the BREADCRUMB slot from the page's entities: each object option whose class has a #[RouteMeta(entity:, purpose: Show)] route becomes a crumb. See BreadcrumbMenuSubscriber."
                     },
                     "menu_options": {
                         "$ref": "#/$defs/types/object_null",
@@ -17926,6 +18267,9 @@
         "survos_google_sheets": {
             "$ref": "#/$defs/nodes/survos_google_sheets"
         },
+        "survos_grid": {
+            "$ref": "#/$defs/nodes/survos_grid"
+        },
         "survos_iiif": {
             "$ref": "#/$defs/nodes/survos_iiif"
         },
@@ -18156,6 +18500,9 @@
                 },
                 "survos_google_sheets": {
                     "$ref": "#/$defs/nodes/survos_google_sheets"
+                },
+                "survos_grid": {
+                    "$ref": "#/$defs/nodes/survos_grid"
                 },
                 "survos_iiif": {
                     "$ref": "#/$defs/nodes/survos_iiif"
@@ -18388,6 +18735,9 @@
                 "survos_google_sheets": {
                     "$ref": "#/$defs/nodes/survos_google_sheets"
                 },
+                "survos_grid": {
+                    "$ref": "#/$defs/nodes/survos_grid"
+                },
                 "survos_iiif": {
                     "$ref": "#/$defs/nodes/survos_iiif"
                 },
@@ -18614,6 +18964,9 @@
                 },
                 "survos_google_sheets": {
                     "$ref": "#/$defs/nodes/survos_google_sheets"
+                },
+                "survos_grid": {
+                    "$ref": "#/$defs/nodes/survos_grid"
                 },
                 "survos_iiif": {
                     "$ref": "#/$defs/nodes/survos_iiif"
