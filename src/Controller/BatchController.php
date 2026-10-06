@@ -57,7 +57,16 @@ final class BatchController implements LoggerAwareInterface
 
     private function handle(string $client, BatchPayloadDto $payload, string $priority = CollectionPriority::NORMAL): JsonResponse
     {
-        $this->logger->warning(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        // Phase timings: logged once per request and returned as Server-Timing, so the caller sees
+        // where a slow batch went (first-time asset inserts and claim inserts dominate; see
+        // ClaimIngestor's no-op for re-sent claims).
+        $started = $mark = hrtime(true);
+        $timings = [];
+        $lap = static function (string $phase) use (&$mark, &$timings): void {
+            $now = hrtime(true);
+            $timings[$phase] = ($now - $mark) / 1e6;
+            $mark = $now;
+        };
 
         // sync=true: process download immediately in this request, skip async queue
         if ($payload->sync) {
@@ -92,6 +101,7 @@ final class BatchController implements LoggerAwareInterface
         // against, never inherit, human metadata. Collected here and ingested
         // in one recordBatch() call below — record() opens/closes its own vault
         // JsonlWriter per call, which capped batches at ~10 URLs/sec.
+        $lap('ensureAssets');
         $claimItems = [];
         foreach ($urls as $url) {
             $claimItem = $this->sourceClaimItem($assets[$url], $payload->claimsFor($url));
@@ -107,6 +117,7 @@ final class BatchController implements LoggerAwareInterface
         // The endpoint returned 200 and wrote nothing.
         $this->claimIngestor->flush();
 
+        $lap('claims');
         $media = [];
         $queue = [];
 
@@ -155,6 +166,14 @@ final class BatchController implements LoggerAwareInterface
         }
         $this->assetRegistry->flush();
 
+        $lap('flush');
+        $this->logger->info('batch[{client}]: {n} url(s) in {ms} ms ({phases})', [
+            'client' => $client,
+            'n' => count($urls),
+            'ms' => (int) round((hrtime(true) - $started) / 1e6),
+            'phases' => implode(' ', array_map(static fn (string $k, float $v): string => sprintf('%s=%d', $k, $v), array_keys($timings), $timings)),
+        ]);
+
         // Report what we refused rather than dropping it silently. A client whose
         // source data holds identifiers instead of URLs (Smithsonian EDAN ids, say)
         // otherwise sees a short media[] and no reason for it.
@@ -170,7 +189,7 @@ final class BatchController implements LoggerAwareInterface
         return new JsonResponse([
             'media' => $media,
             'rejected' => $rejected,
-        ]);
+        ], headers: ['Server-Timing' => implode(', ', array_map(static fn (string $k, float $v): string => sprintf('%s;dur=%.1f', $k, $v), array_keys($timings), $timings))]);
     }
 
     /**
