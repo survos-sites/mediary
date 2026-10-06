@@ -24,8 +24,8 @@ use Symfony\Component\Routing\Attribute\Route;
  *
  * Endpoints mirror ClaimReaderInterface exactly, so the two transports are interchangeable:
  *   GET /api/claim-store/subjects?ids[]=…&scope=…&manifested=1
- *   GET /api/claim-store/scope?scope=…
- *   GET /api/claim-store/runs?scope=…
+ *   GET /api/claim-store/scope?scope=…&excludeSources[]=@import
+ *   GET /api/claim-store/runs?scope=…&excludeSources[]=@import
  *   GET /api/claim-store/count?id=…&scope=…
  *
  * Responses are {"rows": [...]} / {"count": n} — an envelope, not a bare array, so fields can be
@@ -77,23 +77,23 @@ final class ApiClaimsController extends AbstractController
     }
 
     #[Route('/api/claim-store/scope', name: 'api_claims_scope', methods: ['GET'])]
-    public function scope(Request $request, #[MapQueryParameter] string $scope): JsonResponse
+    public function scope(Request $request, #[MapQueryParameter] string $scope, #[MapQueryParameter(filter: \FILTER_DEFAULT)] array $excludeSources = []): JsonResponse
     {
         if ($denied = $this->denyUnlessAuthorized($request)) {
             return $denied;
         }
 
-        return $this->json(['rows' => $this->reader->forScope($scope)]);
+        return $this->json(['rows' => $this->reader->forScope($scope, array_values($excludeSources))]);
     }
 
     #[Route('/api/claim-store/runs', name: 'api_claims_runs', methods: ['GET'])]
-    public function runs(Request $request, #[MapQueryParameter] string $scope): JsonResponse
+    public function runs(Request $request, #[MapQueryParameter] string $scope, #[MapQueryParameter(filter: \FILTER_DEFAULT)] array $excludeSources = []): JsonResponse
     {
         if ($denied = $this->denyUnlessAuthorized($request)) {
             return $denied;
         }
 
-        return $this->json(['rows' => $this->reader->runsForScope($scope)]);
+        return $this->json(['rows' => $this->reader->runsForScope($scope, array_values($excludeSources))]);
     }
 
     #[Route('/api/claim-store/count', name: 'api_claims_count', methods: ['GET'])]

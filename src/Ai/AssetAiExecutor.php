@@ -6,6 +6,7 @@ namespace App\Ai;
 
 use App\Entity\Asset;
 use App\Entity\MediaRecord;
+use Survos\ClaimsBundle\Entity\Claim;
 use Survos\ClaimsBundle\Repository\ClaimRepository;
 use App\Service\ClaimSearchSync;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,7 +77,7 @@ final class AssetAiExecutor
             return [];
         }
         $facts = [];
-        foreach ($this->claims->findForSubjectAndSource(MediaRecord::class, $asset->mediaRecord->id, '@import', $asset->dataset) as $claim) {
+        foreach ($this->claims->findForSubjectAndSource(MediaRecord::class, $asset->mediaRecord->id, Claim::SOURCE_IMPORT, $asset->dataset) as $claim) {
             $key = self::FACT_KEYS[$claim->predicate] ?? null;
             if ($key !== null && is_scalar($claim->value) && trim((string) $claim->value) !== '') {
                 $facts[$key][] = (string) $claim->value;

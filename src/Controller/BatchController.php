@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Asset;
 use App\Entity\MediaRecord;
+use Survos\ClaimsBundle\Entity\Claim;
 use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
 use App\Service\CollectionPriority;
@@ -209,7 +210,7 @@ final class BatchController implements LoggerAwareInterface
             'scope' => $asset->dataset,
             'subjectType' => MediaRecord::class,
             'subjectId' => $asset->mediaRecord->id,
-            'source' => '@import',
+            'source' => Claim::SOURCE_IMPORT,
             'rawClaims' => $raw,
         ];
     }
