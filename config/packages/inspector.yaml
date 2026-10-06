@@ -13,7 +13,6 @@ inspector:
         - 'make.*'
         - 'asset-map:compile'
         - 'importmap:install'
-        - 'fos:js-routing:dump'
         - 'messenger*'
         - 'assets*'
         - 'importmap*'
