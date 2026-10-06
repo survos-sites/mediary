@@ -4641,133 +4641,6 @@
                 },
                 "additionalProperties": false
             },
-            "data_tables": {
-                "$ref": "#/$defs/types/object_null",
-                "properties": {
-                    "max_page_length": {
-                        "$ref": "#/$defs/types/integer",
-                        "minimum": 1,
-                        "default": 1000,
-                        "description": "Upper bound applied to the DataTables \"length\" parameter on Ajax requests. \"length=-1\" (show all) is honored only when the table declares -1 in lengthMenu(); otherwise it is capped to this value."
-                    },
-                    "options": {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "language": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": "en-GB"
-                            },
-                            "stateSave": {
-                                "$ref": "#/$defs/types/boolean"
-                            },
-                            "showHeaderResetButton": {
-                                "$ref": "#/$defs/types/boolean"
-                            },
-                            "layout": {
-                                "$ref": "#/$defs/types/variable",
-                                "default": {
-                                    "topStart": "pageLength",
-                                    "topEnd": "search",
-                                    "bottomStart": "info",
-                                    "bottomEnd": "paging"
-                                }
-                            },
-                            "lengthMenu": {
-                                "$ref": "#/$defs/types/array_null",
-                                "items": {
-                                    "$ref": "#/$defs/types/scalar"
-                                }
-                            },
-                            "pageLength": {
-                                "$ref": "#/$defs/types/integer"
-                            },
-                            "paging": {
-                                "$ref": "#/$defs/types/object_null",
-                                "properties": {
-                                    "boundaryNumbers": {
-                                        "$ref": "#/$defs/types/boolean",
-                                        "default": true
-                                    },
-                                    "buttons": {
-                                        "$ref": "#/$defs/types/integer",
-                                        "default": 7
-                                    },
-                                    "firstLast": {
-                                        "$ref": "#/$defs/types/boolean",
-                                        "default": true
-                                    },
-                                    "numbers": {
-                                        "$ref": "#/$defs/types/boolean",
-                                        "default": true
-                                    },
-                                    "previousNext": {
-                                        "$ref": "#/$defs/types/boolean",
-                                        "default": true
-                                    }
-                                },
-                                "additionalProperties": false
-                            }
-                        },
-                        "additionalProperties": false
-                    },
-                    "table_attributes": {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "class": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": "table"
-                            }
-                        },
-                        "additionalProperties": false
-                    },
-                    "extensions": {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "buttons": {
-                                "$ref": "#/$defs/types/array_null",
-                                "items": {
-                                    "$ref": "#/$defs/types/scalar"
-                                }
-                            },
-                            "select": {
-                                "$ref": "#/$defs/types/object_null",
-                                "properties": {
-                                    "style": {
-                                        "$ref": "#/$defs/types/scalar",
-                                        "default": "single"
-                                    }
-                                },
-                                "additionalProperties": false
-                            }
-                        },
-                        "additionalProperties": false
-                    },
-                    "edit_modal": {
-                        "$ref": "#/$defs/types/object_null",
-                        "properties": {
-                            "template": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": "@PentiminaxDataTables/modal/datatables/edit_modal.html.twig"
-                            },
-                            "body_template": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": "@PentiminaxDataTables/modal/datatables/_form_body.html.twig"
-                            },
-                            "default_title": {
-                                "$ref": "#/$defs/types/scalar",
-                                "default": "Edit"
-                            }
-                        },
-                        "additionalProperties": false,
-                        "default": {
-                            "template": "@PentiminaxDataTables/modal/datatables/edit_modal.html.twig",
-                            "body_template": "@PentiminaxDataTables/modal/datatables/_form_body.html.twig",
-                            "default_title": "Edit"
-                        }
-                    }
-                },
-                "additionalProperties": false
-            },
             "debug": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
@@ -15633,20 +15506,6 @@
             "survos_simple_datatables": {
                 "$ref": "#/$defs/types/object_null",
                 "properties": {
-                    "backend": {
-                        "anyOf": [
-                            {
-                                "enum": [
-                                    "simple",
-                                    "ux"
-                                ]
-                            },
-                            {
-                                "$ref": "#/$defs/types/param"
-                            }
-                        ],
-                        "default": "simple"
-                    },
                     "stimulus_controller": {
                         "$ref": "#/$defs/types/scalar",
                         "default": "@survos/simple-datatables-bundle/table"
@@ -18147,9 +18006,6 @@
         "cache": {
             "$ref": "#/$defs/nodes/cache"
         },
-        "data_tables": {
-            "$ref": "#/$defs/nodes/data_tables"
-        },
         "doctrine": {
             "$ref": "#/$defs/nodes/doctrine"
         },
@@ -18365,9 +18221,6 @@
                 },
                 "cache": {
                     "$ref": "#/$defs/nodes/cache"
-                },
-                "data_tables": {
-                    "$ref": "#/$defs/nodes/data_tables"
                 },
                 "debug": {
                     "$ref": "#/$defs/nodes/debug"
@@ -18609,9 +18462,6 @@
                 "cache": {
                     "$ref": "#/$defs/nodes/cache"
                 },
-                "data_tables": {
-                    "$ref": "#/$defs/nodes/data_tables"
-                },
                 "doctrine": {
                     "$ref": "#/$defs/nodes/doctrine"
                 },
@@ -18844,9 +18694,6 @@
                 },
                 "cache": {
                     "$ref": "#/$defs/nodes/cache"
-                },
-                "data_tables": {
-                    "$ref": "#/$defs/nodes/data_tables"
                 },
                 "doctrine": {
                     "$ref": "#/$defs/nodes/doctrine"

@@ -1842,7 +1842,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  * }
  * @psalm-type SurvosSimpleDatatablesConfig = array{
- *     backend?: "simple"|"ux"|Param, // Default: "simple"
  *     stimulus_controller?: scalar|Param|null, // Default: "@survos/simple-datatables-bundle/table"
  *     per_page?: int|Param, // Default: 10
  *     searchable?: bool|Param, // Default: true
@@ -3354,38 +3353,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/admin/elastic"
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  * }
- * @psalm-type DataTablesConfig = array{
- *     max_page_length?: int|Param, // Upper bound applied to the DataTables "length" parameter on Ajax requests. "length=-1" (show all) is honored only when the table declares -1 in lengthMenu(); otherwise it is capped to this value. // Default: 1000
- *     options?: array{
- *         language?: scalar|Param|null, // Default: "en-GB"
- *         stateSave?: bool|Param,
- *         showHeaderResetButton?: bool|Param,
- *         layout?: mixed, // Default: {"topStart":"pageLength","topEnd":"search","bottomStart":"info","bottomEnd":"paging"}
- *         lengthMenu?: list<scalar|Param|null>,
- *         pageLength?: int|Param,
- *         paging?: array{
- *             boundaryNumbers?: bool|Param, // Default: true
- *             buttons?: int|Param, // Default: 7
- *             firstLast?: bool|Param, // Default: true
- *             numbers?: bool|Param, // Default: true
- *             previousNext?: bool|Param, // Default: true
- *         },
- *     },
- *     table_attributes?: array{
- *         class?: scalar|Param|null, // Default: "table"
- *     },
- *     extensions?: array{
- *         buttons?: list<scalar|Param|null>,
- *         select?: array{
- *             style?: scalar|Param|null, // Default: "single"
- *         },
- *     },
- *     edit_modal?: array{
- *         template?: scalar|Param|null, // Default: "@PentiminaxDataTables/modal/datatables/edit_modal.html.twig"
- *         body_template?: scalar|Param|null, // Default: "@PentiminaxDataTables/modal/datatables/_form_body.html.twig"
- *         default_title?: scalar|Param|null, // Default: "Edit"
- *     },
- * }
  * @psalm-type SurvosGridConfig = array{
  *     stimulus_controller?: scalar|Param|null, // Default: "survos--grid-bundle--grid"
  * }
@@ -3463,7 +3430,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_fetch?: SurvosFetchConfig,
  *     ov_json_rpc_api?: OvJsonRpcApiConfig,
  *     survos_elastic?: SurvosElasticConfig,
- *     data_tables?: DataTablesConfig,
  *     survos_grid?: SurvosGridConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
@@ -3546,7 +3512,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
  *         survos_elastic?: SurvosElasticConfig,
- *         data_tables?: DataTablesConfig,
  *         survos_grid?: SurvosGridConfig,
  *     },
  *     "when@prod"?: array{
@@ -3623,7 +3588,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_fetch?: SurvosFetchConfig,
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *         survos_elastic?: SurvosElasticConfig,
- *         data_tables?: DataTablesConfig,
  *         survos_grid?: SurvosGridConfig,
  *     },
  *     "when@test"?: array{
@@ -3704,7 +3668,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ov_json_rpc_api?: OvJsonRpcApiConfig,
  *         survos_supervisor?: SurvosSupervisorConfig,
  *         survos_elastic?: SurvosElasticConfig,
- *         data_tables?: DataTablesConfig,
  *         survos_grid?: SurvosGridConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias

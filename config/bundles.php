@@ -66,6 +66,5 @@ return [
     Jwage\PhpAmqpLibMessengerBundle\PhpAmqpLibMessengerBundle::class => ['all' => true],
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['all' => true],
     Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
-    Pentiminax\UX\DataTables\PentiminaxDataTablesBundle::class => ['all' => true],
     Survos\Grid\SurvosGridBundle::class => ['all' => true],
 ];
