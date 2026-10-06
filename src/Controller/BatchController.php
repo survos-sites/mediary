@@ -9,6 +9,7 @@ use App\Service\AssetNotifier;
 use App\Service\AssetRegistry;
 use App\Service\CollectionPriority;
 use App\Workflow\AssetFlow;
+use App\Workflow\AssetWorkflow;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Survos\ClaimsBundle\Service\ClaimIngestor;
@@ -29,6 +30,7 @@ final class BatchController implements LoggerAwareInterface
         private readonly AsyncQueueLocator $asyncQueueLocator,
         private readonly ClaimIngestor     $claimIngestor,
         private readonly AssetNotifier     $assetNotifier,
+        private readonly AssetWorkflow     $assetWorkflow,
     ) {
     }
 
@@ -131,7 +133,12 @@ final class BatchController implements LoggerAwareInterface
                 $asset->context['callback_url'] = $payload->callbackUrl;
             }
 
-            if ($asset->marking === AssetFlow::PLACE_NEW) {
+            if ($asset->marking === AssetFlow::PLACE_NEW && $this->assetWorkflow->probeSkipped()) {
+                // Local timing only: answer `probed` in this response, so the client's row is
+                // terminal at once and nothing waits on a probe queue or the callback.
+                $this->assetWorkflow->recordSkippedProbe($asset);
+                $asset->marking = AssetFlow::PLACE_PROBED;
+            } elseif ($asset->marking === AssetFlow::PLACE_NEW) {
                 $queue[$asset->originalUrl] = $asset;
             }
             // Same builder the asset.analyzed webhook uses, so what a client

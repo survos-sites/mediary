@@ -133,6 +133,9 @@ class AssetWorkflow
         iterable $taskServices = [],
         #[Autowire('%env(default::MEDIARY_OWNED_PDF_HOSTS)%')]
         private readonly ?string $ownedPdfHosts = null,
+        /** Local pipeline timing only: complete the probe transition without touching the source. */
+        #[Autowire('%env(bool:default::MEDIARY_PROBE_SKIP)%')]
+        private readonly bool $probeSkip = false,
     ) {
         foreach ($taskServices as $task) {
             if ($task instanceof AiTaskInterface) {
@@ -589,10 +592,32 @@ class AssetWorkflow
      * NARA's scale — most of its URLs are withdrawn — throwing here would fill the failed transport
      * with hundreds of thousands of rows. Only 5xx and an exhausted 429 throw, and are retried.
      */
+    public function probeSkipped(): bool
+    {
+        return $this->probeSkip;
+    }
+
+    /**
+     * MEDIARY_PROBE_SKIP: the facts of a successful probe, without the GET, so local pipeline
+     * timing is not dominated by per-host source rate limits. Never set in production.
+     */
+    public function recordSkippedProbe(Asset $asset): void
+    {
+        $asset->statusCode = 200;
+        $asset->mime ??= $this->looksLikePdf($asset->originalUrl) ? 'application/pdf' : 'image/jpeg';
+        $asset->context['probe'] = ['checkedAt' => (new \DateTimeImmutable())->format(DATE_ATOM), 'status' => 200, 'skipped' => true];
+    }
+
     #[AsTransitionListener(WF::WORKFLOW_NAME, AssetFlow::TRANSITION_PROBE)]
     public function onProbe(TransitionEvent $event): void
     {
         $asset = $this->getAsset($event);
+        if ($this->probeSkip) {
+            $this->recordSkippedProbe($asset);
+            $this->em->flush();
+
+            return;
+        }
         $url = $asset->originalUrl;
         $rate = $asset->sourceMeta[MediaSyncKeys::SOURCE_RATE] ?? null;
 
