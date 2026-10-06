@@ -39,8 +39,8 @@ final class MediaBatchObserveService
     #[AsCommand('media:batch-observe', 'Submit OpenAI vision "observe" batches for assets; the scheduler polls and records claims')]
     public function batchObserve(
         SymfonyStyle $io,
-        #[Argument('Claim scope to record under (e.g. mus/fpus, or mediary)')] string $scope,
-        #[Option('Explicit asset IDs for a bounded test; repeat for multiple assets')] array $assetId = [],
+        #[Argument('Dataset key to observe (e.g. mus/fpus); selects assets with that dataset and records claims under it')] string $scope,
+        #[Option('Explicit asset IDs for a bounded test, in place of the dataset filter; repeat for multiple assets')] array $assetId = [],
         #[Option('Max assets to include (0 = all eligible)')] int $limit = 0,
         #[Option('Requests per provider batch')] int $chunkSize = 2000,
         #[Option('OpenAI model')] string $model = 'gpt-4o-mini',
@@ -50,8 +50,13 @@ final class MediaBatchObserveService
     ): int {
         $qb = $this->em->getRepository(Asset::class)->createQueryBuilder('a')
             ->where('a.originalUrl IS NOT NULL');
+        // The scope used to be only a label, so an unbounded run sent every asset in mediary
+        // to OpenAI and filed the claims under whatever dataset was named (2026-09-20: 22,500
+        // requests for "mus/fpus"). Explicit IDs are the one case that skips the dataset filter.
         if ($assetId !== []) {
             $qb->andWhere('a.id IN (:ids)')->setParameter('ids', $assetId);
+        } else {
+            $qb->andWhere('a.dataset = :dataset')->setParameter('dataset', $scope);
         }
         if ($limit > 0) {
             $qb->setMaxResults($limit);
@@ -59,7 +64,9 @@ final class MediaBatchObserveService
         /** @var list<Asset> $assets */
         $assets = $qb->getQuery()->getResult();
         if ($assets === []) {
-            $io->warning('No assets with an originalUrl to observe.');
+            $io->warning($assetId !== []
+                ? 'None of the given asset IDs has an originalUrl to observe.'
+                : sprintf('No assets in dataset %s with an originalUrl to observe.', $scope));
             return Command::SUCCESS;
         }
 
