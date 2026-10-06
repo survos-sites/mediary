@@ -18,6 +18,13 @@
 	# mediary receives image uploads and multi-page PDFs. php.ini raises
 	# upload_max_filesize/post_max_size to 512M; Caddy has to allow the body through
 	# first or PHP never sees the request.
+	# Request size is capped in THREE places; the smallest wins:
+	#   1. dokku's host nginx in front of this container. Not in this repo: dokku generates
+	#      /home/dokku/mediary/nginx.conf (hand edits are overwritten). Set it with
+	#        dokku nginx:set mediary client-max-body-size 32m && dokku proxy:build-config mediary
+	#      The dokku default is 1m, which rejected harvest's 500-row /batch (~1 MB) with 413.
+	#   2. here (Caddy request_body)
+	#   3. docker/php.ini post_max_size / upload_max_filesize
 	request_body {
 		max_size 512MB
 	}
