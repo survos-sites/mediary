@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Ordinary SSH over Tailscale; retain the existing fsn1 SSH identity/host key.
+set -euo pipefail
+exec ssh -T -o BatchMode=yes -o ConnectTimeout=10 \
+  -o "Hostname=${LIVE_TAILSCALE_HOST:-100.122.226.25}" \
+  -o "HostKeyAlias=${LIVE_HOST_KEY_ALIAS:-fsn1.survos.com}" "$@"
