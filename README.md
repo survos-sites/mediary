@@ -12,6 +12,42 @@ Storage is [flysystem](https://github.com/thephpleague/flysystem-bundle), so the
 is configurable. Each client registers as a `User` with a code, which is both its API key and its
 root path in storage.
 
+## Fetch the live Mediary and Lingua databases
+
+From your Mac, with Tailscale connected, run these commands from this repository.
+They create PostgreSQL snapshots on the live host and download verified copies;
+they do **not** replace your local databases:
+
+```bash
+# Check access to the live host.
+bin/live-ssh fsn1-root hostname
+
+# Fetch the live Mediary database.
+bin/backup-live.sh dump mediary
+bin/backup-live.sh fetch mediary
+
+# Fetch the live Lingua database (also run from this repository).
+bin/backup-live.sh dump lingua
+bin/backup-live.sh fetch lingua
+```
+
+Downloads land in `var/backups/mediary_live.dump` and
+`var/backups/lingua_live.dump`. If a download is interrupted, rerun only its
+`fetch` command to resume it. To inspect the source and destination first, run
+`bin/backup-live.sh plan mediary` or `bin/backup-live.sh plan lingua`.
+
+To **replace the local databases**, first back them up and stop local workers,
+schedulers, and web requests. Review local configuration and outbound services
+using the [database sync runbook](docs/database-sync.md), then run:
+
+```bash
+bin/backup-live.sh restore mediary --replace-local
+bin/backup-live.sh restore lingua --replace-local
+```
+
+Restore targets the local `survos_postgres` container and does not run migrations.
+The runbook covers prerequisites, Tailscale access, rollback, and validation.
+
 ---
 
 ## One table, one owner
