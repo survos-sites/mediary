@@ -53,7 +53,6 @@
         "survos/crawler-bundle": "^2.33.0",
         "survos/data-bundle": "^2.33.1",
         "survos/data-contracts": "^2.34.13",
-        "survos/dataset-bundle": "^2.34.9",
         "survos/doc-bundle": "^2.33.0",
         "survos/elastic-bundle": "^2.33.0",
         "survos/ez-bundle": "^2.33.0",
