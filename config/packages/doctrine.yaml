@@ -1,8 +1,5 @@
 doctrine:
     dbal:
-        # SurvosDatasetBundle adds a second 'dataset' (pdo_sqlite) connection, so the
-        # default can no longer be inferred from the `url` shorthand — it must be named
-        # and pinned, or the sqlite registry silently becomes the app default.
         default_connection: default
         connections:
             default:
@@ -18,7 +15,6 @@ doctrine:
             claims:
                 url: '%env(resolve:CLAIMS_DATABASE_URL)%'
                 profiling_collect_backtrace: '%kernel.debug%'
-            # 'dataset' (pdo_sqlite) connection is added by SurvosDatasetBundle.
 
     orm:
         default_entity_manager: default
@@ -39,7 +35,6 @@ doctrine:
             claims:
                 connection: claims
                 naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-            # 'dataset' entity manager is added by SurvosDatasetBundle.
 
 when@test:
     doctrine:

@@ -55,7 +55,6 @@ return [
     Survos\AiWorkflowBundle\SurvosAiWorkflowBundle::class => ['all' => true],
     Survos\Kit\SurvosKitBundle::class => ['all' => true],
     Survos\ImportBundle\SurvosImportBundle::class => ['all' => true],
-    Survos\DatasetBundle\SurvosDatasetBundle::class => ['all' => true],
     Survos\DataBundle\SurvosDataBundle::class => ['all' => true],
     Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
     Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
