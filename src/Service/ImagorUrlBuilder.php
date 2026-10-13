@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Service;
+
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
+/**
+ * Signed URLs for the Survos imagor build (survos-sites/imagor) — the
+ * proof-of-concept alternative to imgproxy Pro. Selected per request by
+ * AssetRegistry when IMAGE_BACKEND=imagor; imgproxy stays the default.
+ *
+ * PoC home: this belongs in survos/imgproxy-bundle as a second backend once the
+ * contract settles; kept app-local so the shared bundle is not touched yet.
+ *
+ * Differences from imgproxy that matter here:
+ *  - imagor has no server-side presets, so presets are expanded HERE. The
+ *    server holds the same list (IMAGOR_PRESETS in its Dockerfile) and only
+ *    persists results whose options match a cached preset (tiny, thumb)
+ *    byte-for-byte. A drifted string still renders; it just never caches.
+ *  - Sources: our durable bucket is read by imagor's S3 loader as a bare key
+ *    ("orig/ab/cd.jpg"); http(s) URLs are fully percent-encoded so '?', '(',
+ *    ',' etc. can never be parsed as imagor options.
+ *  - Signature: base64url(HMAC-SHA256(secret, path)) truncated to 40 chars,
+ *    where path is everything after the signature segment.
+ */
+final class ImagorUrlBuilder
+{
+    /**
+     * MUST match IMAGOR_PRESETS in survos-sites/imagor's Dockerfile, which
+     * mirrors IMGPROXY_PRESETS (same sizes, quality, webp, metadata kept).
+     */
+    public const PRESETS = [
+        'tiny' => 'fit-in/200x200/filters:quality(70):format(webp)',
+        'thumb' => 'fit-in/400x400/filters:quality(80):format(webp)',
+        'observe' => 'fit-in/512x512/filters:quality(80):format(webp)',
+        'display' => 'fit-in/600x400/filters:quality(80):format(webp)',
+        'archive' => 'filters:quality(88):format(webp)',
+        'card' => '800x600/filters:quality(82):format(webp):no_upscale()',
+        'large' => 'fit-in/1600x1600/filters:quality(82):format(webp)',
+    ];
+
+    public function __construct(
+        #[Autowire('%env(default::IMAGOR_HOST)%')] public readonly ?string $host = null,
+        #[Autowire('%env(default::IMAGOR_SECRET)%')] private readonly ?string $secret = null,
+        /** The bucket imagor's S3 loader reads in place (S3_LOADER_BUCKET on the server). */
+        #[Autowire('%env(default::IMAGOR_S3_BUCKET)%')] private readonly ?string $s3Bucket = null,
+        private readonly int $signerTruncate = 40,
+    ) {
+    }
+
+    public function isConfigured(): bool
+    {
+        return null !== $this->host && '' !== $this->host && null !== $this->secret && '' !== $this->secret;
+    }
+
+    public function hasPreset(string $preset): bool
+    {
+        return isset(self::PRESETS[$preset]);
+    }
+
+    /**
+     * Whether imagor can read this source at all. s3:// URLs are only readable
+     * for the loader bucket; other buckets (SourceBuckets) stay on imgproxy.
+     */
+    public function supports(string $source): bool
+    {
+        return null !== $this->imagePath($source);
+    }
+
+    public function preset(string $source, string $preset = 'thumb'): string
+    {
+        if (!isset(self::PRESETS[$preset])) {
+            throw new \InvalidArgumentException(sprintf('Unknown imagor preset "%s". Available: %s', $preset, implode(', ', array_keys(self::PRESETS))));
+        }
+
+        return $this->build($source, self::PRESETS[$preset]);
+    }
+
+    /** Arbitrary imagor options, e.g. "fit-in/1200x0/filters:format(webp)". Never cached server-side. */
+    public function build(string $source, string $options): string
+    {
+        if (!$this->isConfigured()) {
+            throw new \RuntimeException('imagor is not configured. Set IMAGOR_HOST and IMAGOR_SECRET.');
+        }
+        $image = $this->imagePath($source) ?? throw new \InvalidArgumentException(sprintf('imagor cannot read source "%s".', $source));
+
+        $path = trim($options, '/').'/'.$image;
+
+        return rtrim((string) $this->host, '/').'/'.$this->sign($path).'/'.$path;
+    }
+
+    public function sign(string $path): string
+    {
+        $sig = strtr(base64_encode(hash_hmac('sha256', $path, (string) $this->secret, true)), '+/', '-_');
+
+        return $this->signerTruncate > 0 ? substr($sig, 0, $this->signerTruncate) : $sig;
+    }
+
+    private function imagePath(string $source): ?string
+    {
+        if (str_starts_with($source, 's3://')) {
+            [$bucket, $key] = array_pad(explode('/', substr($source, 5), 2), 2, '');
+            if ('' === $key || null === $this->s3Bucket || $bucket !== $this->s3Bucket) {
+                return null;
+            }
+
+            // Keys are hex-sharded (orig/ab/cd/<sha>.jpg); encode each segment but keep the slashes.
+            return implode('/', array_map(rawurlencode(...), explode('/', $key)));
+        }
+
+        if (preg_match('~^https?://~i', $source)) {
+            return rawurlencode($source);
+        }
+
+        return null;
+    }
+}
