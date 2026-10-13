@@ -8676,16 +8676,16 @@
         },
         {
             "name": "survos/imagor-bundle",
-            "version": "2.41.10",
+            "version": "2.41.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/imagor-bundle.git",
-                "reference": "83ccb80021ed8481004b3a9ff4bf7cfa44b852ac"
+                "reference": "113bc6cc3c34fa5c6a773756fa68172b5209e515"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/imagor-bundle/zipball/83ccb80021ed8481004b3a9ff4bf7cfa44b852ac",
-                "reference": "83ccb80021ed8481004b3a9ff4bf7cfa44b852ac",
+                "url": "https://api.github.com/repos/survos/imagor-bundle/zipball/113bc6cc3c34fa5c6a773756fa68172b5209e515",
+                "reference": "113bc6cc3c34fa5c6a773756fa68172b5209e515",
                 "shasum": ""
             },
             "require": {
@@ -8731,7 +8731,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/imagor-bundle/issues",
-                "source": "https://github.com/survos/imagor-bundle/tree/2.41.10"
+                "source": "https://github.com/survos/imagor-bundle/tree/2.41.11"
             },
             "funding": [
                 {
@@ -8739,7 +8739,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-13T15:49:30+00:00"
+            "time": "2026-10-13T15:55:06+00:00"
         },
         {
             "name": "survos/imgproxy-bundle",
