@@ -19,9 +19,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  *    server holds the same list (IMAGOR_PRESETS in its Dockerfile) and only
  *    persists results whose options match a cached preset (tiny, thumb)
  *    byte-for-byte. A drifted string still renders; it just never caches.
- *  - Sources: our durable bucket is read by imagor's S3 loader as a bare key
- *    ("orig/ab/cd.jpg"); http(s) URLs are fully percent-encoded so '?', '(',
- *    ',' etc. can never be parsed as imagor options.
+ *  - Sources: our own buckets are read in place as "{bucket}/{key}" (the
+ *    server's buckets.yaml is the allowlist); http(s) URLs are fully
+ *    percent-encoded so '?', '(', ',' etc. can never be parsed as options.
  *  - Signature: base64url(HMAC-SHA256(secret, path)) truncated to 40 chars,
  *    where path is everything after the signature segment.
  */
@@ -44,8 +44,11 @@ final class ImagorUrlBuilder
     public function __construct(
         #[Autowire('%env(default::IMAGOR_HOST)%')] public readonly ?string $host = null,
         #[Autowire('%env(default::IMAGOR_SECRET)%')] private readonly ?string $secret = null,
-        /** The bucket imagor's S3 loader reads in place (S3_LOADER_BUCKET on the server). */
-        #[Autowire('%env(default::IMAGOR_S3_BUCKET)%')] private readonly ?string $s3Bucket = null,
+        /**
+         * Comma-separated buckets the server reads in place (its buckets.yaml).
+         * Sources in other buckets fall back to imgproxy. Empty = any bucket.
+         */
+        #[Autowire('%env(default::IMAGOR_S3_BUCKETS)%')] private readonly ?string $s3Buckets = null,
         private readonly int $signerTruncate = 40,
     ) {
     }
@@ -62,7 +65,7 @@ final class ImagorUrlBuilder
 
     /**
      * Whether imagor can read this source at all. s3:// URLs are only readable
-     * for the loader bucket; other buckets (SourceBuckets) stay on imgproxy.
+     * for the server's allowed buckets; others stay on imgproxy.
      */
     public function supports(string $source): bool
     {
@@ -102,12 +105,13 @@ final class ImagorUrlBuilder
     {
         if (str_starts_with($source, 's3://')) {
             [$bucket, $key] = array_pad(explode('/', substr($source, 5), 2), 2, '');
-            if ('' === $key || null === $this->s3Bucket || $bucket !== $this->s3Bucket) {
+            $allowed = array_filter(array_map(trim(...), explode(',', (string) $this->s3Buckets)));
+            if ('' === $bucket || '' === $key || ([] !== $allowed && !in_array($bucket, $allowed, true))) {
                 return null;
             }
 
-            // Keys are hex-sharded (orig/ab/cd/<sha>.jpg); encode each segment but keep the slashes.
-            return implode('/', array_map(rawurlencode(...), explode('/', $key)));
+            // Encode each segment but keep the slashes: {bucket}/orig/ab/cd/<sha>.jpg
+            return implode('/', array_map(rawurlencode(...), [$bucket, ...explode('/', $key)]));
         }
 
         if (preg_match('~^https?://~i', $source)) {

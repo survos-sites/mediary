@@ -11,15 +11,15 @@ final class ImagorUrlBuilderTest extends TestCase
 {
     private function builder(): ImagorUrlBuilder
     {
-        return new ImagorUrlBuilder('http://localhost:8000/', 'localsecret', 'museado');
+        return new ImagorUrlBuilder('http://localhost:8000/', 'localsecret', 'museado, mediary-dev');
     }
 
-    public function testLoaderBucketSourceIsABareKey(): void
+    public function testS3SourceIsBucketSlashKey(): void
     {
         // Expected signature computed independently:
         //   printf '%s' "$path" | openssl dgst -sha256 -hmac localsecret -binary | base64 | tr '+/' '-_' | cut -c1-40
         self::assertSame(
-            'http://localhost:8000/7X-GQiB7siC8xql8EYl_THsm7KBK9xw7wwOu5cem/fit-in/400x400/filters:quality(80):format(webp)/orig/te/st/photo.jpg',
+            'http://localhost:8000/2lmwRkMeL8mI3CeMkft3yEMvHvuf-XvOfezK6qBm/fit-in/400x400/filters:quality(80):format(webp)/museado/orig/te/st/photo.jpg',
             $this->builder()->preset('s3://museado/orig/te/st/photo.jpg', 'thumb'),
         );
     }
@@ -39,6 +39,7 @@ final class ImagorUrlBuilderTest extends TestCase
         self::assertFalse($b->supports('s3://museado/'));
         self::assertFalse($b->supports('file:///etc/passwd'));
         self::assertTrue($b->supports('s3://museado/orig/a.jpg'));
+        self::assertTrue($b->supports('s3://mediary-dev/orig/a.jpg'));
         self::assertTrue($b->supports('https://example.com/a.jpg'));
 
         $this->expectException(\InvalidArgumentException::class);
@@ -53,7 +54,7 @@ final class ImagorUrlBuilderTest extends TestCase
 
     public function testUnconfiguredBuilderRefusesToBuild(): void
     {
-        $b = new ImagorUrlBuilder(null, null, 'museado');
+        $b = new ImagorUrlBuilder(null, null);
         self::assertFalse($b->isConfigured());
         $this->expectException(\RuntimeException::class);
         $b->preset('https://example.com/a.jpg');
