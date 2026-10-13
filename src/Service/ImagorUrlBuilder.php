@@ -50,6 +50,10 @@ final class ImagorUrlBuilder
          */
         #[Autowire('%env(default::IMAGOR_S3_BUCKETS)%')] private readonly ?string $s3Buckets = null,
         private readonly int $signerTruncate = 40,
+        /** Our object storage; https URLs into it are rewritten to {bucket}/{key} (read in place, never copied). */
+        #[Autowire('%env(default::S3_ENDPOINT)%')] private readonly ?string $s3Endpoint = null,
+        /** S3_STORAGE_BASE_DIR on the server: where cached external originals live in museado. */
+        private readonly string $sourcePrefix = 'imagor/src',
     ) {
     }
 
@@ -101,8 +105,52 @@ final class ImagorUrlBuilder
         return $this->signerTruncate > 0 ? substr($sig, 0, $this->signerTruncate) : $sig;
     }
 
+    /**
+     * Where imagor keeps its byte-identical copy of an EXTERNAL original, as an
+     * s3://museado/… URL — computable from the source URL alone, readable
+     * without imagor. Null for our own buckets: those are never copied, their
+     * master IS the source. The object exists once imagor has served any
+     * request for the source.
+     */
+    public function cachedSourceUrl(string $source, string $bucket = 'museado'): ?string
+    {
+        $source = $this->ownStorageS3Url($source) ?? $source;
+        if (!preg_match('~^https?://~i', $source)) {
+            return null;
+        }
+        $d = sha1($source);
+
+        return sprintf('s3://%s/%s/%s/%s/%s', $bucket, trim($this->sourcePrefix, '/'), substr($d, 0, 2), substr($d, 2, 2), $d);
+    }
+
+    /**
+     * https://fsn1.your-objectstorage.com/{bucket}/{key} and
+     * https://{bucket}.fsn1.your-objectstorage.com/{key} → s3://{bucket}/{key}.
+     * Presigned URLs are left alone (their query string is the access).
+     */
+    private function ownStorageS3Url(string $source): ?string
+    {
+        $endpoint = parse_url((string) $this->s3Endpoint, PHP_URL_HOST);
+        $parts = parse_url($source);
+        if (!$endpoint || !isset($parts['host'], $parts['path']) || isset($parts['query'])) {
+            return null;
+        }
+        $path = ltrim(rawurldecode($parts['path']), '/');
+        if (strcasecmp($parts['host'], $endpoint) === 0) {
+            return str_contains($path, '/') ? 's3://'.$path : null;
+        }
+        $suffix = '.'.$endpoint;
+        if (str_ends_with(strtolower($parts['host']), strtolower($suffix)) && '' !== $path) {
+            return 's3://'.substr($parts['host'], 0, -strlen($suffix)).'/'.$path;
+        }
+
+        return null;
+    }
+
     private function imagePath(string $source): ?string
     {
+        $source = $this->ownStorageS3Url($source) ?? $source;
+
         if (str_starts_with($source, 's3://')) {
             [$bucket, $key] = array_pad(explode('/', substr($source, 5), 2), 2, '');
             $allowed = array_filter(array_map(trim(...), explode(',', (string) $this->s3Buckets)));

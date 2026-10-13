@@ -59,4 +59,22 @@ final class ImagorUrlBuilderTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $b->preset('https://example.com/a.jpg');
     }
+
+    public function testOwnObjectStorageUrlsAreReadInPlace(): void
+    {
+        $b = new ImagorUrlBuilder('http://localhost:8000', 'localsecret', 'museado,ink-rappnews', 40, 'https://fsn1.your-objectstorage.com');
+        $expected = $b->preset('s3://ink-rappnews/R/1/0001.jp2', 'thumb');
+        self::assertSame($expected, $b->preset('https://fsn1.your-objectstorage.com/ink-rappnews/R/1/0001.jp2', 'thumb'));
+        self::assertSame($expected, $b->preset('https://ink-rappnews.fsn1.your-objectstorage.com/R/1/0001.jp2', 'thumb'));
+        self::assertNull($b->cachedSourceUrl('https://ink-rappnews.fsn1.your-objectstorage.com/R/1/0001.jp2'), 'our masters are never copied');
+        self::assertFalse($b->supports('https://nabolom.fsn1.your-objectstorage.com/a.jpg'), 'not an allowed bucket');
+    }
+
+    public function testCachedSourceUrlMatchesTheServerKey(): void
+    {
+        // policy.SourceKey: {aa}/{bb}/sha1(url) under S3_STORAGE_BASE_DIR
+        $url = 'https://iiif.example.org/iiif/2/a%3Ab/full/max/0/default.jpg';
+        $d = sha1($url);
+        self::assertSame("s3://museado/imagor/src/{$d[0]}{$d[1]}/{$d[2]}{$d[3]}/$d", $this->builder()->cachedSourceUrl($url));
+    }
 }
