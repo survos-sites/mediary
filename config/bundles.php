@@ -66,4 +66,5 @@ return [
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['all' => true],
     Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
     Survos\Grid\SurvosGridBundle::class => ['all' => true],
+    Survos\ImagorBundle\SurvosImagorBundle::class => ['all' => true],
 ];

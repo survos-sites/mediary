@@ -5,7 +5,7 @@ namespace App\Command;
 
 use App\Repository\AssetRepository;
 use App\Service\AssetRegistry;
-use App\Service\ImagorUrlBuilder;
+use Survos\ImagorBundle\Service\ImagorUrlBuilder;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;

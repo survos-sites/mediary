@@ -13,6 +13,7 @@ use App\Workflow\AssetFlow;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Survos\ImagorBundle\Service\ImagorUrlBuilder;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Survos\DataContracts\Dto\BatchItemDto;
 use Survos\DataContracts\Vocabulary\MediaSyncKeys;
@@ -42,7 +43,7 @@ final class AssetRegistry
         private readonly ImgproxyUrlBuilder $imgproxyUrlBuilder,
         private readonly ?LoggerInterface $logger = null,
         private readonly ?ImagorUrlBuilder $imagorUrlBuilder = null,
-        /** imgproxy (default) | imagor — imagor PoC, see ImagorUrlBuilder. */
+        /** imgproxy (default) | imagor — see survos/imagor-bundle. */
         #[Autowire('%env(IMAGE_BACKEND)%')]
         private readonly string $imageBackend = 'imgproxy',
     ) {

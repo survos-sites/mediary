@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c240a0cb4fd0b20f84275857f6f0583f",
+    "content-hash": "160d8e036e8f0ac3953a84ce40fb9acd",
     "packages": [
         {
             "name": "api-platform/core",
@@ -8673,6 +8673,73 @@
                 }
             ],
             "time": "2026-09-15T16:15:42+00:00"
+        },
+        {
+            "name": "survos/imagor-bundle",
+            "version": "2.41.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/imagor-bundle.git",
+                "reference": "83ccb80021ed8481004b3a9ff4bf7cfa44b852ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/imagor-bundle/zipball/83ccb80021ed8481004b3a9ff4bf7cfa44b852ac",
+                "reference": "83ccb80021ed8481004b3a9ff4bf7cfa44b852ac",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.5",
+                "survos/kit-bundle": "^2.5",
+                "symfony/config": "^8.1",
+                "symfony/console": "^8.1",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/http-client-contracts": "^3.5",
+                "symfony/http-kernel": "^8.1",
+                "twig/twig": "^3.14|^4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.0",
+                "symfony/framework-bundle": "^8.1",
+                "symfony/http-client": "^8.1",
+                "symfony/twig-bundle": "^8.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "symfony": {
+                    "require": "^8.1"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Survos\\ImagorBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony bundle for signed imagor URLs (presets, crops, meta) against the Survos imagor build",
+            "keywords": [
+                "blurhash",
+                "image",
+                "imagor",
+                "resize",
+                "symfony",
+                "thumbhash",
+                "thumbnail"
+            ],
+            "support": {
+                "issues": "https://github.com/survos/imagor-bundle/issues",
+                "source": "https://github.com/survos/imagor-bundle/tree/2.41.10"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-13T15:49:30+00:00"
         },
         {
             "name": "survos/imgproxy-bundle",

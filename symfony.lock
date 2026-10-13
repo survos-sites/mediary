@@ -296,6 +296,9 @@
     "survos/iiif-bundle": {
         "version": "1.0.0"
     },
+    "survos/imagor-bundle": {
+        "version": "2.41.10"
+    },
     "survos/imgproxy-bundle": {
         "version": "2.0.0"
     },
