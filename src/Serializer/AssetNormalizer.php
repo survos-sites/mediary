@@ -80,7 +80,8 @@ final class AssetNormalizer implements NormalizerInterface, NormalizerAwareInter
         // Hex-encoded — that is imgproxy's encoding, NOT the unpadded base64 that
         // Survos\ThumbHashBundle emits. The `thumbhash` Stimulus controller takes an
         // `encoding` value for exactly this reason; see docs/local-image-analysis.md.
-        $thumbHash = $object->context['info']['thumb_hash'] ?? null;
+        // imagor meta/ (context.thumbhash) first; imgproxy Pro /info's thumb_hash for older assets.
+        $thumbHash = $object->context['thumbhash'] ?? $object->context['info']['thumb_hash'] ?? null;
         $data['thumbHash'] = is_string($thumbHash) && $thumbHash !== '' ? $thumbHash : null;
 
         $sourceMeta = is_array($object->sourceMeta) ? $object->sourceMeta : [];

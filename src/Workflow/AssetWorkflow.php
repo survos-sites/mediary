@@ -37,6 +37,7 @@ use Survos\ClaimsBundle\Service\ClaimIngestor;
 use Survos\ClaimsBundle\Service\RawClaim;
 use Survos\ClaimsBundle\Service\RunMeta;
 use Survos\DataContracts\Util\MediaKeyService;
+use Survos\ImagorBundle\Service\ImagorUrlBuilder;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Symfony\Component\HttpClient\Response\StreamWrapper;
 use App\Util\ImageProbe;
@@ -116,6 +117,7 @@ class AssetWorkflow
         private readonly AssetRegistry $assetRegistry,
         private readonly PdfToolsClient $pdfTools,
         private readonly ImgproxyUrlBuilder $imgproxyUrlBuilder,
+        private readonly ImagorUrlBuilder $imagor,
         private readonly IiifManifestService $iiifManifestService,
         private readonly EdgeAnalysisService $edgeAnalysisService,
         private readonly OcrService $ocrService,
@@ -948,6 +950,12 @@ class AssetWorkflow
             $this->logger->info('info[{id}]: reprocessing cached /info payload', [
                 'id' => $asset->id,
             ]);
+        } elseif (str_starts_with($source, 's3://') && $this->imagor->isConfigured() && $this->imagor->supports($source)) {
+            // imagor meta/ against the s3:// master, read in place (never copied):
+            // dimensions, format, EXIF, plus thumbhash/blurhash/average colour.
+            // Replaces imgproxy Pro /info; byte size was recorded by the archive step.
+            // Errors propagate exactly as /info's did (info_failed).
+            $info = $this->imagorMetaInfo($asset, $source);
         } else {
             // imgproxy PRO /info against the s3:// master — one remote call, NO
             // download to our server, NO nesting (the source is a real object in our
@@ -969,8 +977,66 @@ class AssetWorkflow
         }
         $asset->statusCode = 200;
         $this->applyInfoMetadata($asset, $info);
+        $this->applyImagorMeta($asset, $source);
 
         $this->em->flush();
+    }
+
+    /**
+     * imagor meta/ — thumbhash, blurhash and average colour, computed in Go on the
+     * imagor server. Runs once per asset (skipped when context['meta'] exists), so
+     * resetting the marking and iterating again fills in assets that predate it
+     * while everything else (archive, cached /info) stays a no-op.
+     *
+     * Only for sources in our own S3: imagor reads those in place, so this never
+     * copies an original or touches the origin. An http source would make imagor
+     * keep a second copy of the master; those wait for the archive step instead.
+     * Enrichment, not registration: a failure is logged and the asset moves on.
+     */
+    private function applyImagorMeta(Asset $asset, string $source): void
+    {
+        if (isset($asset->context['meta']) || !str_starts_with($source, 's3://')
+            || !$this->imagor->isConfigured() || !$this->imagor->supports($source)) {
+            return;
+        }
+        try {
+            $this->imagorMetaInfo($asset, $source);
+        } catch (\Throwable $e) {
+            $this->logger->warning('info[{id}]: imagor meta failed: {err}', ['id' => $asset->id, 'err' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Calls meta/, records it in context (meta, thumbhash, blurhash, colors) and
+     * returns it in /info's shape for applyInfoMetadata().
+     *
+     * @return array<string, mixed>
+     */
+    private function imagorMetaInfo(Asset $asset, string $source): array
+    {
+        $meta = $this->imagor->meta($source);
+        $asset->context ??= [];
+        $asset->context['meta'] = [
+            'width' => $meta->width,
+            'height' => $meta->height,
+            'format' => $meta->format,
+            'content_type' => $meta->contentType,
+            'orientation' => $meta->orientation,
+            'pages' => $meta->pages,
+            'at' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
+        ];
+        $asset->context['thumbhash'] = $meta->thumbhash;
+        $asset->context['blurhash'] = $meta->blurhash;
+        $asset->context['colors'] = ['average' => $meta->averageHex()];
+        $asset->context['info_at'] = (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM);
+
+        return [
+            'width' => $meta->width,
+            'height' => $meta->height,
+            'format' => $meta->format,
+            'mime_type' => $meta->contentType,
+            'exif' => $meta->exif,
+        ];
     }
 
     private function applyPdfMetadata(Asset $asset, array $file): void
