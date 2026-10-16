@@ -1,0 +1,47 @@
+[
+  {
+    "dataset": "news/rappnews4909",
+    "slug": "rappnews-iiif",
+    "title": "Rappahannock News",
+    "issues": 3115,
+    "records": 964527,
+    "pages": 43019,
+    "bytes": 6933884928
+  },
+  {
+    "dataset": "cron-america/sn98068377-enhanced",
+    "slug": "farmville-herald-enhanced",
+    "title": "Farmville Herald enhanced sample",
+    "issues": 1,
+    "records": 139,
+    "pages": 8,
+    "bytes": 2101248
+  },
+  {
+    "dataset": "amstory/sn83025196",
+    "slug": "du-buque-visitor-american-stories",
+    "title": "Du Buque Visitor",
+    "issues": 5,
+    "records": 507,
+    "pages": 20,
+    "bytes": 5242880
+  },
+  {
+    "dataset": "amstory/sn82015686",
+    "slug": "iowa-news-american-stories",
+    "title": "Iowa News",
+    "issues": 51,
+    "records": 6255,
+    "pages": 206,
+    "bytes": 64253952
+  },
+  {
+    "dataset": "cron-america/sn85059732",
+    "slug": "sunday-telegram",
+    "title": "Sunday Telegram",
+    "issues": 57,
+    "records": 178756,
+    "pages": 1822,
+    "bytes": 1040674816
+  }
+]

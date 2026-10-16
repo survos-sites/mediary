@@ -1,0 +1,360 @@
+{
+  "at": "2026-10-06T20:04:28+00:00",
+  "entity": "App\\Entity\\Asset",
+  "id": "faacbfb299f5684c",
+  "results": {
+    "openai-mini-json": {
+      "profile": "openai-mini-json",
+      "provider": "openai",
+      "requested_model": "gpt-4o-mini",
+      "status": "ok",
+      "http_status": 200,
+      "model": "gpt-4o-mini-2024-07-18",
+      "finish_reason": "stop",
+      "output": "{\n  \"routing\": {\n    \"content_type\": \"newspaper\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"presence of printed text and newspaper formatting\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": true,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"potential loss of details related to the health program announcement and names listed\"\n  },\n  \"prose\": \"The image features a newspaper clipping titled 'Health Program Grows at S.H.S.' The clipping discusses health work at Sperryville High School under the supervision of Mrs. Quaintance, stating that health examinations have been conducted rapidly. It mentions that all pupils have had dental examinations by a dentist and by a doctor, with details that 20 have had dental corrections, five attended an eye clinic in Front Royal, and 35 had chest x-rays in Culpeper. Additionally, it notes that an assembly program has been dedicated to health, with Mrs. James F. Smith, from Culpeper county health nurse, talking and presenting a motion picture about the importance of frequent physical examinations.\",\n  \"transcription\": {\n    \"masthead\": \"Health Program Grows at S.H.S.\",\n    \"body\": \"Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.\"\n  }\n}",
+      "usage": {
+        "prompt_tokens": 5052,
+        "completion_tokens": 414,
+        "total_tokens": 5466,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "audio_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "audio_tokens": 0,
+          "accepted_prediction_tokens": 0,
+          "rejected_prediction_tokens": 0
+        }
+      },
+      "estimated_cost_usd": 0.0010061999999999998,
+      "hypothetical_batch_cost_usd": 0.0005030999999999999,
+      "pricing": {
+        "input_per_million": 0.15,
+        "cached_input_per_million": 0.075,
+        "output_per_million": 0.6,
+        "pricing_date": "2026-10-06"
+      },
+      "markdown_envelope": false,
+      "json_output": {
+        "routing": {
+          "content_type": "newspaper",
+          "content_type_confidence": "high",
+          "content_type_basis": "presence of printed text and newspaper formatting",
+          "text_flags": {
+            "has_text": true,
+            "typed_text": true,
+            "handwritten_text": false,
+            "is_form": false,
+            "is_filled_form": false
+          },
+          "needs_high_res": false,
+          "pending_steps": [],
+          "analysis_tasks": [],
+          "risk_if_skipped": "potential loss of details related to the health program announcement and names listed"
+        },
+        "prose": "The image features a newspaper clipping titled 'Health Program Grows at S.H.S.' The clipping discusses health work at Sperryville High School under the supervision of Mrs. Quaintance, stating that health examinations have been conducted rapidly. It mentions that all pupils have had dental examinations by a dentist and by a doctor, with details that 20 have had dental corrections, five attended an eye clinic in Front Royal, and 35 had chest x-rays in Culpeper. Additionally, it notes that an assembly program has been dedicated to health, with Mrs. James F. Smith, from Culpeper county health nurse, talking and presenting a motion picture about the importance of frequent physical examinations.",
+        "transcription": {
+          "masthead": "Health Program Grows at S.H.S.",
+          "body": "Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations."
+        }
+      },
+      "elapsed_ms": 5891.97,
+      "task": "observe",
+      "images": [
+        {
+          "sha256": "6317350b28e4ce1443692b30683fcecc5d0d00a404750c9fe994ab92f41f2595",
+          "width": 372,
+          "height": 512,
+          "mime": "image/webp",
+          "bytes": 57746
+        }
+      ],
+      "crop": "575,710,372,512",
+      "image_fetch_ms": 596.08,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+            }
+          ]
+        }
+      ]
+    },
+    "gemini-flash-lite-3.5-json": {
+      "profile": "gemini-flash-lite-3.5-json",
+      "provider": "gemini",
+      "requested_model": "gemini-3.5-flash-lite",
+      "status": "ok",
+      "http_status": 200,
+      "native_usage": {
+        "promptTokenCount": 3444,
+        "candidatesTokenCount": 519,
+        "totalTokenCount": 3963,
+        "promptTokensDetails": [
+          {
+            "modality": "TEXT",
+            "tokenCount": 2352
+          },
+          {
+            "modality": "IMAGE",
+            "tokenCount": 1092
+          }
+        ],
+        "serviceTier": "standard"
+      },
+      "model": "gemini-3.5-flash-lite",
+      "finish_reason": "stop",
+      "output": "{\n  \"routing\": {\n    \"content_type\": \"clipping\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"Printed newspaper clipping reporting on a school health program.\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": true,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"summarize\",\n      \"extract_metadata\",\n      \"generate_title\"\n    ]\n  },\n  \"prose\": \"A rectangular black-and-white newspaper clipping featuring a news article set in a typical serif typeface. The clipping is framed at the top and bottom by thin horizontal black rules. Above the main text is a bold headline spanning two lines: 'Health Program / Grows at S.H.S,', with a short horizontal rule directly underneath. Below the headline, a single-column paragraph begins with an indented first line and reports on health work at Sperryville High School under the supervision of Mrs. Quaintance. The text mentions pupil examinations by a dentist and doctor, dental corrections, an eye clinic in Front Royal, chest x-rays in Culpeper, an assembly program, and a talk by Mrs. James F. Smith, Culpeper county health nurse, who presented a motion picture on physical examinations. The paper texture shows slight grain, faint vertical grid lines, and minor smudging or aging discoloration.\",\n  \"transcription\": {\n    \"transcription_type\": \"newspaper\",\n    \"language\": \"en\",\n    \"headline\": \"Health Program Grows at S.H.S,\",\n    \"body\": \"Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.\"\n  }\n}",
+      "usage": {
+        "prompt_tokens": 3444,
+        "completion_tokens": 519,
+        "total_tokens": 3963,
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "answer_tokens": 519
+        },
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "estimated_cost_usd": 0.0023307,
+      "hypothetical_batch_cost_usd": 0.00116535,
+      "pricing": {
+        "input_per_million": 0.3,
+        "cached_input_per_million": 0.03,
+        "output_per_million": 2.5,
+        "pricing_date": "2026-10-06"
+      },
+      "markdown_envelope": false,
+      "json_output": {
+        "routing": {
+          "content_type": "clipping",
+          "content_type_confidence": "high",
+          "content_type_basis": "Printed newspaper clipping reporting on a school health program.",
+          "text_flags": {
+            "has_text": true,
+            "typed_text": true,
+            "handwritten_text": false,
+            "is_form": false,
+            "is_filled_form": false
+          },
+          "needs_high_res": false,
+          "pending_steps": [],
+          "analysis_tasks": [
+            "summarize",
+            "extract_metadata",
+            "generate_title"
+          ]
+        },
+        "prose": "A rectangular black-and-white newspaper clipping featuring a news article set in a typical serif typeface. The clipping is framed at the top and bottom by thin horizontal black rules. Above the main text is a bold headline spanning two lines: 'Health Program / Grows at S.H.S,', with a short horizontal rule directly underneath. Below the headline, a single-column paragraph begins with an indented first line and reports on health work at Sperryville High School under the supervision of Mrs. Quaintance. The text mentions pupil examinations by a dentist and doctor, dental corrections, an eye clinic in Front Royal, chest x-rays in Culpeper, an assembly program, and a talk by Mrs. James F. Smith, Culpeper county health nurse, who presented a motion picture on physical examinations. The paper texture shows slight grain, faint vertical grid lines, and minor smudging or aging discoloration.",
+        "transcription": {
+          "transcription_type": "newspaper",
+          "language": "en",
+          "headline": "Health Program Grows at S.H.S,",
+          "body": "Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations."
+        }
+      },
+      "elapsed_ms": 3992.42,
+      "task": "observe",
+      "images": [
+        {
+          "sha256": "6317350b28e4ce1443692b30683fcecc5d0d00a404750c9fe994ab92f41f2595",
+          "width": 372,
+          "height": 512,
+          "mime": "image/webp",
+          "bytes": 57746
+        }
+      ],
+      "crop": "575,710,372,512",
+      "image_fetch_ms": 596.08,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+            }
+          ]
+        }
+      ]
+    },
+    "ministral-8b-json": {
+      "profile": "ministral-8b-json",
+      "provider": "mistral",
+      "requested_model": "ministral-8b-2512",
+      "status": "ok",
+      "http_status": 200,
+      "model": "ministral-8b-2512",
+      "finish_reason": "stop",
+      "output": "{\n  \"routing\": {\n    \"content_type\": \"newspaper\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"printed newspaper clipping with masthead, date, and article text\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": true,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"extract_metadata\",\n      \"context_description\",\n      \"summarize\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": {\n    \"masthead\": {\n      \"headline\": \"Health Program Grows at S.H.S.\",\n      \"font_style\": \"bold, serif\",\n      \"size\": \"large\"\n    },\n    \"date\": {\n      \"not_fully_visible\": true,\n      \"year_range\": \"likely 1940s to 1960s based on font and layout style\"\n    },\n    \"article\": {\n      \"lead\": \"Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly.\",\n      \"content\": [\n        {\n          \"paragraph\": \"To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper.\",\n          \"details\": [\n            {\n              \"examination_type\": \"dental and medical\",\n              \"participation\": \"all pupils\"\n            },\n            {\n              \"examination_type\": \"dental corrections\",\n              \"participation\": \"20 pupils\"\n            },\n            {\n              \"examination_type\": \"eye clinic\",\n              \"location\": \"Front Royal\",\n              \"participation\": \"five pupils\"\n            },\n            {\n              \"examination_type\": \"chest x-rays\",\n              \"location\": \"Culpeper\",\n              \"participation\": \"35 pupils\"\n            }\n          ]\n        },\n        {\n          \"paragraph\": \"One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.\"\n        }\n      ],\n      \"mentions\": [\n        {\n          \"name\": \"Mrs. Quaintance\",\n          \"role\": \"supervisor of health work at Sperryville High School\"\n        },\n        {\n          \"name\": \"Mrs. James F. Smith\",\n          \"role\": \"Culpeper county health nurse\"\n        },\n        {\n          \"location\": \"Sperryville High School\",\n          \"location_type\": \"school\"\n        },\n        {\n          \"location\": \"Front Royal\",\n          \"location_type\": \"city\"\n        },\n        {\n          \"location\": \"Culpeper\",\n          \"location_type\": \"city\"\n        }\n      ]\n    },\n    \"layout\": {\n      \"column_width\": \"single-column layout\",\n      \"text_alignment\": \"left-aligned\",\n      \"font\": \"serif, black ink on light paper\",\n      \"condition\": {\n        \"fading\": \"moderate, especially in the background\",\n        \"damage\": \"none visible\",\n        \"quality\": \"moderate, slightly blurred\"\n      }\n    }\n  },\n  \"transcription\": {\n    \"transcription_type\": \"newspaper\",\n    \"masthead\": \"Health Program Grows at S.H.S.\",\n    \"date\": \"incomplete (year not fully visible)\",\n    \"page\": \"not visible\",\n    \"headline\": \"Health Program Grows at S.H.S.\",\n    \"byline\": \"\",\n    \"body\": [\n      {\n        \"text\": \"Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.\"\n      }\n    ]\n  }\n}",
+      "usage": {
+        "prompt_tokens": 2563,
+        "total_tokens": 3499,
+        "completion_tokens": 936,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "service_tier": "standard"
+      },
+      "estimated_cost_usd": 0.00052485,
+      "hypothetical_batch_cost_usd": 0.000262425,
+      "pricing": {
+        "input_per_million": 0.15,
+        "cached_input_per_million": 0.015,
+        "output_per_million": 0.15,
+        "pricing_date": "2026-10-06"
+      },
+      "markdown_envelope": false,
+      "json_output": {
+        "routing": {
+          "content_type": "newspaper",
+          "content_type_confidence": "high",
+          "content_type_basis": "printed newspaper clipping with masthead, date, and article text",
+          "text_flags": {
+            "has_text": true,
+            "typed_text": true,
+            "handwritten_text": false,
+            "is_form": false,
+            "is_filled_form": false
+          },
+          "needs_high_res": false,
+          "pending_steps": [],
+          "analysis_tasks": [
+            "extract_metadata",
+            "context_description",
+            "summarize"
+          ],
+          "risk_if_skipped": ""
+        },
+        "prose": {
+          "masthead": {
+            "headline": "Health Program Grows at S.H.S.",
+            "font_style": "bold, serif",
+            "size": "large"
+          },
+          "date": {
+            "not_fully_visible": true,
+            "year_range": "likely 1940s to 1960s based on font and layout style"
+          },
+          "article": {
+            "lead": "Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly.",
+            "content": [
+              {
+                "paragraph": "To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper.",
+                "details": [
+                  {
+                    "examination_type": "dental and medical",
+                    "participation": "all pupils"
+                  },
+                  {
+                    "examination_type": "dental corrections",
+                    "participation": "20 pupils"
+                  },
+                  {
+                    "examination_type": "eye clinic",
+                    "location": "Front Royal",
+                    "participation": "five pupils"
+                  },
+                  {
+                    "examination_type": "chest x-rays",
+                    "location": "Culpeper",
+                    "participation": "35 pupils"
+                  }
+                ]
+              },
+              {
+                "paragraph": "One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations."
+              }
+            ],
+            "mentions": [
+              {
+                "name": "Mrs. Quaintance",
+                "role": "supervisor of health work at Sperryville High School"
+              },
+              {
+                "name": "Mrs. James F. Smith",
+                "role": "Culpeper county health nurse"
+              },
+              {
+                "location": "Sperryville High School",
+                "location_type": "school"
+              },
+              {
+                "location": "Front Royal",
+                "location_type": "city"
+              },
+              {
+                "location": "Culpeper",
+                "location_type": "city"
+              }
+            ]
+          },
+          "layout": {
+            "column_width": "single-column layout",
+            "text_alignment": "left-aligned",
+            "font": "serif, black ink on light paper",
+            "condition": {
+              "fading": "moderate, especially in the background",
+              "damage": "none visible",
+              "quality": "moderate, slightly blurred"
+            }
+          }
+        },
+        "transcription": {
+          "transcription_type": "newspaper",
+          "masthead": "Health Program Grows at S.H.S.",
+          "date": "incomplete (year not fully visible)",
+          "page": "not visible",
+          "headline": "Health Program Grows at S.H.S.",
+          "byline": "",
+          "body": [
+            {
+              "text": "Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations."
+            }
+          ]
+        }
+      },
+      "elapsed_ms": 10456.72,
+      "task": "observe",
+      "images": [
+        {
+          "sha256": "6317350b28e4ce1443692b30683fcecc5d0d00a404750c9fe994ab92f41f2595",
+          "width": 372,
+          "height": 512,
+          "mime": "image/webp",
+          "bytes": 57746
+        }
+      ],
+      "crop": "575,710,372,512",
+      "image_fetch_ms": 596.08,
+      "messages": [
+        {
+          "role": "system",
+          "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,127 @@
+[
+  {
+    "label": "rappnews-512",
+    "engine": "tesseract 5.5.3",
+    "language": "eng",
+    "psm": 6,
+    "sha256": "6317350b28e4ce1443692b30683fcecc5d0d00a404750c9fe994ab92f41f2595",
+    "median_ms": 201.18,
+    "text": "Health Program\nGrows at S.H.S, :\nBi ae ;\n* Health work at Sperryville High\nSchool, under the supervision of\nMrs. Quaintance, is progressing\nrapidly. To date, all of tae pupils\nhave had examinations by a den-\ntist and by a doctor; 20 have had\ndental corrections; five.attended\nan eye clinic in Front Royal; and\n35 had chest x-rays in Culpeper.\nOne assembly program has been\ndevgted to health. Mrs. James F,\nSmith, Culpeper county - health\nRurse, made a talk and presented\n@ motion picture which explained |\n\u2018the importance of having frequent\n\u201cPhysical examinations.\n",
+    "trials": [
+      {
+        "elapsed_ms": 201.59,
+        "text": "Health Program\nGrows at S.H.S, :\nBi ae ;\n* Health work at Sperryville High\nSchool, under the supervision of\nMrs. Quaintance, is progressing\nrapidly. To date, all of tae pupils\nhave had examinations by a den-\ntist and by a doctor; 20 have had\ndental corrections; five.attended\nan eye clinic in Front Royal; and\n35 had chest x-rays in Culpeper.\nOne assembly program has been\ndevgted to health. Mrs. James F,\nSmith, Culpeper county - health\nRurse, made a talk and presented\n@ motion picture which explained |\n\u2018the importance of having frequent\n\u201cPhysical examinations.\n"
+      },
+      {
+        "elapsed_ms": 200.41,
+        "text": "Health Program\nGrows at S.H.S, :\nBi ae ;\n* Health work at Sperryville High\nSchool, under the supervision of\nMrs. Quaintance, is progressing\nrapidly. To date, all of tae pupils\nhave had examinations by a den-\ntist and by a doctor; 20 have had\ndental corrections; five.attended\nan eye clinic in Front Royal; and\n35 had chest x-rays in Culpeper.\nOne assembly program has been\ndevgted to health. Mrs. James F,\nSmith, Culpeper county - health\nRurse, made a talk and presented\n@ motion picture which explained |\n\u2018the importance of having frequent\n\u201cPhysical examinations.\n"
+      },
+      {
+        "elapsed_ms": 201.18,
+        "text": "Health Program\nGrows at S.H.S, :\nBi ae ;\n* Health work at Sperryville High\nSchool, under the supervision of\nMrs. Quaintance, is progressing\nrapidly. To date, all of tae pupils\nhave had examinations by a den-\ntist and by a doctor; 20 have had\ndental corrections; five.attended\nan eye clinic in Front Royal; and\n35 had chest x-rays in Culpeper.\nOne assembly program has been\ndevgted to health. Mrs. James F,\nSmith, Culpeper county - health\nRurse, made a talk and presented\n@ motion picture which explained |\n\u2018the importance of having frequent\n\u201cPhysical examinations.\n"
+      }
+    ],
+    "api_fee_usd": 0,
+    "timing_scope": "Fresh process including model load and image decode; excludes image download."
+  },
+  {
+    "label": "loc-512",
+    "engine": "tesseract 5.5.3",
+    "language": "eng",
+    "psm": 6,
+    "sha256": "a980e50da51a9decc05ec1450d6b2b4578fc727a72472f6f75dedd2b65bd5286",
+    "median_ms": 236.43,
+    "text": "281n Day.\u2014In tbe Senate two resolutions\nwere offered by Messrs, Peffer, of Kansas,\nand Allen, of Nebraska, to the effect that\u201d\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, l\nif go iveued and sold, they will be null and <\nvoid, The resolutions were laid over and {\nwill come up for action next week, The \\\nquesiion was touched upon in connection\nwith a bill appropriating #40,(00 for an\nequestrian statue in Manchester, N. H., to a\nRevolutionary hero, General Jobn Stark,\nMr, Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent, \u2018on a ques-\nHonable use of the statutes.\u201d\n",
+    "trials": [
+      {
+        "elapsed_ms": 236.43,
+        "text": "281n Day.\u2014In tbe Senate two resolutions\nwere offered by Messrs, Peffer, of Kansas,\nand Allen, of Nebraska, to the effect that\u201d\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, l\nif go iveued and sold, they will be null and <\nvoid, The resolutions were laid over and {\nwill come up for action next week, The \\\nquesiion was touched upon in connection\nwith a bill appropriating #40,(00 for an\nequestrian statue in Manchester, N. H., to a\nRevolutionary hero, General Jobn Stark,\nMr, Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent, \u2018on a ques-\nHonable use of the statutes.\u201d\n"
+      },
+      {
+        "elapsed_ms": 233.69,
+        "text": "281n Day.\u2014In tbe Senate two resolutions\nwere offered by Messrs, Peffer, of Kansas,\nand Allen, of Nebraska, to the effect that\u201d\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, l\nif go iveued and sold, they will be null and <\nvoid, The resolutions were laid over and {\nwill come up for action next week, The \\\nquesiion was touched upon in connection\nwith a bill appropriating #40,(00 for an\nequestrian statue in Manchester, N. H., to a\nRevolutionary hero, General Jobn Stark,\nMr, Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent, \u2018on a ques-\nHonable use of the statutes.\u201d\n"
+      },
+      {
+        "elapsed_ms": 239.97,
+        "text": "281n Day.\u2014In tbe Senate two resolutions\nwere offered by Messrs, Peffer, of Kansas,\nand Allen, of Nebraska, to the effect that\u201d\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, l\nif go iveued and sold, they will be null and <\nvoid, The resolutions were laid over and {\nwill come up for action next week, The \\\nquesiion was touched upon in connection\nwith a bill appropriating #40,(00 for an\nequestrian statue in Manchester, N. H., to a\nRevolutionary hero, General Jobn Stark,\nMr, Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent, \u2018on a ques-\nHonable use of the statutes.\u201d\n"
+      }
+    ],
+    "api_fee_usd": 0,
+    "timing_scope": "Fresh process including model load and image decode; excludes image download."
+  },
+  {
+    "label": "loc-original",
+    "engine": "tesseract 5.5.3",
+    "language": "eng",
+    "psm": 6,
+    "sha256": "826ba3d0af24fc79d3cc2b75a953646d472e3e30e24a464f5bd474d30c32beb9",
+    "median_ms": 243.95,
+    "text": "281n Dax.\u2014In the Senate two resolutions \u00bb\nwere offered by Messrs, Peffer, of Kansas.\nand Allen, of Nebraska, to the effect that\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, |\nif so issued and sold, they will be null and \u201c\nvoid. The resolutions were laid over and \\\nwill come up for action next week, Tho \\\nquestion was touched upon in connection |\nwith a bill appropriating $40,(00 jor an\nequestrian statue in Mancebester, N. H., to a ;\nRevolutionary hero, General Jobn Stark.\nMr. Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent. \u2018\u2019on a ques-\ntHonable use of the statutes.\u201d\n",
+    "trials": [
+      {
+        "elapsed_ms": 248.1,
+        "text": "281n Dax.\u2014In the Senate two resolutions \u00bb\nwere offered by Messrs, Peffer, of Kansas.\nand Allen, of Nebraska, to the effect that\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, |\nif so issued and sold, they will be null and \u201c\nvoid. The resolutions were laid over and \\\nwill come up for action next week, Tho \\\nquestion was touched upon in connection |\nwith a bill appropriating $40,(00 jor an\nequestrian statue in Mancebester, N. H., to a ;\nRevolutionary hero, General Jobn Stark.\nMr. Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent. \u2018\u2019on a ques-\ntHonable use of the statutes.\u201d\n"
+      },
+      {
+        "elapsed_ms": 243.95,
+        "text": "281n Dax.\u2014In the Senate two resolutions \u00bb\nwere offered by Messrs, Peffer, of Kansas.\nand Allen, of Nebraska, to the effect that\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, |\nif so issued and sold, they will be null and \u201c\nvoid. The resolutions were laid over and \\\nwill come up for action next week, Tho \\\nquestion was touched upon in connection |\nwith a bill appropriating $40,(00 jor an\nequestrian statue in Mancebester, N. H., to a ;\nRevolutionary hero, General Jobn Stark.\nMr. Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent. \u2018\u2019on a ques-\ntHonable use of the statutes.\u201d\n"
+      },
+      {
+        "elapsed_ms": 242.79,
+        "text": "281n Dax.\u2014In the Senate two resolutions \u00bb\nwere offered by Messrs, Peffer, of Kansas.\nand Allen, of Nebraska, to the effect that\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, |\nif so issued and sold, they will be null and \u201c\nvoid. The resolutions were laid over and \\\nwill come up for action next week, Tho \\\nquestion was touched upon in connection |\nwith a bill appropriating $40,(00 jor an\nequestrian statue in Mancebester, N. H., to a ;\nRevolutionary hero, General Jobn Stark.\nMr. Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent. \u2018\u2019on a ques-\ntHonable use of the statutes.\u201d\n"
+      }
+    ],
+    "api_fee_usd": 0,
+    "timing_scope": "Fresh process including model load and image decode; excludes image download."
+  },
+  {
+    "label": "theatre-512",
+    "engine": "tesseract 5.5.3",
+    "language": "eng",
+    "psm": 6,
+    "sha256": "b96354ac991f0a124a09da1d440ddce33141abb809baee0782a5846edd57ed91",
+    "median_ms": 194.01,
+    "text": "eto?\nPitts\n\u2014THEATRE\u2014\nCulpeper\nMatinee Tuo, There, Sat\nSto\nEvery Nite 7H18 & 8118\nADMISSION:\nChitdeen tee Saute ase\nTHURSDAY, OOT, 20\nBURT LANCASTER\nSHIRLEY SOOT\n\u201cCome Back Little Sheba\u201d\nPins Cartoon\nFHL ~ SAT OCT, 90 or\n3 bien ston\nsage BIEEANES\n\u201c1, THE JURY\u201d\ntetris\nSu ettor\nreat Adventures of Capt. Kid\nEplecde 8\nRegalar Prats S'Admision\nlas Toe for Viewors\nSUN. \u2014 MON, NOV. 1-2\nFARLEY GRANGER\nSANE Powel\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nSanath, ny\n2 Shows Sunday: 3 t0d'9 pm\nTUBS, - WED, - THUR,\nSoveee.\neran ents\nDONALD oconNOR\noe\n\u201cCALL ME MADAM\u201d\nSere eae Matra\n",
+    "trials": [
+      {
+        "elapsed_ms": 195.25,
+        "text": "eto?\nPitts\n\u2014THEATRE\u2014\nCulpeper\nMatinee Tuo, There, Sat\nSto\nEvery Nite 7H18 & 8118\nADMISSION:\nChitdeen tee Saute ase\nTHURSDAY, OOT, 20\nBURT LANCASTER\nSHIRLEY SOOT\n\u201cCome Back Little Sheba\u201d\nPins Cartoon\nFHL ~ SAT OCT, 90 or\n3 bien ston\nsage BIEEANES\n\u201c1, THE JURY\u201d\ntetris\nSu ettor\nreat Adventures of Capt. Kid\nEplecde 8\nRegalar Prats S'Admision\nlas Toe for Viewors\nSUN. \u2014 MON, NOV. 1-2\nFARLEY GRANGER\nSANE Powel\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nSanath, ny\n2 Shows Sunday: 3 t0d'9 pm\nTUBS, - WED, - THUR,\nSoveee.\neran ents\nDONALD oconNOR\noe\n\u201cCALL ME MADAM\u201d\nSere eae Matra\n"
+      },
+      {
+        "elapsed_ms": 193.34,
+        "text": "eto?\nPitts\n\u2014THEATRE\u2014\nCulpeper\nMatinee Tuo, There, Sat\nSto\nEvery Nite 7H18 & 8118\nADMISSION:\nChitdeen tee Saute ase\nTHURSDAY, OOT, 20\nBURT LANCASTER\nSHIRLEY SOOT\n\u201cCome Back Little Sheba\u201d\nPins Cartoon\nFHL ~ SAT OCT, 90 or\n3 bien ston\nsage BIEEANES\n\u201c1, THE JURY\u201d\ntetris\nSu ettor\nreat Adventures of Capt. Kid\nEplecde 8\nRegalar Prats S'Admision\nlas Toe for Viewors\nSUN. \u2014 MON, NOV. 1-2\nFARLEY GRANGER\nSANE Powel\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nSanath, ny\n2 Shows Sunday: 3 t0d'9 pm\nTUBS, - WED, - THUR,\nSoveee.\neran ents\nDONALD oconNOR\noe\n\u201cCALL ME MADAM\u201d\nSere eae Matra\n"
+      },
+      {
+        "elapsed_ms": 194.01,
+        "text": "eto?\nPitts\n\u2014THEATRE\u2014\nCulpeper\nMatinee Tuo, There, Sat\nSto\nEvery Nite 7H18 & 8118\nADMISSION:\nChitdeen tee Saute ase\nTHURSDAY, OOT, 20\nBURT LANCASTER\nSHIRLEY SOOT\n\u201cCome Back Little Sheba\u201d\nPins Cartoon\nFHL ~ SAT OCT, 90 or\n3 bien ston\nsage BIEEANES\n\u201c1, THE JURY\u201d\ntetris\nSu ettor\nreat Adventures of Capt. Kid\nEplecde 8\nRegalar Prats S'Admision\nlas Toe for Viewors\nSUN. \u2014 MON, NOV. 1-2\nFARLEY GRANGER\nSANE Powel\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nSanath, ny\n2 Shows Sunday: 3 t0d'9 pm\nTUBS, - WED, - THUR,\nSoveee.\neran ents\nDONALD oconNOR\noe\n\u201cCALL ME MADAM\u201d\nSere eae Matra\n"
+      }
+    ],
+    "api_fee_usd": 0,
+    "timing_scope": "Fresh process including model load and image decode; excludes image download."
+  },
+  {
+    "label": "theatre-original",
+    "engine": "tesseract 5.5.3",
+    "language": "eng",
+    "psm": 6,
+    "sha256": "c70dbede8bd67092ceb4460a7b8a163b94421a9eecd7838e1d4643a62c33ca25",
+    "median_ms": 482.42,
+    "text": ": e r :\n| Pitts\n\u2014THEATRE\u2014\n| Culpeper\n|Matinees: Tues., Thurs., Sat.\n$$. \u20143:30 Sn ea Cede reed\nEvery Nite 7:15 & 9:15 \u2014\nADMISSION: ,\nChildren 16c Adults 35c\nTHURSDAY, OCT..29\n| BURT LANCASTER\nSHIRLEY BOOTH\n\u20141n\u2014\n\u201cCome Back Little Sheba\u201d\nPlus: Cartoon\n' FRI, - SAT.,; OCT. 30 - 31\n3 DIMENSION\nMICKY SPILLANE\u2019S\n\u201cI, THE JURY\u201d\nintroduci\nBIFF BLLUOT\nGreat Adventures of Capt. Kidd\nEpisode 9\nRegular Prices of Admission\nPlus 10c for Viewers \u2014\nSUN. - MON, NOV, 1 - 2\nFARLEY GRANGER\nJANE -ohig gu\noe TD sas\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nCartoon - Novelty\n2-Shows Sunday: 3 and 9 p.m.\nTUES. - WED. - THUR.\nNOV. 3-4-5\nETHEL MERMAN\nDONALD TONNOR\n\u2014 Ti\n\u201cCALL ME MADAM\u201d\n(Color by Technicolor)\n",
+    "trials": [
+      {
+        "elapsed_ms": 482.42,
+        "text": ": e r :\n| Pitts\n\u2014THEATRE\u2014\n| Culpeper\n|Matinees: Tues., Thurs., Sat.\n$$. \u20143:30 Sn ea Cede reed\nEvery Nite 7:15 & 9:15 \u2014\nADMISSION: ,\nChildren 16c Adults 35c\nTHURSDAY, OCT..29\n| BURT LANCASTER\nSHIRLEY BOOTH\n\u20141n\u2014\n\u201cCome Back Little Sheba\u201d\nPlus: Cartoon\n' FRI, - SAT.,; OCT. 30 - 31\n3 DIMENSION\nMICKY SPILLANE\u2019S\n\u201cI, THE JURY\u201d\nintroduci\nBIFF BLLUOT\nGreat Adventures of Capt. Kidd\nEpisode 9\nRegular Prices of Admission\nPlus 10c for Viewers \u2014\nSUN. - MON, NOV, 1 - 2\nFARLEY GRANGER\nJANE -ohig gu\noe TD sas\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nCartoon - Novelty\n2-Shows Sunday: 3 and 9 p.m.\nTUES. - WED. - THUR.\nNOV. 3-4-5\nETHEL MERMAN\nDONALD TONNOR\n\u2014 Ti\n\u201cCALL ME MADAM\u201d\n(Color by Technicolor)\n"
+      },
+      {
+        "elapsed_ms": 483.25,
+        "text": ": e r :\n| Pitts\n\u2014THEATRE\u2014\n| Culpeper\n|Matinees: Tues., Thurs., Sat.\n$$. \u20143:30 Sn ea Cede reed\nEvery Nite 7:15 & 9:15 \u2014\nADMISSION: ,\nChildren 16c Adults 35c\nTHURSDAY, OCT..29\n| BURT LANCASTER\nSHIRLEY BOOTH\n\u20141n\u2014\n\u201cCome Back Little Sheba\u201d\nPlus: Cartoon\n' FRI, - SAT.,; OCT. 30 - 31\n3 DIMENSION\nMICKY SPILLANE\u2019S\n\u201cI, THE JURY\u201d\nintroduci\nBIFF BLLUOT\nGreat Adventures of Capt. Kidd\nEpisode 9\nRegular Prices of Admission\nPlus 10c for Viewers \u2014\nSUN. - MON, NOV, 1 - 2\nFARLEY GRANGER\nJANE -ohig gu\noe TD sas\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nCartoon - Novelty\n2-Shows Sunday: 3 and 9 p.m.\nTUES. - WED. - THUR.\nNOV. 3-4-5\nETHEL MERMAN\nDONALD TONNOR\n\u2014 Ti\n\u201cCALL ME MADAM\u201d\n(Color by Technicolor)\n"
+      },
+      {
+        "elapsed_ms": 471.29,
+        "text": ": e r :\n| Pitts\n\u2014THEATRE\u2014\n| Culpeper\n|Matinees: Tues., Thurs., Sat.\n$$. \u20143:30 Sn ea Cede reed\nEvery Nite 7:15 & 9:15 \u2014\nADMISSION: ,\nChildren 16c Adults 35c\nTHURSDAY, OCT..29\n| BURT LANCASTER\nSHIRLEY BOOTH\n\u20141n\u2014\n\u201cCome Back Little Sheba\u201d\nPlus: Cartoon\n' FRI, - SAT.,; OCT. 30 - 31\n3 DIMENSION\nMICKY SPILLANE\u2019S\n\u201cI, THE JURY\u201d\nintroduci\nBIFF BLLUOT\nGreat Adventures of Capt. Kidd\nEpisode 9\nRegular Prices of Admission\nPlus 10c for Viewers \u2014\nSUN. - MON, NOV, 1 - 2\nFARLEY GRANGER\nJANE -ohig gu\noe TD sas\n\u201cSMALL TOWN GIRL\u201d\n(Color by Technicolor)\nCartoon - Novelty\n2-Shows Sunday: 3 and 9 p.m.\nTUES. - WED. - THUR.\nNOV. 3-4-5\nETHEL MERMAN\nDONALD TONNOR\n\u2014 Ti\n\u201cCALL ME MADAM\u201d\n(Color by Technicolor)\n"
+      }
+    ],
+    "api_fee_usd": 0,
+    "timing_scope": "Fresh process including model load and image decode; excludes image download."
+  }
+]
