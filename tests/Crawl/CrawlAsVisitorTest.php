@@ -48,7 +48,6 @@ class CrawlAsVisitorTest extends WebTestCase
 
 
 	#[TestDox('/$method $url ($route)')]
-	#[TestWith(['', '/data/providers', 200])]
 	#[TestWith(['', '/ez', 302])]
 	#[TestWith(['', '/ez/asset', 200])]
 	#[TestWith(['', '/ez/asset/new', 403])]
@@ -98,7 +97,6 @@ class CrawlAsVisitorTest extends WebTestCase
 	#[TestWith(['', '/routes-sitemap.json', 200])]
 	#[TestWith(['', '/imgproxy/url', 404])]
 	#[TestWith(['', '/imgproxy/info', 404])]
-	#[TestWith(['', '/data/providers?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/storage/archive.storage', 200])]
 	#[TestWith(['', '/storage/local.storage', 200])]
 	#[TestWith(['', '/state/workflow/FileWorkflow', 200])]
@@ -109,18 +107,6 @@ class CrawlAsVisitorTest extends WebTestCase
 	#[TestWith(['', '/entity/ai_workflow_subject/search', 200])]
 	#[TestWith(['', '/entity/claims_claim/search', 200])]
 	#[TestWith(['', '/entity/claims_claim_run/search', 200])]
-	#[TestWith(['', '/data/datasets/cron-america/2022239700', 200])]
-	#[TestWith(['', '/data/datasets/cron-america/sn95079246', 200])]
-	#[TestWith(['', '/data/datasets/cron-america/sn85059732', 200])]
-	#[TestWith(['', '/data/datasets/cron-america/00225879', 200])]
-	#[TestWith(['', '/data/providers/cron-america', 200])]
-	#[TestWith(['', '/api/dataset_infos?aggregator=cron-america', 200])]
-	#[TestWith(['', '/data/providers/curatescape', 200])]
-	#[TestWith(['', '/api/dataset_infos?aggregator=curatescape', 200])]
-	#[TestWith(['', '/data/providers/dc', 200])]
-	#[TestWith(['', '/api/dataset_infos?aggregator=dc', 200])]
-	#[TestWith(['', '/data/providers/fpeu', 200])]
-	#[TestWith(['', '/api/dataset_infos?aggregator=fpeu', 200])]
 	#[TestWith(['', '/images?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/ez/custom/asset/5933cc1e1b4958d0', 200])]
 	#[TestWith(['', '/ez/custom/asset/29b3148294901f3e', 200])]
@@ -152,7 +138,6 @@ class CrawlAsVisitorTest extends WebTestCase
 	#[TestWith(['', '/api/storages', 200])]
 	#[TestWith(['', '/api/claims', 200])]
 	#[TestWith(['', '/api/claim-runs', 200])]
-	#[TestWith(['', '/api/artifacts', 200])]
 	#[TestWith(['', '/debug-menu?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/docs?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/auth/login?debugMenuSlots=1', 200])]
@@ -164,7 +149,6 @@ class CrawlAsVisitorTest extends WebTestCase
 	#[TestWith(['', '/auth/register?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/entity-constants?debugMenuSlots=1', 200])]
 	#[TestWith(['', '/entity/app_ai_batch', 200])]
-	#[TestWith(['', '/entity/dataset_artifact', 200])]
 	#[TestWith(['', '/entity/claims_claim', 200])]
 	#[TestWith(['', '/entity/claims_claim_run', 200])]
 	#[TestWith(['', '/routes-sitemap?debugMenuSlots=1', 200])]
@@ -209,20 +193,6 @@ class CrawlAsVisitorTest extends WebTestCase
             $url = str_replace($oldId, $asset->id, $url);
         }
         $em->flush();
-        $datasets = self::getContainer()->get('doctrine.orm.dataset_entity_manager');
-        foreach (['cron-america', 'curatescape', 'dc', 'fpeu'] as $code) {
-            $provider = new \Survos\DatasetBundle\Entity\Provider($code);
-            $provider->setLabel('Fixture '.$code);
-            $datasets->persist($provider);
-            if ($code === 'cron-america') {
-                foreach (['2022239700', 'sn95079246', 'sn85059732', '00225879'] as $id) {
-                    $dataset = new \Survos\DatasetBundle\Entity\DatasetInfo($code.'/'.$id);
-                    $dataset->providerEntity = $provider;
-                    $datasets->persist($dataset);
-                }
-            }
-        }
-        $datasets->flush();
         $storage = self::getContainer()->get('local.storage');
         foreach (['index.php', 'robots.txt', '_profiler/717d69', '_profiler/95c193'] as $path) {
             $storage->write($path, 'Local storage test fixture');

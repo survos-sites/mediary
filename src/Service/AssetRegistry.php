@@ -13,6 +13,7 @@ use App\Workflow\AssetFlow;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Survos\ImagorBundle\Service\ImagorUrlBuilder;
 use Survos\ImgproxyBundle\Service\ImgproxyUrlBuilder;
 use Survos\DataContracts\Dto\BatchItemDto;
 use Survos\DataContracts\Vocabulary\MediaSyncKeys;
@@ -41,6 +42,10 @@ final class AssetRegistry
         private readonly string        $archiveBucket,
         private readonly ImgproxyUrlBuilder $imgproxyUrlBuilder,
         private readonly ?LoggerInterface $logger = null,
+        private readonly ?ImagorUrlBuilder $imagorUrlBuilder = null,
+        /** imgproxy (default) | imagor — see survos/imagor-bundle. */
+        #[Autowire('%env(IMAGE_BACKEND)%')]
+        private readonly string $imageBackend = 'imgproxy',
     ) {
     }
 
@@ -411,7 +416,7 @@ final class AssetRegistry
         'ai'     => 'observe',
     ];
 
-    /** @return array{url: ?string, source: string, source_url: ?string} */
+    /** @return array{url: ?string, source: string, source_url: ?string, backend: string} */
     public function imgProxyDebug(Asset $asset, string $preset = MediaPreset::SMALL): array
     {
         // if the asset has been stored on OUR s3, then use it, much faster.
@@ -427,15 +432,33 @@ final class AssetRegistry
             $sourceLabel = 'original_url';
         }
 
-        // Never derive a preset from another imgproxy URL — that double-encodes
-        // (imgproxy fetching imgproxy). Fall back to the original master.
-        $imgproxyHost = rtrim((string) $this->imgproxyUrlBuilder->host, '/');
-        if ($imgproxyHost !== '' && is_string($source) && str_starts_with($source, $imgproxyHost)) {
-            $source = $asset->originalUrl;
-            $sourceLabel = 'original_url';
+        // Never derive a preset from another imgproxy/imagor URL — that double-encodes
+        // (the renderer fetching itself). Fall back to the original master.
+        foreach ([$this->imgproxyUrlBuilder->host, $this->imagorUrlBuilder?->host] as $rendererHost) {
+            $rendererHost = rtrim((string) $rendererHost, '/');
+            if ($rendererHost !== '' && is_string($source) && str_starts_with($source, $rendererHost)) {
+                $source = $asset->originalUrl;
+                $sourceLabel = 'original_url';
+            }
         }
 
         $preset = self::IMGPROXY_PRESET_ALIASES[$preset] ?? $preset;
+
+        // imagor PoC: same preset names, same source. Sources imagor can't read
+        // (s3:// in a non-loader bucket) stay on imgproxy, per asset.
+        if ($this->imageBackend === 'imagor'
+            && $this->imagorUrlBuilder?->isConfigured()
+            && is_string($source)
+            && $this->imagorUrlBuilder->supports($source)
+        ) {
+            return [
+                'url' => $this->imagorUrlBuilder->preset($source, $this->imagorUrlBuilder->hasPreset($preset) ? $preset : 'thumb'),
+                'source' => $sourceLabel,
+                'source_url' => $source,
+                'backend' => 'imagor',
+            ];
+        }
+
         if (!$this->imgproxyUrlBuilder->hasPreset($preset)) {
             $preset = 'thumb';
         }
@@ -444,6 +467,7 @@ final class AssetRegistry
             'url' => $imgproxyUrl,
             'source' => $sourceLabel,
             'source_url' => $source,
+            'backend' => 'imgproxy',
         ];
 
     }

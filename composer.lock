@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d34daefbc46a9909bca4e501e60d0ef6",
+    "content-hash": "160d8e036e8f0ac3953a84ce40fb9acd",
     "packages": [
         {
             "name": "api-platform/core",
@@ -8113,83 +8113,6 @@
             "time": "2026-10-05T13:13:35+00:00"
         },
         {
-            "name": "survos/dataset-bundle",
-            "version": "2.35.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/dataset-bundle.git",
-                "reference": "45a003b9fc943a4b38e2533e4a3a9eae51af4ac7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/dataset-bundle/zipball/45a003b9fc943a4b38e2533e4a3a9eae51af4ac7",
-                "reference": "45a003b9fc943a4b38e2533e4a3a9eae51af4ac7",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "^4.2",
-                "php": "^8.5",
-                "survos/data-contracts": "^2.32",
-                "survos/jsonl-bundle": "^2.5",
-                "survos/lingua-contracts": "^2.5",
-                "survos/lingua-core": "^2.5",
-                "survos/state-bundle": "^2.5",
-                "symfony/config": "^8.1",
-                "symfony/console": "^8.1",
-                "symfony/dependency-injection": "^8.1",
-                "symfony/deprecation-contracts": "^3.6|^4.0",
-                "symfony/filesystem": "^8.1",
-                "symfony/framework-bundle": "^8.1",
-                "symfony/serializer": "^8.1",
-                "symfony/ux-twig-component": "^3",
-                "zenstruck/bytes": "^1.1"
-            },
-            "require-dev": {
-                "api-platform/core": "^4.3 || ^5.0",
-                "meilisearch/meilisearch-php": "dev-main",
-                "phpunit/phpunit": "^13.0",
-                "survos/ai-workflow-bundle": "^2.5",
-                "survos/folio-bundle": "^2.5",
-                "survos/geonames-bundle": "^2.5",
-                "survos/import-bundle": "^2.5",
-                "survos/lingua-bundle": "^2.5",
-                "survos/meili-bundle": "^2.5",
-                "survos/tabler-bundle": "^2.5",
-                "symfony/yaml": "^8.1"
-            },
-            "suggest": {
-                "survos/ai-workflow-bundle": "Wires DatasetIterateRowEvent → Subject creation for AI workflow pipelines",
-                "survos/geonames-bundle": "dataset:intl:push resolves place-name phrases via GeoService::alternateNames() instead of routing them through Lingua's MT"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "symfony": {
-                    "require": "^8.1"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Survos\\DatasetBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Shared data directory conventions and path utilities for dataset-driven apps (APP_DATA_DIR).",
-            "support": {
-                "issues": "https://github.com/survos/dataset-bundle/issues",
-                "source": "https://github.com/survos/dataset-bundle/tree/2.35.7"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-05T13:03:24+00:00"
-        },
-        {
             "name": "survos/doc-bundle",
             "version": "2.34.25",
             "source": {
@@ -8750,6 +8673,73 @@
                 }
             ],
             "time": "2026-09-15T16:15:42+00:00"
+        },
+        {
+            "name": "survos/imagor-bundle",
+            "version": "2.41.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/survos/imagor-bundle.git",
+                "reference": "113bc6cc3c34fa5c6a773756fa68172b5209e515"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/survos/imagor-bundle/zipball/113bc6cc3c34fa5c6a773756fa68172b5209e515",
+                "reference": "113bc6cc3c34fa5c6a773756fa68172b5209e515",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.5",
+                "survos/kit-bundle": "^2.5",
+                "symfony/config": "^8.1",
+                "symfony/console": "^8.1",
+                "symfony/dependency-injection": "^8.1",
+                "symfony/http-client-contracts": "^3.5",
+                "symfony/http-kernel": "^8.1",
+                "twig/twig": "^3.14|^4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^13.0",
+                "symfony/framework-bundle": "^8.1",
+                "symfony/http-client": "^8.1",
+                "symfony/twig-bundle": "^8.1"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "symfony": {
+                    "require": "^8.1"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Survos\\ImagorBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony bundle for signed imagor URLs (presets, crops, meta) against the Survos imagor build",
+            "keywords": [
+                "blurhash",
+                "image",
+                "imagor",
+                "resize",
+                "symfony",
+                "thumbhash",
+                "thumbnail"
+            ],
+            "support": {
+                "issues": "https://github.com/survos/imagor-bundle/issues",
+                "source": "https://github.com/survos/imagor-bundle/tree/2.41.11"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/kbond",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-10-13T15:55:06+00:00"
         },
         {
             "name": "survos/imgproxy-bundle",

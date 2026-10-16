@@ -55,7 +55,6 @@ return [
     Survos\AiWorkflowBundle\SurvosAiWorkflowBundle::class => ['all' => true],
     Survos\Kit\SurvosKitBundle::class => ['all' => true],
     Survos\ImportBundle\SurvosImportBundle::class => ['all' => true],
-    Survos\DatasetBundle\SurvosDatasetBundle::class => ['all' => true],
     Survos\DataBundle\SurvosDataBundle::class => ['all' => true],
     Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
     Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
@@ -67,4 +66,5 @@ return [
     Survos\TuiExtrasBundle\SurvosTuiExtrasBundle::class => ['all' => true],
     Survos\ElasticBundle\SurvosElasticBundle::class => ['all' => true],
     Survos\Grid\SurvosGridBundle::class => ['all' => true],
+    Survos\ImagorBundle\SurvosImagorBundle::class => ['all' => true],
 ];

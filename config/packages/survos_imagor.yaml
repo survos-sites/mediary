@@ -1,0 +1,7 @@
+survos_imagor:
+    host: '%env(IMAGOR_HOST)%'
+    secret: '%env(IMAGOR_SECRET)%'
+    s3_endpoint: '%env(S3_ENDPOINT)%'
+    # Read in place as {bucket}/{key}, never copied — mirror survos-sites/imagor's
+    # docker/imagor/buckets.yaml. s3:// sources elsewhere stay on imgproxy.
+    buckets: [museado, mediary-dev, survos-platform, nabolom, ink-rappnews]

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Messenger\Exception\TransportException;
 use Symfony\Component\Routing\Attribute\Route;
 use Zenstruck\Messenger\Monitor\History\Period;
 use Zenstruck\Messenger\Monitor\History\Specification;
@@ -53,7 +54,15 @@ final class StatusController extends AbstractController
             // Not every transport can be counted (sync, in-memory, some AMQP setups). Report null
             // rather than 0 — "cannot know" and "empty" are different answers, and collapsing them
             // is how a stalled queue hides.
-            $depth = $transport->isCountable() ? $transport->count() : null;
+            // An unreachable broker is the same "cannot know", plus a reason — a status endpoint that
+            // 500s exactly when the broker is down is no use to the monitor polling it.
+            $error = null;
+            try {
+                $depth = $transport->isCountable() ? $transport->count() : null;
+            } catch (TransportException $e) {
+                $depth = null;
+                $error = $e->getMessage();
+            }
             $consumers = \count($transport->workers());
 
             $transports[$name] = [
@@ -61,6 +70,7 @@ final class StatusController extends AbstractController
                 'consumers' => $consumers,
                 'running' => $transport->isRunning(),
                 'isFailureTransport' => $transport->isFailure(),
+                'error' => $error,
             ];
 
             if ($depth !== null) {

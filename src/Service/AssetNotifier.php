@@ -53,7 +53,10 @@ final class AssetNotifier
         'ocr',
         'ocr_chars',
         'thumbhash',
+        'blurhash',
         'colors',
+        // imagor meta/ summary (dimensions, format, orientation) — see AssetWorkflow::applyImagorMeta().
+        'meta',
         'phash',
         'path',
         'tenant',
