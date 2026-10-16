@@ -1,0 +1,913 @@
+<!doctype html><html lang="en" data-dev3-artifact-template="v1"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Newspaper re-OCR evidence</title><link rel="stylesheet" href="app.css" data-dev3-artifact-shell></head><body><main class="app"><header class="topbar"><div class="brand"><img src="dev3-icon.png" alt="dev3 logo"><div><div class="eyebrow">DEV3 ARTIFACT · COMPARISON</div><h1>Newspaper re-OCR evidence</h1><div class="muted">Four newspaper snippets · provider OCR, Tesseract and vision models · 6 October 2026</div></div></div><div class="actions"><div class="segmented text-size" role="group" aria-label="Text size"><button type="button" data-font-step="-1">A−</button><button class="text-size-value" id="fontScaleValue" type="button" data-font-step="0">100%</button><button type="button" data-font-step="1">A+</button></div><button class="ghost" id="artifactTheme" type="button">◐ Auto</button></div></header>
+<nav class="section-nav"><a href="#collection">Full collection</a><a href="#evidence">Findings</a><a href="#rappnews">RappNews</a><a href="#loc">LoC Senate clipping</a><a href="#theatre">Theatre ad</a><a href="#halloween">Supplied OCR case</a><a href="#method">Method &amp; costs</a></nav>
+<section class="card section" id="collection"><div class="section-head"><h2 class="section-title">Full RappNews collection recovered locally</h2></div><p class="prose">The full folio was still on disk. Its Harvest dataset registration was missing and its Ink publication was hidden. The generic restore command preferred an enhanced sample over the full archive. The full publication has now been explicitly unhidden at <a href="http://ink.wip/rappnews-iiif">rappnews-iiif</a>; the collection and 1953/2007 issue readers returned HTTP 200 on the local server.</p><p class="prose">The rebuilt archive contains <strong>3,115 issues, 964,527 article records and 43,019 distinct scans</strong>. Article-to-page copies account for the much larger page-table row count. The full archive has completed the supported workflow rebuild from its durable capture, with local backups retained.</p><h3>Completed local workflow rebuilds</h3><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Publication</th><th>Issues</th><th>Issue pages</th><th>Article records</th><th>Status</th></tr></thead><tbody><tr><td><a href="http://ink.wip/rappnews-iiif">Rappahannock News</a></td><td>3,115</td><td>43,019</td><td>964,527</td><td>Built locally</td></tr><tr><td><a href="http://ink.wip/farmville-herald-enhanced">Farmville Herald enhanced sample</a></td><td>1</td><td>8</td><td>139</td><td>Built locally</td></tr><tr><td><a href="http://ink.wip/du-buque-visitor-american-stories">Du Buque Visitor</a></td><td>5</td><td>20</td><td>507</td><td>Built locally</td></tr><tr><td><a href="http://ink.wip/iowa-news-american-stories">Iowa News</a></td><td>51</td><td>206</td><td>6,255</td><td>Built locally</td></tr><tr><td><a href="http://ink.wip/sunday-telegram">Sunday Telegram</a></td><td>57</td><td>1,822</td><td>178,756</td><td>Built locally</td></tr></tbody></table></div><p class="prose">All five datasets reached the folio workflow state on 6 October 2026. Existing folios were backed up before replacement. Image masters were not downloaded again, and this run did not perform new OCR or consume the media/translation service queues.</p><h3>Which images and OCR are these?</h3><p class="prose">The full collection uses the vendor’s original per-page PDFs through PDF Tools, not the assembled 1953 PDF used for the clipping experiments. The delivery also retains JP2 masters and ALTO XML. For the first page of 29 October 1953, the captured JP2 is 4,772 × 7,315 pixels and the vendor-PDF IIIF image is 4,774 × 7,316. Similar dimensions do not prove equal image quality; a same-page visual or OCR comparison is still required before asserting that JP2 improves recognition.</p><p class="prose">That delivery’s ALTO identifies ABBYY FineReader and Apex CoVantage processing in June 2024. It is a separate OCR baseline from the recent Tesseract text supplied for the Halloween clipping. Preserve both provenance records when evaluating replacement OCR.</p></section>
+<section class="card section" id="evidence"><div class="section-head"><h2 class="section-title">Evidence for a re-OCR program—with resolution and quality controls</h2></div><p class="prose">These samples demonstrate recoverable text errors in supplied OCR and substantial differences between recognition methods. They support investing in a measured re-OCR pipeline and a broader corpus audit. They do <strong>not yet establish that every page should be replaced</strong>, that every provider has poor OCR, or that a single model wins across the corpus.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Finding</th><th>Evidence</th><th>Implication</th></tr></thead><tbody><tr><td>Supplied OCR can be improved</td><td>LoC text contains “Senals”, “fssuing” and “£40,(00”; Gemini recovers the Senate passage much more cleanly.</td><td>Existing text is a baseline, not ground truth.</td></tr><tr><td>A newer OCR version alone is insufficient</td><td>LoC ALTO reports Tesseract 5.4.1; local 5.5.3 still makes numerous errors on the clipping.</td><td>Resolution, segmentation and model choice matter alongside engine version.</td></tr><tr><td>512 pixels is not a universal OCR target</td><td>The tall theatre ad becomes 167 × 512. Tesseract is severely degraded; the source-resolution crop is substantially better.</td><td>Keep source-resolution images for recognition. Do not use the scene-observation preset as a general OCR policy.</td></tr><tr><td>Vision models can recover more—but can invent</td><td>Gemini best preserves both complex snippets here. OpenAI omits text; Ministral invents dates, headings and changes field types.</td><td>Require typed output, evidence-linked text and quality checks before replacing existing OCR.</td></tr><tr><td>Provider baselines vary</td><td>LoC exposes word-positioned ALTO with engine metadata. PDF Tools cached text requests returned HTTP 401; the user supplied recent Tesseract text for the Halloween crop. No supplied OCR was retrieved for the school-health scan.</td><td>Track availability, provenance, coordinates and engine separately for each provider.</td></tr></tbody></table></div><p class="prose">No human-adjudicated reference transcript or character/word error rate was produced. Findings below are visual spot-checks and output-structure checks; four selected snippets are too few for a corpus-wide accuracy claim.</p></section>
+<section class="card section" id="rappnews"><div class="section-head"><h2 class="section-title">RappNews · school health article · November 3, 1949</h2></div><img src="images/faacbfb299f5684c-snippet.webp" width="372" height="512" alt="RappNews · school health article · November 3, 1949"><p class="prose"><a href="https://museado.fsn1.your-objectstorage.com/public/scans/rappnews/1949-11-03/01.jpg">Source image</a> · Model input 372 × 512, 57,746 bytes, WebP. Image hash verified across all three models and the displayed thumbnail. Shared fetch/preparation: 0.596s, excluded from model times.</p><p class="prose">The full-page masthead establishes November 3, 1949. A crop was made at original-pixel x=575, y=710, width=372, height=512. All three models returned identical article-body text, including the names and the counts 20, five and 35. Tesseract has visible errors such as “tae”, “devgted” and “Rurse”. OpenAI labels the headline as a masthead and omits transcription_type. Ministral returns object prose and an array body, rather than strings. No provider OCR baseline was retrieved for this scan.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Method</th><th>API cost /100K snippets</th><th>Measured time</th><th>Scope</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td>$50.31 batch projection<br>$100.62 standard</td><td>5.89s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td>$116.53 batch projection<br>$233.07 standard</td><td>3.99s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Ministral 8B 2512</td><td>$26.24 batch projection<br>$52.48 standard</td><td>10.46s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Tesseract 5.5.3 · same thumbnail</td><td>$0 API fees</td><td>0.201s median</td><td>OCR only; 3 fresh-process runs, psm 6, English</td></tr>
+<tr><td>Supplied OCR</td><td>Not compared</td><td>Not measured</td><td>No baseline retrieved</td></tr>
+</tbody></table></div>
+<details><summary>Tesseract — rappnews-512 — complete text</summary><pre>Health Program
+Grows at S.H.S, :
+Bi ae ;
+* Health work at Sperryville High
+School, under the supervision of
+Mrs. Quaintance, is progressing
+rapidly. To date, all of tae pupils
+have had examinations by a den-
+tist and by a doctor; 20 have had
+dental corrections; five.attended
+an eye clinic in Front Royal; and
+35 had chest x-rays in Culpeper.
+One assembly program has been
+devgted to health. Mrs. James F,
+Smith, Culpeper county - health
+Rurse, made a talk and presented
+@ motion picture which explained |
+‘the importance of having frequent
+“Physical examinations.
+</pre></details>
+<details><summary>GPT-4o mini — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;presence of printed text and newspaper formatting&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;potential loss of details related to the health program announcement and names listed&quot;
+  },
+  &quot;prose&quot;: &quot;The image features a newspaper clipping titled &#x27;Health Program Grows at S.H.S.&#x27; The clipping discusses health work at Sperryville High School under the supervision of Mrs. Quaintance, stating that health examinations have been conducted rapidly. It mentions that all pupils have had dental examinations by a dentist and by a doctor, with details that 20 have had dental corrections, five attended an eye clinic in Front Royal, and 35 had chest x-rays in Culpeper. Additionally, it notes that an assembly program has been dedicated to health, with Mrs. James F. Smith, from Culpeper county health nurse, talking and presenting a motion picture about the importance of frequent physical examinations.&quot;,
+  &quot;transcription&quot;: {
+    &quot;masthead&quot;: &quot;Health Program Grows at S.H.S.&quot;,
+    &quot;body&quot;: &quot;Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.&quot;
+  }
+}</pre></details>
+<details><summary>Gemini 3.5 Flash-Lite — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;clipping&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;Printed newspaper clipping reporting on a school health program.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;summarize&quot;,
+      &quot;extract_metadata&quot;,
+      &quot;generate_title&quot;
+    ]
+  },
+  &quot;prose&quot;: &quot;A rectangular black-and-white newspaper clipping featuring a news article set in a typical serif typeface. The clipping is framed at the top and bottom by thin horizontal black rules. Above the main text is a bold headline spanning two lines: &#x27;Health Program / Grows at S.H.S,&#x27;, with a short horizontal rule directly underneath. Below the headline, a single-column paragraph begins with an indented first line and reports on health work at Sperryville High School under the supervision of Mrs. Quaintance. The text mentions pupil examinations by a dentist and doctor, dental corrections, an eye clinic in Front Royal, chest x-rays in Culpeper, an assembly program, and a talk by Mrs. James F. Smith, Culpeper county health nurse, who presented a motion picture on physical examinations. The paper texture shows slight grain, faint vertical grid lines, and minor smudging or aging discoloration.&quot;,
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;language&quot;: &quot;en&quot;,
+    &quot;headline&quot;: &quot;Health Program Grows at S.H.S,&quot;,
+    &quot;body&quot;: &quot;Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.&quot;
+  }
+}</pre></details>
+<details><summary>Ministral 8B 2512 — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;printed newspaper clipping with masthead, date, and article text&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;extract_metadata&quot;,
+      &quot;context_description&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: {
+    &quot;masthead&quot;: {
+      &quot;headline&quot;: &quot;Health Program Grows at S.H.S.&quot;,
+      &quot;font_style&quot;: &quot;bold, serif&quot;,
+      &quot;size&quot;: &quot;large&quot;
+    },
+    &quot;date&quot;: {
+      &quot;not_fully_visible&quot;: true,
+      &quot;year_range&quot;: &quot;likely 1940s to 1960s based on font and layout style&quot;
+    },
+    &quot;article&quot;: {
+      &quot;lead&quot;: &quot;Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly.&quot;,
+      &quot;content&quot;: [
+        {
+          &quot;paragraph&quot;: &quot;To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper.&quot;,
+          &quot;details&quot;: [
+            {
+              &quot;examination_type&quot;: &quot;dental and medical&quot;,
+              &quot;participation&quot;: &quot;all pupils&quot;
+            },
+            {
+              &quot;examination_type&quot;: &quot;dental corrections&quot;,
+              &quot;participation&quot;: &quot;20 pupils&quot;
+            },
+            {
+              &quot;examination_type&quot;: &quot;eye clinic&quot;,
+              &quot;location&quot;: &quot;Front Royal&quot;,
+              &quot;participation&quot;: &quot;five pupils&quot;
+            },
+            {
+              &quot;examination_type&quot;: &quot;chest x-rays&quot;,
+              &quot;location&quot;: &quot;Culpeper&quot;,
+              &quot;participation&quot;: &quot;35 pupils&quot;
+            }
+          ]
+        },
+        {
+          &quot;paragraph&quot;: &quot;One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.&quot;
+        }
+      ],
+      &quot;mentions&quot;: [
+        {
+          &quot;name&quot;: &quot;Mrs. Quaintance&quot;,
+          &quot;role&quot;: &quot;supervisor of health work at Sperryville High School&quot;
+        },
+        {
+          &quot;name&quot;: &quot;Mrs. James F. Smith&quot;,
+          &quot;role&quot;: &quot;Culpeper county health nurse&quot;
+        },
+        {
+          &quot;location&quot;: &quot;Sperryville High School&quot;,
+          &quot;location_type&quot;: &quot;school&quot;
+        },
+        {
+          &quot;location&quot;: &quot;Front Royal&quot;,
+          &quot;location_type&quot;: &quot;city&quot;
+        },
+        {
+          &quot;location&quot;: &quot;Culpeper&quot;,
+          &quot;location_type&quot;: &quot;city&quot;
+        }
+      ]
+    },
+    &quot;layout&quot;: {
+      &quot;column_width&quot;: &quot;single-column layout&quot;,
+      &quot;text_alignment&quot;: &quot;left-aligned&quot;,
+      &quot;font&quot;: &quot;serif, black ink on light paper&quot;,
+      &quot;condition&quot;: {
+        &quot;fading&quot;: &quot;moderate, especially in the background&quot;,
+        &quot;damage&quot;: &quot;none visible&quot;,
+        &quot;quality&quot;: &quot;moderate, slightly blurred&quot;
+      }
+    }
+  },
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;masthead&quot;: &quot;Health Program Grows at S.H.S.&quot;,
+    &quot;date&quot;: &quot;incomplete (year not fully visible)&quot;,
+    &quot;page&quot;: &quot;not visible&quot;,
+    &quot;headline&quot;: &quot;Health Program Grows at S.H.S.&quot;,
+    &quot;byline&quot;: &quot;&quot;,
+    &quot;body&quot;: [
+      {
+        &quot;text&quot;: &quot;Health work at Sperryville High School, under the supervision of Mrs. Quaintance, is progressing rapidly. To date, all of the pupils have had examinations by a dentist and by a doctor; 20 have had dental corrections; five attended an eye clinic in Front Royal; and 35 had chest x-rays in Culpeper. One assembly program has been devoted to health. Mrs. James F. Smith, Culpeper county health nurse, made a talk and presented a motion picture which explained the importance of having frequent physical examinations.&quot;
+      }
+    ]
+  }
+}</pre></details>
+</section>
+<section class="card section" id="loc"><div class="section-head"><h2 class="section-title">Library of Congress · Senate proceedings</h2></div><img src="images/d9c66317e01bde05-snippet.webp" width="512" height="379" alt="Library of Congress · Senate proceedings"><p class="prose"><a href="https://tile.loc.gov/image-services/iiif/service:ndnp:vi:batch_vi_styx_ver04:data:sn95079246:00175032277:1894012601:0214/pct:85.365006,22.438672,14.611819,7.479557/pct:79.302141/0/default.jpg">Source image</a> · Model input 512 × 379, 34,182 bytes, WebP. Image hash verified across all three models and the displayed thumbnail. Shared fetch/preparation: 0.982s, excluded from model times.</p><p class="prose">This is the user-supplied LoC crop; the URL contains the issue identifier 1894012601, not the 1949 RappNews issue. Gemini preserves the whole passage, including “will come up for action next week”. OpenAI omits that phrase and places the text in headline with an empty body. Ministral recovers most passage text but invents a headline, drops the “28th Day” marker from its body, and adds unsupported era commentary. Local Tesseract has “tbe”, “eelling”, “Jobn” and a corrupted amount; source-resolution Tesseract still has recognition errors. The supplied LoC text is also Tesseract-derived, with independent full-page processing and post-processing; it is not the same recognition experiment as our crop.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Method</th><th>API cost /100K snippets</th><th>Measured time</th><th>Scope</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td>$43.53 batch projection<br>$87.06 standard</td><td>5.96s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td>$110.49 batch projection<br>$220.98 standard</td><td>3.16s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Ministral 8B 2512</td><td>$26.27 batch projection<br>$52.55 standard</td><td>8.14s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Tesseract 5.5.3 · same thumbnail</td><td>$0 API fees</td><td>0.236s median</td><td>OCR only; 3 fresh-process runs, psm 6, English</td></tr>
+<tr><td>Tesseract 5.5.3 · original supplied crop</td><td>$0 API fees</td><td>0.244s median</td><td>OCR only; 3 fresh-process runs, psm 6, English</td></tr>
+<tr><td>Supplied LoC ALTO OCR</td><td>$0 new inference fees</td><td>Not measured</td><td>Precomputed full-page OCR; generation time unavailable</td></tr>
+</tbody></table></div>
+<p class="prose"><a href="images/loc-original.jpg">Open original supplied crop</a>. Original-resolution Tesseract is a separate resolution test; the vision-model calls above all used the thumbnail.</p>
+<details><summary>Tesseract — loc-512 — complete text</summary><pre>281n Day.—In tbe Senate two resolutions
+were offered by Messrs, Peffer, of Kansas,
+and Allen, of Nebraska, to the effect that”
+there is no lawful authority for the issuing
+and eelling of bonds as proposed, and that, l
+if go iveued and sold, they will be null and &lt;
+void, The resolutions were laid over and {
+will come up for action next week, The \
+quesiion was touched upon in connection
+with a bill appropriating #40,(00 for an
+equestrian statue in Manchester, N. H., to a
+Revolutionary hero, General Jobn Stark,
+Mr, Morgan (Dem.), of Alabama, said that
+the Government was actually too poor to
+honor the memory of heroic ancestors when
+it bad to borrow at five per cent, ‘on a ques-
+Honable use of the statutes.”
+</pre></details>
+<details><summary>Tesseract — loc-original — complete text</summary><pre>281n Dax.—In the Senate two resolutions »
+were offered by Messrs, Peffer, of Kansas.
+and Allen, of Nebraska, to the effect that
+there is no lawful authority for the issuing
+and eelling of bonds as proposed, and that, |
+if so issued and sold, they will be null and “
+void. The resolutions were laid over and \
+will come up for action next week, Tho \
+question was touched upon in connection |
+with a bill appropriating $40,(00 jor an
+equestrian statue in Mancebester, N. H., to a ;
+Revolutionary hero, General Jobn Stark.
+Mr. Morgan (Dem.), of Alabama, said that
+the Government was actually too poor to
+honor the memory of heroic ancestors when
+it bad to borrow at five per cent. ‘’on a ques-
+tHonable use of the statutes.”
+</pre></details>
+<details><summary>Supplied LoC OCR — complete extracted text and provenance</summary><pre>28tH Dav.—In the Senals two resolutions
+were offered by Messrs, Peffer, of Kansas,
+and Allen, of Nebraska, to the effect that’
+thers is no lawful authority for the fssuing
+and selling of bonds as proposed, and that,
+if so issued and sold, they will be null and
+void. The resolutions were laid over and
+will come up for action next week. The
+ques:ion was touched upon jn connection
+with a bill appropriatiug £40,(00 jor an
+equestrian statue in Manchester, N. H., to a
+Revolutionary hero, General John Stark,
+Mr. Morgan (Dem. ), of Alabama, said that
+the Government was actually too poor 10
+honor the memory of heroic ancestors when
+it bad to borrow at five per cent, ‘on a ques:
+tionable use of the statutes.”
+\</pre><p class="prose">ALTO metadata: Tesseract Open Source OCR Engine 5.4.1; LoC ndnp-open-ocr 1.2.0 post-processing dated July 15, 2026. Page units inch1200; crop word centers selected using the exact IIIF percentage region. XML reading order retained; an extra edge mark remains in the extracted region. <a href="loc-provider-alto.xml">Original ALTO XML</a> · <a href="loc-provider-ocr.json">Extraction and metadata</a> · <a href="https://tile.loc.gov/storage-services/service/ndnp/vi/batch_vi_styx_ver04/data/sn95079246/00175032277/1894012601/0214.xml">Provider source</a>.</p></details>
+<details><summary>GPT-4o mini — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;contains printed text in a column layout consistent with newspapers&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;context about the article, including historical significance and possible backstory.&quot;
+  },
+  &quot;prose&quot;: &quot;The image is a black and white newspaper clipping featuring a passage regarding a Senate resolution concerning the issuance and selling of bonds, offered by Messrs. Peffer of Kansas and Allen of Nebraska. It states that the resolutions were laid over and mentions a forthcoming connection to a bill appropriating $40,000 for an equestrian statue in Manchester, N.H. It references General John Stark, a Revolutionary hero, and Mr. Morgan from Alabama, discussing the government&#x27;s financial constraints in honoring &#x27;ancestry&#x27; from the era of borrowing at five percent interest on a &#x27;questionable use of the statutes.&#x27; The text is presented in a typical column format with breaks between sentences.&quot;,
+  &quot;transcription&quot;: {
+    &quot;masthead&quot;: &quot;&quot;,
+    &quot;date&quot;: &quot;28th day&quot;,
+    &quot;page&quot;: &quot;&quot;,
+    &quot;headline&quot;: &quot;In the Senate two resolutions were offered by Messrs. Peffer, of Kansas, and Allen, of Nebraska, to the effect that there is no lawful authority for the issuing and selling of bonds as proposed, and that if so issued and sold, they will be null and void. The resolutions were laid over. The question was touched upon in connection with a bill appropriating $40,000 for an equestrian statue in Manchester, N. H., to a Revolutionary hero, General John Stark, Mr. Morgan (Dem.), of Alabama, said that the Government was actually too poor to honor the memory of heroic ancestors when it had to borrow at five per cent. on a &#x27;questionable use of the statutes.&#x27;&quot;,
+    &quot;byline&quot;: &quot;&quot;,
+    &quot;body&quot;: &quot;&quot;
+  }
+}</pre></details>
+<details><summary>Gemini 3.5 Flash-Lite — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;clipping&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;The image is a clipped excerpt of a printed newspaper article.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;summarize&quot;,
+      &quot;extract_metadata&quot;
+    ]
+  },
+  &quot;prose&quot;: &quot;A small newspaper clipping, slightly angled and torn at the right edge, containing a printed text block in a serif typeface. The text discusses legislative proceedings in the United States Senate, mentioning resolutions introduced by Messrs. Peffer of Kansas and Allen of Nebraska regarding bond issuance, a bill appropriating funds for an equestrian statue of General John Stark in Manchester, New Hampshire, and statements by Mr. Morgan of Alabama. The paper shows age-related yellowing, minor surface texture, and dark, uneven lighting along the right edge where a dark shape or shadow obscures part of the margin.&quot;,
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;language&quot;: &quot;en&quot;,
+    &quot;body&quot;: &quot;28TH DAY.—In the Senate two resolutions were offered by Messrs. Peffer, of Kansas, and Allen, of Nebraska, to the effect that there is no lawful authority for the issuing and selling of bonds as proposed, and that, if so issued and sold, they will be null and void. The resolutions were laid over and will come up for action next week. The question was touched upon in connection with a bill appropriating $40,000 for an equestrian statue in Manchester, N. H., to a Revolutionary hero, General John Stark. Mr. Morgan (Dem.), of Alabama, said that the Government was actually too poor to honor the memory of heroic ancestors when it had to borrow at five per cent. \&quot;on a questionable use of the statutes.\&quot;&quot;
+  }
+}</pre></details>
+<details><summary>Ministral 8B 2512 — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;printed newspaper clipping with masthead and dated content&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;extract_metadata&quot;,
+      &quot;context_description&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: {
+    &quot;masthead&quot;: {
+      &quot;date&quot;: &quot;28th Day&quot;,
+      &quot;partial_headline&quot;: &quot;In the Senate two resolutions were offered by Messrs. Peffer, of Kansas, and Allen, of Nebraska, to the effect that there is no lawful authority for the issuing and selling of bonds as proposed, and that, if so issued and sold, they will be null and void.&quot;
+    },
+    &quot;content&quot;: {
+      &quot;text&quot;: {
+        &quot;first_paragraph&quot;: &quot;In the Senate two resolutions were offered by Messrs. Peffer, of Kansas, and Allen, of Nebraska, to the effect that there is no lawful authority for the issuing and selling of bonds as proposed, and that, if so issued and sold, they will be null and void. The resolutions were laid over and will come up for action next week.&quot;,
+        &quot;second_paragraph&quot;: &quot;The question was touched upon in connection with a bill appropriating $40,000 for an equestrian statue in Manchester, N.H., to a Revolutionary hero, General John Stark. Mr. Morgan (Dem.), of Alabama, said that the Government was actually too poor to honor the memory of heroic ancestors when it had to borrow at five per cent. &#x27;on a questionable use of the statutes.&#x27;&quot;
+      },
+      &quot;layout&quot;: {
+        &quot;column_width&quot;: &quot;single column&quot;,
+        &quot;font_style&quot;: &quot;serif, old-style newspaper font&quot;,
+        &quot;leading&quot;: &quot;tight, typical of early 20th-century print&quot;,
+        &quot;condition&quot;: &quot;slightly faded, with minor ink smudges at edges, consistent with aged newspaper clipping&quot;
+      },
+      &quot;visual_elements&quot;: {
+        &quot;background&quot;: {
+          &quot;paper&quot;: &quot;off-white, slightly yellowed&quot;,
+          &quot;print_quality&quot;: &quot;moderate, with some ink bleed visible&quot;
+        },
+        &quot;text_quality&quot;: {
+          &quot;clarity&quot;: &quot;legible but slightly faded, especially in the second paragraph&quot;,
+          &quot;ink&quot;: &quot;dark, consistent with early 20th-century printing&quot;
+        }
+      },
+      &quot;era_cues&quot;: {
+        &quot;language&quot;: &quot;consistent with early 1900s American English&quot;,
+        &quot;political_references&quot;: {
+          &quot;statutes&quot;: &quot;questionable use of statutes&quot;,
+          &quot;Revolutionary hero&quot;: &quot;General John Stark, referencing the American Revolution&quot;,
+          &quot;five per cent borrowing&quot;: &quot;indicative of economic conditions around the time of the First World War or earlier&quot;
+        },
+        &quot;monetary_notation&quot;: &quot;$40,000&quot;  ,
+        &quot;political_terms&quot;: &quot;Senate, resolutions, appropriating&quot;
+      }
+    }
+  },
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;masthead&quot;: {
+      &quot;date&quot;: &quot;28th Day&quot;,
+      &quot;headline&quot;: &quot;Senate Debate on Bond Authority and Statue Appropriation&quot;
+    },
+    &quot;body&quot;: [
+      {
+        &quot;paragraph&quot;: &quot;In the Senate two resolutions were offered by Messrs. Peffer, of Kansas, and Allen, of Nebraska, to the effect that there is no lawful authority for the issuing and selling of bonds as proposed, and that, if so issued and sold, they will be null and void. The resolutions were laid over and will come up for action next week.&quot;
+      },
+      {
+        &quot;paragraph&quot;: &quot;The question was touched upon in connection with a bill appropriating $40,000 for an equestrian statue in Manchester, N.H., to a Revolutionary hero, General John Stark. Mr. Morgan (Dem.), of Alabama, said that the Government was actually too poor to honor the memory of heroic ancestors when it had to borrow at five per cent. &#x27;on a questionable use of the statutes.&#x27;&quot;
+      }
+    ]
+  }
+}</pre></details>
+</section>
+<section class="card section" id="theatre"><div class="section-head"><h2 class="section-title">PDF Tools · Pitts’ Theatre advertisement</h2></div><img src="images/b74e863960f741be-snippet.webp" width="167" height="512" alt="PDF Tools · Pitts’ Theatre advertisement"><p class="prose"><a href="https://pdf-tools.survos.com/iiif/3/94704755a8ddb1b1d947656fff692292~1/pct:79.920436,28.717665,16.31072,33.005948/pct:100.000000/0/default.jpg">Source image</a> · Model input 167 × 512, 27,650 bytes, WebP. Image hash verified across all three models and the displayed thumbnail. Shared fetch/preparation: 0.835s, excluded from model times.</p><p class="prose">The 512-long-edge preset reduces this tall advertisement to just 167 pixels wide. Gemini preserves the schedule, performers, 16c/35c prices and November 3–4–5 dates much more faithfully in this sample. OpenAI loses performers and sections and reads “Bury Lancaster”. Ministral changes Shirley Booth to “Shirley Blithe”, introduces November 9 and changes the final dates; its prose converts 16c/35c to $1.6/$3.5 even while transcription retains cents. All three nevertheless claim needs_high_res=false. Tesseract on the source-resolution crop is far better than on the thumbnail, although names and incidental lines remain noisy. This is strong evidence against trusting the routing flag alone for OCR quality.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Method</th><th>API cost /100K snippets</th><th>Measured time</th><th>Scope</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td>$47.52 batch projection<br>$95.04 standard</td><td>7.22s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td>$168.06 batch projection<br>$336.12 standard</td><td>3.96s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Ministral 8B 2512</td><td>$25.80 batch projection<br>$51.60 standard</td><td>9.64s</td><td>Observe: description, routing and transcription; JSON mode</td></tr>
+<tr><td>Tesseract 5.5.3 · same thumbnail</td><td>$0 API fees</td><td>0.194s median</td><td>OCR only; 3 fresh-process runs, psm 6, English</td></tr>
+<tr><td>Tesseract 5.5.3 · original supplied crop</td><td>$0 API fees</td><td>0.482s median</td><td>OCR only; 3 fresh-process runs, psm 6, English</td></tr>
+<tr><td>PDF Tools cached text</td><td>Unknown / not compared</td><td>Not measured</td><td>HTTP 401; no supplied text available to this run</td></tr>
+</tbody></table></div>
+<p class="prose"><a href="images/theatre-original.jpg">Open original supplied crop</a>. Original-resolution Tesseract is a separate resolution test; the vision-model calls above all used the thumbnail.</p>
+<details><summary>Tesseract — theatre-512 — complete text</summary><pre>eto?
+Pitts
+—THEATRE—
+Culpeper
+Matinee Tuo, There, Sat
+Sto
+Every Nite 7H18 &amp; 8118
+ADMISSION:
+Chitdeen tee Saute ase
+THURSDAY, OOT, 20
+BURT LANCASTER
+SHIRLEY SOOT
+“Come Back Little Sheba”
+Pins Cartoon
+FHL ~ SAT OCT, 90 or
+3 bien ston
+sage BIEEANES
+“1, THE JURY”
+tetris
+Su ettor
+reat Adventures of Capt. Kid
+Eplecde 8
+Regalar Prats S&#x27;Admision
+las Toe for Viewors
+SUN. — MON, NOV. 1-2
+FARLEY GRANGER
+SANE Powel
+“SMALL TOWN GIRL”
+(Color by Technicolor)
+Sanath, ny
+2 Shows Sunday: 3 t0d&#x27;9 pm
+TUBS, - WED, - THUR,
+Soveee.
+eran ents
+DONALD oconNOR
+oe
+“CALL ME MADAM”
+Sere eae Matra
+</pre></details>
+<details><summary>Tesseract — theatre-original — complete text</summary><pre>: e r :
+| Pitts
+—THEATRE—
+| Culpeper
+|Matinees: Tues., Thurs., Sat.
+$$. —3:30 Sn ea Cede reed
+Every Nite 7:15 &amp; 9:15 —
+ADMISSION: ,
+Children 16c Adults 35c
+THURSDAY, OCT..29
+| BURT LANCASTER
+SHIRLEY BOOTH
+—1n—
+“Come Back Little Sheba”
+Plus: Cartoon
+&#x27; FRI, - SAT.,; OCT. 30 - 31
+3 DIMENSION
+MICKY SPILLANE’S
+“I, THE JURY”
+introduci
+BIFF BLLUOT
+Great Adventures of Capt. Kidd
+Episode 9
+Regular Prices of Admission
+Plus 10c for Viewers —
+SUN. - MON, NOV, 1 - 2
+FARLEY GRANGER
+JANE -ohig gu
+oe TD sas
+“SMALL TOWN GIRL”
+(Color by Technicolor)
+Cartoon - Novelty
+2-Shows Sunday: 3 and 9 p.m.
+TUES. - WED. - THUR.
+NOV. 3-4-5
+ETHEL MERMAN
+DONALD TONNOR
+— Ti
+“CALL ME MADAM”
+(Color by Technicolor)
+</pre></details>
+<details><summary>GPT-4o mini — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;The text appears clearly printed and structured.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;Important details about the show times, prices, and featured acts would be omitted.&quot;
+  },
+  &quot;prose&quot;: &quot;The image is a newspaper clipping advertising events at &#x27;Pitts&#x27; theater located in Culpeper. The clipping has a structured layout with various sections for different details. At the top, &#x27;Pitts&#x27; THE ATRÉ&#x27; is prominently displayed, indicating the theater&#x27;s name along with &#x27;Culpeper&#x27; underneath. Below this, &#x27;Matinees: Tues., Thurs., Sat. 3:30&#x27; sets specific showtimes. The following section outlines ticket pricing, stating &#x27;Every Nite 7:15 &amp; 9:15 Children 16c Admission 35c.&#x27; The main body features a list of performances scheduled for Thursday, October 29, including &#x27;Bury Lancaster&#x27; starring &#x27;Shirley Booth,&#x27; and the show titled &#x27;Come Back Little Sheba,&#x27; noted as a cartoon. Additionally, show listings for Saturday, October 31, highlight &#x27;3 DIMENSIONS&#x27; and &#x27;Micky Spillane&#x27;s The Jury.&#x27; The entries are neatly arranged with the dates and performance names clearly defined. &#x27;Great Adventures of Capt. Kidd&#x27; is also mentioned with the player&#x27;s names following, indicating featured performers like &#x27;Jane Powell.&#x27; The lower part of the clipping states upcoming shows for &#x27;SMALL TOWN GIRL&#x27; and &#x27;CALL ME MADAM,&#x27; along with &#x27;2 Shows Sunday&#x27; indicated at the bottom. The format is typical of theater advertisements of the era, providing concise details about the events.&quot;,
+  &quot;transcription&quot;: {
+    &quot;masthead&quot;: &quot;Pitts&#x27; THE ATRÉ&quot;,
+    &quot;date&quot;: &quot;October 29&quot;,
+    &quot;page&quot;: &quot;&quot;,
+    &quot;headline&quot;: &quot;Come Back Little Sheba&quot;,
+    &quot;byline&quot;: &quot;&quot;,
+    &quot;body&quot;: [
+      &quot;Matinees: Tues., Thurs., Sat. 3:30&quot;,
+      &quot;Every Nite 7:15 &amp; 9:15 Children 16c Admission 35c&quot;,
+      &quot;Bury Lancaster Shirley Booth&quot;,
+      &quot;Come Back Little Sheba&quot;,
+      &quot;Cartoon&quot;,
+      &quot;3 DIMENSIONS&quot;,
+      &quot;Micky Spillane&#x27;s The Jury&quot;,
+      &quot;Great Adventures of Capt. Kidd&quot;,
+      &quot;Jane Powell&quot;,
+      &quot;SMALL TOWN GIRL&quot;,
+      &quot;CALL ME MADAM&quot;,
+      &quot;2 Shows Sunday&quot;
+    ]
+  }
+}</pre></details>
+<details><summary>Gemini 3.5 Flash-Lite — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;clipping&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;Printed newspaper clipping of a theatre schedule.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;summarize&quot;,
+      &quot;extract_metadata&quot;
+    ]
+  },
+  &quot;prose&quot;: &quot;A rectangular, vertically-oriented newspaper clipping showing a movie theatre schedule printed in black ink on off-white paper. At the top, the header reads &#x27;Pitts&#x27; / — T H E A T R E — / Culpeper&#x27;. Below the theatre name are showtimes: &#x27;Matinees: Tues., Thurs., Sat. / 3:30&#x27; and &#x27;Every Nite 7:15 &amp; 9:15&#x27;, followed by &#x27;ADMISSION: / Children 16c Adults 35c&#x27;. Below this header section are four distinct horizontal schedule blocks separated by heavy black rules:\n\n1. &#x27;THURSDAY, OCT. 29&#x27; / &#x27;BURT LANCASTER / SHIRLEY BOOTH&#x27; / &#x27;— IN —&#x27; / &#x27;\&quot;Come Back Little Sheba\&quot;&#x27; / &#x27;Plus: Cartoon&#x27;\n\n2. &#x27;FRI. - SAT., OCT. 30 - 31&#x27; / &#x27;3 DIMENSION / MICKY SPILLANE&#x27;S / \&quot;I, THE JURY\&quot;&#x27; / &#x27;introducing / BIFF ELLIOT&#x27; / &#x27;Great Adventures of Capt. Kidd / Episode 9&#x27; / &#x27;Regular Prices of Admission / Plus 10c for Viewers&#x27;\n\n3. &#x27;SUN. - MON., NOV. 1 - 2&#x27; / &#x27;FARLEY GRANGER / JANE POWELL&#x27; / &#x27;— in —&#x27; / &#x27;\&quot;SMALL TOWN GIRL\&quot;&#x27; / &#x27;(Color by Technicolor)&#x27; / &#x27;Cartoon - Novelty&#x27; / &#x27;2 Shows Sunday: 3 and 9 p.m.&#x27;\n\n4. &#x27;TUES. - WED. - THUR. / NOV. 3 - 4 - 5&#x27; / &#x27;ETHEL MERMAN / DONALD O&#x27;CONNOR&#x27; / &#x27;— in —&#x27; / &#x27;\&quot;CALL ME MADAM\&quot;&#x27; / &#x27;(Color by Technicolor)&#x27;\n\nThe clipping has slight grain, faint horizontal screen lines typical of newsprint reproduction, and clean-cut edges on top and sides.&quot;,
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;language&quot;: &quot;en&quot;,
+    &quot;masthead&quot;: &quot;Pitts&#x27; THEATRE Culpeper&quot;,
+    &quot;body&quot;: &quot;Matinees: Tues., Thurs., Sat. 3:30\nEvery Nite 7:15 &amp; 9:15\nADMISSION: Children 16c Adults 35c\n\nTHURSDAY, OCT. 29\nBURT LANCASTER\nSHIRLEY BOOTH\n— IN —\n\&quot;Come Back Little Sheba\&quot;\nPlus: Cartoon\n\nFRI. - SAT., OCT. 30 - 31\n3 DIMENSION\nMICKY SPILLANE&#x27;S\n\&quot;I, THE JURY\&quot;\nintroducing\nBIFF ELLIOT\nGreat Adventures of Capt. Kidd\nEpisode 9\nRegular Prices of Admission\nPlus 10c for Viewers\n\nSUN. - MON., NOV. 1 - 2\nFARLEY GRANGER\nJANE POWELL\n— in —\n\&quot;SMALL TOWN GIRL\&quot;\n(Color by Technicolor)\nCartoon - Novelty\n2 Shows Sunday: 3 and 9 p.m.\n\nTUES. - WED. - THUR.\nNOV. 3 - 4 - 5\nETHEL MERMAN\nDONALD O&#x27;CONNOR\n— in —\n\&quot;CALL ME MADAM\&quot;\n(Color by Technicolor)&quot;
+  }
+}</pre></details>
+<details><summary>Ministral 8B 2512 — full response, including transcription</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;printed theatre listings with masthead-style formatting&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;extract_metadata&quot;,
+      &quot;generate_title&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: {
+    &quot;masthead&quot;: {
+      &quot;text&quot;: &quot;Pitt&#x27;s Theatre&quot;,
+      &quot;location&quot;: &quot;Culpeper&quot;
+    },
+    &quot;date_range&quot;: {
+      &quot;start&quot;: &quot;Thursday, October 29&quot;,
+      &quot;end&quot;: &quot;Sunday, November 8&quot;
+    },
+    &quot;matinee_schedule&quot;: {
+      &quot;day&quot;: &quot;Tues., Thurs., Sat.&quot;,
+      &quot;time&quot;: &quot;3:30 PM&quot;
+    },
+    &quot;evening_schedule&quot;: {
+      &quot;times&quot;: [&quot;7:15 PM&quot;, &quot;9:15 PM&quot;],
+      &quot;price&quot;: {
+        &quot;children&quot;: &quot;$1.6&quot;,
+        &quot;adults&quot;: &quot;$3.5&quot;
+      }
+    },
+    &quot;performances&quot;: [
+      {
+        &quot;date&quot;: &quot;Thursday, October 29&quot;,
+        &quot;play&quot;: &quot;Burt Lancaster Shirley Blithe&quot;,
+        &quot;subtitle&quot;: &quot;Come Back Little Sheba&quot;,
+        &quot;plus&quot;: &quot;Cartoon&quot;
+      },
+      {
+        &quot;date&quot;: &quot;Friday to Saturday, October 30-31&quot;,
+        &quot;play&quot;: &quot;3 Dimension Mickey Spillane&quot;,
+        &quot;subtitle&quot;: &quot;I, the Jury&quot;,
+        &quot;plus&quot;: &quot;Cartoon&quot;
+      },
+      {
+        &quot;date&quot;: &quot;Sunday, October 31&quot;,
+        &quot;play&quot;: &quot;Great Adventures of Capt. Kidd&quot;,
+        &quot;plus&quot;: &quot;Cartoon&quot;,
+        &quot;note&quot;: &quot;Regular Price of Admission Plus 10¢ for Viewers&quot;
+      },
+      {
+        &quot;date&quot;: &quot;Sunday, Monday, November 1-2&quot;,
+        &quot;play&quot;: &quot;Farley Granger Jane Powell&quot;,
+        &quot;subtitle&quot;: &quot;Small Town Girl&quot;,
+        &quot;note&quot;: &quot;Color by Technicolor&quot;
+      },
+      {
+        &quot;date&quot;: &quot;Tuesday to Thursday, November 4-6&quot;,
+        &quot;play&quot;: &quot;Ethel Merman Donald O&#x27;Connor&quot;,
+        &quot;subtitle&quot;: &quot;Call Me Madam&quot;,
+        &quot;note&quot;: &quot;Color by Technicolor&quot;
+      },
+      {
+        &quot;date&quot;: &quot;Sunday, November 9&quot;,
+        &quot;play&quot;: &quot;2 Shows Sunday, 3 and 9 PM&quot;
+      }
+    ],
+    &quot;condition&quot;: {
+      &quot;quality&quot;: &quot;moderate fading, slightly blurred&quot;,
+      &quot;layout&quot;: &quot;vertical columnar text with bolded headings and subtitles&quot;
+    }
+  },
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;masthead&quot;: &quot;Pitt&#x27;s THEATRE\nCulpeper&quot;,
+    &quot;date&quot;: &quot;THURSDAY, OCT. 29&quot;,
+    &quot;matinee&quot;: &quot;Matinees: Tues., Thurs., Sat.\n3:30&quot;,
+    &quot;evening&quot;: &quot;Every Nite 7:15 &amp; 9:15\nAdmission: Children 16¢\nAdults 35¢&quot;,
+    &quot;performances&quot;: [
+      {
+        &quot;date&quot;: &quot;THURSDAY, OCT. 29&quot;,
+        &quot;play&quot;: &quot;Burt Lancaster Shirley Blithe\n&#x27;Come Back Little Sheba&#x27;\nPlus: Cartoon&quot;
+      },
+      {
+        &quot;date&quot;: &quot;FRI. - SAT. OCT. 30 - 31&quot;,
+        &quot;play&quot;: &quot;3 Dimension\nMickey Spillane\n&#x27;I, the Jury&#x27;\nPlus: Cartoon&quot;
+      },
+      {
+        &quot;date&quot;: &quot;SUN. OCT. 31&quot;,
+        &quot;play&quot;: &quot;Great Adventures of Capt. Kidd\nPlus 10¢ for Viewers\nPlus: Cartoon&quot;
+      },
+      {
+        &quot;date&quot;: &quot;SUN. - MON. NOV. 1 - 2&quot;,
+        &quot;play&quot;: &quot;Farley Granger\nJane Powell\n&#x27;Small Town Girl&#x27;\n(Color by Technicolor)&quot;
+      },
+      {
+        &quot;date&quot;: &quot;TUES. - THURS. NOV. 4 - 6&quot;,
+        &quot;play&quot;: &quot;Ethel Merman\nDonald O&#x27;Connor\n&#x27;Call Me Madam&#x27;\n(Color by Technicolor)&quot;
+      },
+      {
+        &quot;date&quot;: &quot;SUN. NOV. 9&quot;,
+        &quot;play&quot;: &quot;2 Shows Sunday, 3 and 9 PM&quot;
+      }
+    ]
+  }
+}</pre></details>
+</section>
+<section class="card section" id="halloween"><div class="section-head"><h2 class="section-title">Supplied recent Tesseract OCR · “Witches Hats - Cold Black Cats”</h2></div><img src="images/halloween-snippet.webp" width="176" height="512" alt="Halloween newspaper article thumbnail"><p class="prose"><a href="https://pdf-tools.survos.com/iiif/3/94704755a8ddb1b1d947656fff692292~1/pct:24.099665,33.476276,17.985762,34.610596/pct:100.000000/0/default.jpg">Source crop</a> · <a href="images/halloween-original.jpg">Full-resolution image used for visual checks and the larger Tesseract test</a>. Model input 176 × 512 WebP, 33,766 bytes. Shared image fetch/preparation 0.726s, excluded from inference. Every model received identical bytes; hashes verified.</p><p class="prose"><strong>This is the most cautionary sample:</strong> the user-supplied OCR is already substantially faithful, with a few recognition errors. Gemini improves those errors and preserves the article text in this trial. GPT-4o mini and Ministral produce fluent but substantially invented passages from the tiny thumbnail, yet both report needs_high_res=false. All outputs are valid JSON. Neither JSON validation nor the routing flag detects these factual failures.</p><p class="prose">The Constitution paragraph is <strong>visible below a horizontal rule in the supplied crop</strong>. It is an adjacent article fragment, not fabricated OCR. A crop transcript may include it; an article transcript should label it separately. Both the supplied OCR and Gemini combine it with the Halloween body. Layout-aware segmentation is needed in addition to character recognition.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Evidence</th><th>Supplied OCR</th><th>Visual reading / outcome</th></tr></thead><tbody><tr><td>First paragraph</td><td>-and-their^ lettingi-loose</td><td>Image reads “and their letting loose”, crossed by a rule; Gemini recovers the words.</td></tr><tr><td>Recognition errors</td><td>yotf · dpn’t · momeftt</td><td>Image reads you · don’t · moment. Gemini and fresh full-resolution Tesseract recover these.</td></tr><tr><td>Source spelling</td><td>scarry · moment of flight</td><td>Both appear in the print. Gemini preserves them; do not silently correct historical source language.</td></tr><tr><td>OpenAI failure</td><td>Rappahannock · a bareness</td><td>Model substitutes Rapunzel · a harvest, then invents much of the remaining body.</td></tr><tr><td>Ministral failure</td><td>No newspaper masthead in crop</td><td>Model invents “The Daily Gazette”, dates/era commentary and altered paragraphs.</td></tr><tr><td>Fresh Tesseract tradeoff</td><td>Title includes Cats</td><td>Full-resolution rerun improves several body errors but drops Cats and corrupts the title. A rerun is not automatically better.</td></tr></tbody></table></div><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Method</th><th>API cost /100K similar snippets</th><th>Measured time</th><th>Result</th></tr></thead><tbody><tr><td>GPT-4o mini</td><td>$43.56 projected batch<br>$87.12 standard</td><td>6.71s</td><td>Substantial invented or altered text</td></tr><tr><td>Gemini 3.5 Flash-Lite</td><td>$133.53 projected batch<br>$267.05 standard</td><td>3.02s</td><td>Most faithful of these model outputs</td></tr><tr><td>Ministral 8B 2512</td><td>$28.23 projected batch<br>$56.46 standard</td><td>9.33s</td><td>Substantial invented or altered text</td></tr><tr><td>Tesseract 5.5.3 · halloween-512</td><td>$0 API fees</td><td>0.237s median</td><td>Severely degraded thumbnail text</td></tr><tr><td>Tesseract 5.5.3 · halloween-original</td><td>$0 API fees</td><td>0.736s median</td><td>Much better body text; still title and artifact errors</td></tr><tr><td>Supplied recent Tesseract</td><td>$0 new inference fees</td><td>Not measured</td><td>User-provided text, preserved verbatim; engine version/settings unavailable</td></tr></tbody></table></div><details><summary>User-supplied OCR — exact baseline</summary><pre>Witches Hats - Cold Black
+
+Cats
+
+With the changing of the leaves -and-their^ lettingi-loose to float lazily to the ground, fall comes to Rappahannock, in a burst of color and in the aftermath, a bareness. As the “ wind scatters&#x27; the dry leaves, a new scent pervades the air, and Hallowe&#x27;en with its witches, jack-o-lanterns, and scarry masks invades the world of youth. It’s fun ‘cause it’s dark and secret—you can shout and blow horns and peep under crooked masks. For one night you throw inhibitions out the window as you are whirled into this make believe environment.
+
+Keep Pace. You’re really old if yotf can’t&#x27; summon a shiver at a sheeted figure’s shrill “boo.” And the housewife who ignores “tricks or treats” is quickly and rightly classed “an old fogey.”
+
+But you fun-seekers—dpn’t carry your jokes over the line. Respect an individual’s rights—Hallowe’en does not let down the bar in this respect. Every year papers carry stories of jokes turned tragedies because of a momeftt of flight or a warped sense of humor. Have fun in a legitimate healthy way. Your neighbor likes to laugh too.
+
+tion when any desired changes in the Constitution can be submitted to the people from time to time as they appear. A “full dress” constitutional convention would be enormously costly and could change our whole system of government without even submitting the changes to the vote of the people.
+</pre></details><details><summary>Fresh Tesseract — halloween-512</summary><pre>‘Witches Hats-- Cold-Black
+
+With the changing of the leaves
+and-heirleling lose to. float laaly
+to the ground, fall comes, to. Rape
+pahannoek, in a burst of color and in
+the aftermath, a arenes. AS the
+‘wind seaters the dry leaves, 2 pew
+Scent. pervades the ait, and Hallo-
+ween ‘with its witches, jack-orlan-
+tems, and scarry masks invades the
+world of youth. It&#x27;s fon ‘cause i&#x27;s
+dark and ecret—you can shout and
+‘low hors and peep under crooked
+maths, For one night you throw
+Inhibitions out the window as you
+fare whirled into this make believe
+
+‘Keep Pace. You&#x27;re really old if
+oil cant&quot; summon a ‘shiver at a
+Sheeed figure’s sil &quot;boo.&quot; And the
+hoisewife who ignores “tricks of
+reals&quot; is quickly and rightly classed
+an old fopey.”
+
+But you funseekers—dont carry
+your jokes over the line. Respect a8
+Indvidea’s rights—Hallowe&#x27;en does
+‘ot let doven the bat in this Fespect
+Every year papers carry stores of
+jokes warned’ tagedies because of a
+‘momest of Might or a warped sense
+Gf humor. Have fun in a legitimate
+Dealtiy way. Your neighbor likes to
+laugh too.
+tion when any desired changes in the
+‘Conaitation can be submited to the
+people from time to time as they 49&gt;
+peat. Aull&quot; dress&quot; constitutional
+Convention would be enormously
+costly and could. change our whole
+‘System of government: without even
+Submitting the changes to the Yote
+of the people.
+</pre></details><details><summary>Fresh Tesseract — halloween-original</summary><pre>Witches Hats-———€old-Black-
+With the changing of the leaves
+-and-their_tetting loose to float lazily _
+to the ground, fall comes to Rap-
+pahannock, in a burst of color and in
+the aftermath, a bareness. “As the
+wind scatters’ the dry leaves, a new
+scent. pervades the air, and Hallo-
+we’en with its witches, jack-o-lan-
+terns, and scarry masks invades the
+world of youth. It’s fun ‘cause it’s
+dark and secret—you can shout and
+blow horns and peep under crooked
+masks. For one night you throw
+inhibitions out. the window as you
+are whirled into this make believe
+
+environment.
+
+Keep Pace. You&#x27;re really old if
+you can’t- summon a shiver at a
+sheeted figure’s shrill “boo.” And the
+housewife who ignores “tricks or
+treats” is quickly and rightly classed
+“an old fogey.”
+
+But you fun-seekers—don’t carry
+your jokes over the line. Respect an
+individual’s rights—Hallowe’en does
+not let down the bar in this respect.
+Every year papers carry stories of
+jokes turned tragedies because of a
+moment of flight or a warped sense
+of humor. Have fun in a legitimate
+healthy way. Your neighbor likes to
+laugh too.
+tion when any desired changes in the
+Constitution can be submitted to the
+people from time to time as they ap-
+pear. A “full dress” constitutional
+convention would be enormously
+costly and could change our whole
+system of government without even
+submitting the changes to the vote
+of the people.
+eee
+</pre></details><details><summary>GPT-4o mini — full response</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;newspaper format and layout&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;important text content regarding seasonal changes and humor would be lost&quot;
+  },
+  &quot;prose&quot;: &quot;The image is a newspaper clipping titled &#x27;Witches Hats - Cold Black Cats.&#x27; The text discusses the changes in leaves during the fall and refers to a character named Rapunzel in a colorful context, mentioning a burst of color and the aftermath bringing a harvest. There are jokes intertwined with advice, with a humorous tone throughout the text. The notice includes a mention of &#x27;Halloween&#x27; and the respect that should be given to the changing seasons. The overall structure is newspaper-like, with multiple columns and a standard layout that includes jokes and seasonal observations.&quot;,
+  &quot;transcription&quot;: {
+    &quot;masthead&quot;: &quot;Witches Hats - Cold Black Cats&quot;,
+    &quot;body&quot;: &quot;With the changing of the leaves and their letting loose to float lazily to the ground, fall comes to Rapunzel, in a burst of color and in the aftermath, a harvest. A new generation of leaves, a new season. Halloween and scary mixes invade the eve of power. It’s fun to watch the fun with blow horns and people dressed to thrill. For one might you throw traditions overboard and you might be enriched. You really ought to &#x27;P. A. summon a shiver at a neighbor’s shrill scream.&#x27; And the odds come out that &#x27;you love to hear a good joke and it’s fairly classified.&#x27; My, that’s foggier. Trusting all you don’t carry your jokes over the line. Respect an original. At times in all the seasonal papers, someone hands you a joke and advises you on your decorum. Hark! Fun is a lengthy health way. Your neighbor likes a healthy way.&quot;
+  }
+}</pre></details><details><summary>Gemini 3.5 Flash-Lite — full response</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;clipping&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;Scanned newspaper clipping with printed headline and columns of text, bordered by horizontal rule lines.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;summarize&quot;,
+      &quot;generate_title&quot;,
+      &quot;extract_metadata&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;none&quot;
+  },
+  &quot;prose&quot;: &quot;A rectangular newspaper clipping oriented vertically, containing printed text set in columns with a centered headline at the top. The typography is typeset in a traditional serif newspaper font. Horizontal rule lines appear above and below the main article body, with an additional partial dividing rule separating the main Halloween-themed article from a separate article fragment at the bottom regarding a constitution convention. The paper shows slight aging discoloration, minor vertical creasing, and faint show-through from text on the reverse side. The text is entirely legible at the current resolution.&quot;,
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;headline&quot;: &quot;Witches Hats - Cold Black Cats&quot;,
+    &quot;body&quot;: &quot;With the changing of the leaves and their letting loose to float lazily to the ground, fall comes to Rappahannock, in a burst of color and in the aftermath, a bareness. As the wind scatters the dry leaves, a new scent pervades the air, and Hallowe&#x27;en with its witches, jack-o-lanterns, and scarry masks invades the world of youth. It&#x27;s fun &#x27;cause it&#x27;s dark and secret—you can shout and blow horns and peep under crooked masks. For one night you throw inhibitions out the window as you are whirled into this make believe environment.\n\nKeep Pace. You&#x27;re really old if you can&#x27;t summon a shiver at a sheeted figure&#x27;s shrill \&quot;boo.\&quot; And the housewife who ignores \&quot;tricks or treats\&quot; is quickly and rightly classed \&quot;an old fogey.\&quot;\n\nBut you fun-seekers—don&#x27;t carry your jokes over the line. Respect an individual&#x27;s rights—Hallowe&#x27;en does not let down the bar in this respect. Every year papers carry stories of jokes turned tragedies because of a moment of flight or a warped sense of humor. Have fun in a legitimate healthy way. Your neighbor likes to laugh too.\n\ntion when any desired changes in the Constitution can be submitted to the people from time to time as they appear. A \&quot;full dress\&quot; constitutional convention would be enormously costly and could change our whole system of government without even submitting the changes to the vote of the people.&quot;
+  }
+}</pre></details><details><summary>Ministral 8B 2512 — full response</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;newspaper&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;printed newspaper clipping with masthead, date, and text content&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;extract_metadata&quot;,
+      &quot;context_description&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: {
+    &quot;masthead&quot;: {
+      &quot;visible&quot;: true,
+      &quot;content&quot;: &quot;The Daily Gazette (partial visible)&quot;,
+      &quot;font_style&quot;: &quot;bold serif&quot;,
+      &quot;date_format&quot;: &quot;Month Day, Year (e.g., October 31, 19XX)&quot;
+    },
+    &quot;date&quot;: {
+      &quot;visible&quot;: false,
+      &quot;implied&quot;: &quot;likely late 20th century based on font and style&quot;
+    },
+    &quot;page_layout&quot;: {
+      &quot;columns&quot;: 2,
+      &quot;column_width&quot;: &quot;narrow&quot;,
+      &quot;text_alignment&quot;: &quot;left-aligned&quot;,
+      &quot;font&quot;: &quot;serif, black ink&quot;,
+      &quot;font_size&quot;: &quot;medium to small&quot;,
+      &quot;leading&quot;: &quot;tight&quot;,
+      &quot;graphics&quot;: &quot;none&quot;
+    },
+    &quot;headline&quot;: {
+      &quot;text&quot;: &quot;Witches Hats - Cold Black Cats&quot;,
+      &quot;font_style&quot;: &quot;bold, larger than body text&quot;,
+      &quot;position&quot;: &quot;top of the clipping&quot;
+    },
+    &quot;body_text&quot;: {
+      &quot;content&quot;: [
+        {
+          &quot;paragraph&quot;: &quot;With the changing of the leaves and their letting loose to float lazily to the ground, fall comes to Rapphannock as in the aftermath, a barren. As the season changes, so does the atmosphere that pervades the air, and Halloween is with its witch, jack-o&#x27;-lanterns, and scary masks that invade the world of youth. It&#x27;s fun because it&#x27;s a time when the old and the new are blended together, like the black cats and blow horns and peep under crooked fences.&quot;,
+          &quot;note&quot;: &quot;Poetic and descriptive language, informal tone&quot;
+        },
+        {
+          &quot;paragraph&quot;: &quot;For one night you throw inhibitions out the window as you are whirled into this make believe world.&quot;,
+          &quot;note&quot;: &quot;Encouraging playful abandon&quot;
+        },
+        {
+          &quot;paragraph&quot;: &quot;Keep Pace. You&#x27;re really old if you can&#x27;t summon a shiver at a sheeted housewife&#x27;s shriek &#x27;Boo.&#x27; And the fireworks who ignores &#x27;tricks or treats&#x27; and rightly classed as a &#x27;fogy&#x27;.&quot;,
+          &quot;note&quot;: &quot;Playful, nostalgic tone&quot;
+        },
+        {
+          &quot;paragraph&quot;: &quot;But you fun-seekers—don&#x27;t carry your jokes over the line. Respect an individual&#x27;s rights—Halloween does not turn the bar into a respectful place for the drunken or the rowdy. A moment of flight or a warped sense of humor. Have fun in a legitimate healthy way. Your neighbor likes to laugh too.&quot;,
+          &quot;note&quot;: &quot;Encouraging respectful behavior&quot;
+        },
+        {
+          &quot;paragraph&quot;: &quot;The Constitution when any desired changes in the tradition are submitted to the people from time to time as they appear to be needed, then the people can change the whole system of government without even submitting the changes to the voice of the people.&quot;,
+          &quot;note&quot;: &quot;Inconsistent with the rest of the article; appears to be a misplaced or unrelated quote&quot;
+        }
+      ]
+    },
+    &quot;condition&quot;: {
+      &quot;paper&quot;: &quot;lightly yellowed, creased along edges&quot;,
+      &quot;ink&quot;: &quot;clear, no smudging&quot;,
+      &quot;damage&quot;: &quot;none visible&quot;
+    },
+    &quot;era_cues&quot;: {
+      &quot;font_style&quot;: &quot;consistent with late 20th century newspapers&quot;,
+      &quot;language_tone&quot;: &quot;informal, community-focused, reflective of 1970s-1980s local newspaper style&quot;,
+      &quot;content_themes&quot;: &quot;Halloween traditions, community values&quot;
+    }
+  },
+  &quot;transcription&quot;: {
+    &quot;transcription_type&quot;: &quot;newspaper&quot;,
+    &quot;masthead&quot;: &quot;The Daily Gazette&quot;,
+    &quot;date&quot;: &quot;unknown (not visible)&quot;,
+    &quot;page&quot;: &quot;unknown (not visible)&quot;,
+    &quot;headline&quot;: &quot;Witches Hats - Cold Black Cats&quot;,
+    &quot;body&quot;: [
+      {
+        &quot;paragraph&quot;: &quot;With the changing of the leaves and their letting loose to float lazily to the ground, fall comes to Rapphannock as in the aftermath, a barren. As the season changes, so does the atmosphere that pervades the air, and Halloween is with its witch, jack-o&#x27;-lanterns, and scary masks that invade the world of youth. It&#x27;s fun because it&#x27;s a time when the old and the new are blended together, like the black cats and blow horns and peep under crooked fences.&quot;
+      },
+      {
+        &quot;paragraph&quot;: &quot;For one night you throw inhibitions out the window as you are whirled into this make believe world.&quot;
+      },
+      {
+        &quot;paragraph&quot;: &quot;Keep Pace. You&#x27;re really old if you can&#x27;t summon a shiver at a sheeted housewife&#x27;s shriek &#x27;Boo.&#x27; And the fireworks who ignores &#x27;tricks or treats&#x27; and rightly classed as a &#x27;fogy&#x27;.&quot;
+      },
+      {
+        &quot;paragraph&quot;: &quot;But you fun-seekers—don&#x27;t carry your jokes over the line. Respect an individual&#x27;s rights—Halloween does not turn the bar into a respectful place for the drunken or the rowdy. A moment of flight or a warped sense of humor. Have fun in a legitimate healthy way. Your neighbor likes to laugh too.&quot;
+      },
+      {
+        &quot;paragraph&quot;: &quot;The Constitution when any desired changes in the tradition are submitted to the people from time to time as they appear to be needed, then the people can change the whole system of government without even submitting the changes to the voice of the people.&quot;
+      }
+    ]
+  }
+}</pre></details><p class="prose"><a href="halloween-supplied-ocr.txt">Download supplied baseline</a> · <a href="halloween-tesseract.json">Fresh Tesseract measurements</a> · <a href="model-results.json">Model outputs and usage</a>. These are spot-checked comparisons, not a formal error-rate benchmark. A full-resolution vision-model rerun and typed-schema comparison remain unmeasured.</p></section><section class="card section" id="method"><div class="section-head"><h2 class="section-title">What the budget does—and does not—cover</h2></div><p class="prose">Figures are USD per <strong>100,000 snippets like the individual sample</strong>, not 100,000 newspaper pages. Page size, number of regions, output length, resolution, model and retries change the total. No provider batch was submitted. Batch estimates halve standard-rate token costs using published discounts; no cache hits were reported for these newspaper runs. Gemini usage includes any reported thinking tokens. Rates: GPT-4o mini $0.15 input/$0.60 output per million; Gemini 3.5 Flash-Lite $0.30/$2.50; Ministral 8B 2512 $0.15/$0.15.</p><p class="prose"><a href="https://developers.openai.com/api/docs/models/gpt-4o-mini">OpenAI pricing</a> · <a href="https://developers.openai.com/api/docs/guides/batch">OpenAI batch</a> · <a href="https://ai.google.dev/gemini-api/docs/pricing">Google pricing and batch</a> · <a href="https://docs.mistral.ai/inference/pricing">Mistral pricing</a> · <a href="https://docs.mistral.ai/studio/batch-processing">Mistral batch</a>. Snapshot October 6, 2026.</p><p class="prose">The vision task is the existing Observe prompt, with JSON mode enabled, a 4,096-token output cap, and OpenAI detail=low. It emits prose and routing as well as transcription, so its cost is not an optimized OCR-only price. JSON mode is not Symfony DTO/schema enforcement. Model request times exclude image download/preparation but include network and generation. The three model calls are sequential and unreplicated per sample.</p><p class="prose">Tesseract 5.5.3 ran locally on an Apple M4 Pro with 48 GiB memory, English, page segmentation mode 6 (single text block), without cleanup or tuning. Its times are medians of three fresh processes including model load and image decode, excluding download. “Free” means zero API fees; electricity, machine time, storage and orchestration are excluded. The LoC source baseline was generated previously with different resolution, segmentation and post-processing. PDF Tools cached text returned HTTP 401 even through the configured client; no fresh remote OCR was triggered to substitute for it.</p><p class="prose"><a href="model-results.json">All model responses, prompts, tokens and hashes</a> · <a href="ocr-baselines.json">Tesseract trials and full text</a> · <a href="benchmark_ocr.py">Reusable Tesseract benchmark script</a>.</p></section><section class="card section"><div class="section-head"><h2 class="section-title">Recommended next evidence for the re-OCR decision</h2></div><ol><li>Sample by provider, newspaper, year, scan quality and layout: ordinary columns, advertisements, tables, damaged print and mixed fonts.</li><li>Keep supplied OCR and its provenance. Align each candidate to image coordinates; compare against a human-reviewed reference using word/character error rates and named-entity, date and amount checks.</li><li>Run full-resolution Tesseract and a dedicated vision transcription task on the same regions. Test source-text-assisted correction separately; do not silently treat corrected text as a faithful transcript.</li><li>Price complete pages, including segmentation, failed requests, retries, review and storage. Set acceptance thresholds before deciding whether to replace, supplement or retain each provider’s text.</li></ol><p class="prose"><strong>Current conclusion:</strong> there is measurable opportunity to improve newspaper text, and visual evidence that resolution and model choice can dominate the result. A corpus-wide re-OCR effort should preserve existing text, validate replacements and target quality—not merely rerun the same engine on thumbnails.</p></section><footer class="dev3-footer"><span><strong>Built with dev3 Artifacts</strong> · Newspaper re-OCR evidence</span><span>Measured samples · projected token costs</span></footer></main><script src="app.js" data-dev3-artifact-shell></script><script src="report.js"></script></body></html>

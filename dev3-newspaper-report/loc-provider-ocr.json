@@ -1,0 +1,21 @@
+{
+  "provider": "Library of Congress",
+  "format": "ALTO v3",
+  "source_url": "https://tile.loc.gov/storage-services/service/ndnp/vi/batch_vi_styx_ver04/data/sn95079246/00175032277/1894012601/0214.xml",
+  "engine": "Tesseract 5.4.1",
+  "postprocessor": "ndnp-open-ocr 1.2.0",
+  "postprocess_timestamp": "2026-07-15T19:32:22.878010",
+  "region_percent": [
+    85.365006,
+    22.438672,
+    14.611819,
+    7.479557
+  ],
+  "page_units": "inch1200",
+  "page_width": 25892,
+  "page_height": 37424,
+  "extraction": "Select ALTO String centers inside crop; preserve XML TextLine order. Edge marks can be included.",
+  "text": "28tH Dav.\u2014In the Senals two resolutions\nwere offered by Messrs, Peffer, of Kansas,\nand Allen, of Nebraska, to the effect that\u2019\nthers is no lawful authority for the fssuing\nand selling of bonds as proposed, and that,\nif so issued and sold, they will be null and\nvoid. The resolutions were laid over and\nwill come up for action next week. The\nques:ion was touched upon jn connection\nwith a bill appropriatiug \u00a340,(00 jor an\nequestrian statue in Manchester, N. H., to a\nRevolutionary hero, General John Stark,\nMr. Morgan (Dem. ), of Alabama, said that\nthe Government was actually too poor 10\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent, \u2018on a ques:\ntionable use of the statutes.\u201d\n\\",
+  "generation_ms": null,
+  "new_api_fee_usd": 0
+}

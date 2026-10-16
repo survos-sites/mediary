@@ -1,0 +1,987 @@
+<!doctype html><html lang="en" data-dev3-artifact-template="v1"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Observe model comparison</title><link rel="stylesheet" href="app.css" data-dev3-artifact-shell></head><body><main class="app"><header class="topbar"><div class="brand"><img src="dev3-icon.png" alt="dev3 logo"><div><div class="eyebrow">DEV3 ARTIFACT · COMPARISON</div><h1>Observe: cost per 100K images</h1><div class="muted">Three Fortepan photographs · 6 October 2026 · USD</div></div></div><div class="actions"><div class="segmented text-size" role="group" aria-label="Text size"><button type="button" data-font-step="-1">A−</button><button class="text-size-value" id="fontScaleValue" type="button" data-font-step="0">100%</button><button type="button" data-font-step="1">A+</button></div><button class="ghost" id="artifactTheme" type="button">◐ Auto</button></div></header><nav class="section-nav"><a href="#costs">Costs</a><a href="#outputs">Images &amp; outputs</a><a href="#method">Method &amp; pricing</a></nav>
+<section class="card section" id="json-correction"><div class="section-head"><h2 class="section-title">Update: JSON mode fixes the observed Ministral syntax failures</h2></div><p class="prose"><strong>Ministral 8B with API JSON mode: 3/3 valid responses, 3/3 with prose. Projected batch cost: $34.91 per 100K images; mean synchronous time: 19.86s.</strong> Same three images and Observe prompt; only response_format={type:json_object} was added. This is a fresh sample, not a guarantee of future success or factual accuracy.</p><p class="prose">The original baseline below used prompt-only JSON. Its two invalid responses contained literal newlines inside quoted prose strings. That is a request-format issue worth fixing before rejecting the model. The existing AbstractPromptTask supports Symfony AI class-based structured output for both synchronous and batch calls, but ObserveTask::responseFormatClass() explicitly returns null. The next production improvement is a typed Observe DTO/schema plus cross-field validation, such as requiring prose when no follow-up image task is queued. JSON mode alone does not enforce those rules.</p><p class="prose"><a href="https://docs.mistral.ai/studio/conversations/structured-output/json_mode">Mistral JSON mode</a> · <a href="https://symfony.com/doc/current/ai/components/platform.html">Symfony structured output</a> · <a href="json-mode-results.json" download>Download corrected run</a></p><details><summary>000105fd2331d7cc — JSON-mode output</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;urban street scene with military presence and destruction, consistent with wartime photograph&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;fortepan_place&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: {
+    &quot;people&quot;: [
+      {
+        &quot;position&quot;: &quot;far left, standing near the edge of the frame&quot;,
+        &quot;count&quot;: 1,
+        &quot;description&quot;: &quot;Adult male, facing left, wearing a long coat, hat, and carrying a bag or briefcase. Appears to be walking away from the camera.&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center-left, near the damaged vehicle&quot;,
+        &quot;count&quot;: 1,
+        &quot;description&quot;: &quot;Adult male, standing near a military vehicle, wearing a long coat and hat, facing the camera. Appears to be observing the scene.&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center-right, near the military vehicle&quot;,
+        &quot;count&quot;: 1,
+        &quot;description&quot;: &quot;Adult male, standing near the military vehicle, wearing a long coat, hat, and possibly a military or official uniform. Facing the camera, appears to be in a commanding or supervisory role.&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center-left background, near the damaged building&quot;,
+        &quot;count&quot;: 1,
+        &quot;description&quot;: &quot;Adult male, standing near the rubble, wearing a long coat and hat, facing the camera. Appears to be observing the scene.&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center-right background, near the military vehicle&quot;,
+        &quot;count&quot;: 1,
+        &quot;description&quot;: &quot;Adult male, standing near the military vehicle, wearing a long coat and hat, facing the camera. Appears to be part of the military or official group.&quot;
+      },
+      {
+        &quot;position&quot;: &quot;far right, standing near the edge of the frame&quot;,
+        &quot;count&quot;: 1,
+        &quot;description&quot;: &quot;Adult male, wearing a long coat and hat, facing the camera. Appears to be walking or standing near the military vehicle.&quot;
+      }
+    ],
+    &quot;total_people&quot;: 6,
+    &quot;setting&quot;: {
+      &quot;location&quot;: &quot;urban street scene, likely in a European city based on architectural style&quot;,
+      &quot;indoor_outdoor&quot;: &quot;outdoor&quot;,
+      &quot;architectural_details&quot;: [
+        {
+          &quot;description&quot;: &quot;Multi-story building with balconies on the left side of the image. The building appears to have sustained significant damage, with broken windows and debris.&quot;
+        },
+        {
+          &quot;description&quot;: &quot;Another multi-story building on the right side, also showing signs of damage, including broken windows and exposed interior elements.&quot;
+        },
+        {
+          &quot;description&quot;: &quot;A street lamp visible on the right side of the image, partially intact.&quot;
+        }
+      ],
+      &quot;furniture_props&quot;: [
+        {
+          &quot;description&quot;: &quot;A military vehicle, possibly a tank or armored car, partially damaged and positioned in the center of the image.&quot;
+        },
+        {
+          &quot;description&quot;: &quot;Rubble and debris scattered on the street, indicating destruction or an explosion.&quot;
+        },
+        {
+          &quot;description&quot;: &quot;A bicycle lying on the ground near the center-left of the image.&quot;
+        }
+      ],
+      &quot;background_elements&quot;: [
+        {
+          &quot;description&quot;: &quot;A bare tree with no leaves, suggesting it may be winter or the scene is post-war.&quot;
+        },
+        {
+          &quot;description&quot;: &quot;Signage on buildings: &#x27;BUTOR&#x27; and &#x27;LODOS MIH.&#x27; visible on the left side.&quot;
+        }
+      ],
+      &quot;light_source&quot;: {
+        &quot;description&quot;: &quot;Overcast or dim lighting, consistent with either early morning, late afternoon, or a cloudy day. The scene appears to be captured in low-light conditions.&quot;
+      },
+      &quot;time_of_day_cues&quot;: &quot;Overcast lighting and lack of distinct shadows suggest it is either early morning, late afternoon, or a cloudy day.&quot;,
+      &quot;weather&quot;: &quot;No clear indication of weather, but the bare tree suggests it may be winter or the area is post-war.&quot;
+    },
+    &quot;composition&quot;: {
+      &quot;camera_angle&quot;: &quot;Street-level perspective, looking down the length of the street.&quot;,
+      &quot;depth_of_field&quot;: &quot;Shallow depth of field, with the foreground and mid-ground in focus, while the background appears slightly blurred.&quot;,
+      &quot;framing&quot;: &quot;The image is framed to capture the destruction and military presence prominently in the center.&quot;,
+      &quot;attention_drawer&quot;: &quot;The military vehicle and the group of people standing around it draw the viewer&#x27;s attention. The destruction and debris also contribute to the focal point.&quot;
+    },
+    &quot;era_and_condition_cues&quot;: {
+      &quot;clothing_styles&quot;: &quot;Long coats, hats, and overall attire suggest a mid-20th century setting, likely the 1940s or 1950s.&quot;,
+      &quot;technology&quot;: &quot;The military vehicle appears to be from the World War II era, consistent with armored cars or tanks used during that time.&quot;,
+      &quot;signage&quot;: &quot;The style of signage and lettering on buildings also suggests a mid-20th century European setting.&quot;,
+      &quot;image_process_artefacts&quot;: &quot;The photograph appears to be a black-and-white image, likely taken on film, which is consistent with mid-20th century photography.&quot;,
+      &quot;physical_condition&quot;: &quot;The image shows signs of wear and tear, consistent with an archival photograph. The buildings and street are visibly damaged, indicating a wartime or post-war scene.&quot;
+    },
+    &quot;objects_and_text&quot;: [
+      {
+        &quot;description&quot;: &quot;Sign on the left building: &#x27;BUTOR&#x27; with additional text partially visible.&quot;,
+        &quot;location&quot;: &quot;Left side of the image, on the building facade.&quot;
+      },
+      {
+        &quot;description&quot;: &quot;Sign on the left building: &#x27;LODOS MIH.&#x27;&quot;,
+        &quot;location&quot;: &quot;Below &#x27;BUTOR&#x27;, on the same building facade.&quot;
+      },
+      {
+        &quot;description&quot;: &quot;Military vehicle, likely a tank or armored car, partially damaged.&quot;,
+        &quot;location&quot;: &quot;Center of the image.&quot;
+      },
+      {
+        &quot;description&quot;: &quot;Rubble and debris scattered on the street.&quot;,
+        &quot;location&quot;: &quot;Center and right side of the image.&quot;
+      },
+      {
+        &quot;description&quot;: &quot;Bicycle lying on the ground.&quot;,
+        &quot;location&quot;: &quot;Center-left of the image.&quot;
+      }
+    ]
+  }
+}</pre></details><details><summary>00014f72885d7425 — JSON-mode output</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;group portrait with outdoor setting, no text or inscriptions visible&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;generate_title&quot;
+    ],
+    &quot;risk_if_skipped&quot;: null
+  },
+  &quot;prose&quot;: {
+    &quot;people&quot;: [
+      {
+        &quot;position&quot;: &quot;far left&quot;,
+        &quot;estimated_age&quot;: &quot;mid-40s to early 50s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, no tie visible&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;watch chain, possibly a pocket watch&quot;
+        },
+        &quot;body_language&quot;: &quot;standing upright, hands clasped in front&quot;,
+        &quot;role&quot;: &quot;appears to be a formal group member, possibly a professional or elder&quot;
+      },
+      {
+        &quot;position&quot;: &quot;second from left&quot;,
+        &quot;estimated_age&quot;: &quot;late 40s to early 50s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, no tie visible&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, slight smile&quot;
+      },
+      {
+        &quot;position&quot;: &quot;third from left&quot;,
+        &quot;estimated_age&quot;: &quot;mid-30s to early 40s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;fourth from left&quot;,
+        &quot;estimated_age&quot;: &quot;mid-40s to early 50s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center-left&quot;,
+        &quot;estimated_age&quot;: &quot;mid-50s to early 60s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, slight smile&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center&quot;,
+        &quot;estimated_age&quot;: &quot;mid-50s to early 60s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;center-right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-40s to early 50s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;sixth from right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-30s to early 40s&quot;,
+        &quot;gender&quot;: &quot;female&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark dress with a high collar, possibly a blouse or dress shirt&quot;,
+          &quot;bottom&quot;: &quot;light-colored skirt or trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;fifth from right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-40s to early 50s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;fourth from right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-50s to early 60s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;third from right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-40s to early 50s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;second from right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-30s to early 40s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;far right&quot;,
+        &quot;estimated_age&quot;: &quot;mid-30s to early 40s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark suit jacket, white dress shirt, tie&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      },
+      {
+        &quot;position&quot;: &quot;far right, slightly behind group&quot;,
+        &quot;estimated_age&quot;: &quot;mid-30s to early 40s&quot;,
+        &quot;gender&quot;: &quot;male&quot;,
+        &quot;clothing&quot;: {
+          &quot;top&quot;: &quot;dark jacket, white shirt, tie, possibly a military or formal uniform&quot;,
+          &quot;bottom&quot;: &quot;light-colored trousers&quot;,
+          &quot;footwear&quot;: &quot;dark shoes&quot;,
+          &quot;accessories&quot;: &quot;none visible&quot;
+        },
+        &quot;body_language&quot;: &quot;arms relaxed at sides, neutral expression&quot;
+      }
+    ],
+    &quot;total_people&quot;: 13,
+    &quot;setting&quot;: {
+      &quot;indoor_outdoor&quot;: &quot;outdoor&quot;,
+      &quot;location&quot;: &quot;appears to be a rural or semi-rural area, possibly a hillside or elevated ground&quot;,
+      &quot;architectural_details&quot;: &quot;none visible&quot;,
+      &quot;furniture_props&quot;: &quot;none visible&quot;,
+      &quot;background_elements&quot;: {
+        &quot;vegetation&quot;: &quot;trees and shrubs, possibly a wooded area in the background&quot;,
+        &quot;terrain&quot;: &quot;slightly elevated ground, possibly a hill or small plateau&quot;,
+        &quot;light_source&quot;: &quot;natural daylight, possibly late morning or early afternoon&quot;,
+        &quot;weather&quot;: &quot;overcast or cloudy, no visible shadows or strong sunlight&quot;
+      }
+    },
+    &quot;composition&quot;: {
+      &quot;camera_angle&quot;: &quot;front-facing, slightly elevated angle&quot;,
+      &quot;depth_of_field&quot;: &quot;moderate, with most subjects in focus&quot;,
+      &quot;framing&quot;: &quot;group is positioned in a line, facing the camera&quot;,
+      &quot;attention_drawer&quot;: &quot;the group’s alignment and uniform attire draw the eye, with the slightly elevated ground and natural background providing context&quot;
+    },
+    &quot;era_and_condition_cues&quot;: {
+      &quot;clothing_styles&quot;: &quot;men are wearing suits with ties, suggesting a formal or professional setting from the early 20th century&quot;,
+      &quot;technology&quot;: &quot;no visible technology or modern artifacts&quot;,
+      &quot;signage&quot;: &quot;none visible&quot;,
+      &quot;vehicle_types&quot;: &quot;none visible&quot;,
+      &quot;image_process_artefacts&quot;: &quot;black-and-white, consistent with early 20th-century photography&quot;,
+      &quot;physical_condition&quot;: &quot;image appears slightly faded and worn, consistent with aged photographic prints&quot;
+    }
+  }
+}</pre></details><details><summary>000154d4d6191521 — JSON-mode output</summary><pre>{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;group of people in an outdoor setting, consistent with a historical or organized activity&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;fortepan_place&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: {
+    &quot;people&quot;: [
+      {
+        &quot;count&quot;: 19,
+        &quot;description&quot;: [
+          {
+            &quot;position&quot;: &quot;front row, leftmost&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;,
+            &quot;role&quot;: &quot;appears to be part of a group, possibly in uniform or coordinated attire&quot;
+          },
+          {
+            &quot;position&quot;: &quot;front row, second from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;front row, third from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;front row, fourth from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;front row, fifth from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;second row, leftmost&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;second row, second from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;second row, third from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;second row, fourth from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;second row, fifth from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;third row, leftmost&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;third row, second from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;third row, third from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;fourth row, leftmost&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;fourth row, second from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;fourth row, third from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;fourth row, fourth from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;fourth row, fifth from left&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          },
+          {
+            &quot;position&quot;: &quot;fifth row, leftmost&quot;,
+            &quot;age&quot;: &quot;appears to be adult&quot;,
+            &quot;gender&quot;: &quot;male&quot;,
+            &quot;clothing&quot;: {
+              &quot;shirt&quot;: &quot;short-sleeved, white, with a dark collar&quot;,
+              &quot;pants&quot;: &quot;dark, possibly khaki or dark green&quot;,
+              &quot;footwear&quot;: &quot;dark, possibly boots or shoes&quot;,
+              &quot;accessories&quot;: &quot;none visible&quot;
+            },
+            &quot;body_language&quot;: &quot;walking, facing forward, hands at sides&quot;
+          }
+        ]
+      }
+    ],
+    &quot;setting&quot;: {
+      &quot;location&quot;: &quot;outdoor, open field with tall grass&quot;,
+      &quot;background&quot;: {
+        &quot;elements&quot;: [
+          {
+            &quot;type&quot;: &quot;power lines&quot;,
+            &quot;description&quot;: &quot;multiple utility poles with overhead power lines, spaced at regular intervals&quot;
+          },
+          {
+            &quot;type&quot;: &quot;trees&quot;,
+            &quot;description&quot;: &quot;a few trees visible in the distance, possibly along the horizon&quot;
+          },
+          {
+            &quot;type&quot;: &quot;terrain_features&quot;,
+            &quot;description&quot;: &quot;flat terrain with tall grass, possibly a field or meadow&quot;
+          },
+          {
+            &quot;type&quot;: &quot;buildings&quot;,
+            &quot;description&quot;: &quot;no visible buildings in the immediate foreground, distant structures possibly visible on the horizon&quot;
+          }
+        ]
+      },
+      &quot;lighting&quot;: {
+        &quot;source&quot;: &quot;natural daylight&quot;,
+        &quot;quality&quot;: &quot;bright, possibly overcast or diffused light&quot;,
+        &quot;time_of_day&quot;: &quot;appears to be daytime, possibly mid-morning or afternoon&quot;
+      }
+    },
+    &quot;composition&quot;: {
+      &quot;camera_angle&quot;: &quot;slightly elevated angle, looking down on the group&quot;,
+      &quot;depth_of_field&quot;: &quot;shallow depth of field, with the group in focus and background slightly blurred&quot;,
+      &quot;framing&quot;: &quot;group of people walking in a line, filling most of the frame from left to right&quot;,
+      &quot;attention_drawer&quot;: &quot;the orderly line of people walking in uniform attire draws the eye, with the open field and power lines providing context&quot;
+    },
+    &quot;era_and_condition_cues&quot;: {
+      &quot;clothing&quot;: {
+        &quot;style&quot;: &quot;short-sleeved shirts with dark collars, dark pants, possibly khaki or military-style attire, consistent with mid-20th century&quot;,
+        &quot;note&quot;: &quot;the attire suggests a group activity, possibly a school trip, scout group, or military unit&quot;
+      },
+      &quot;technology&quot;: {
+        &quot;power_lines&quot;: &quot;overhead power lines suggest a developed area, but the style of poles is consistent with mid-20th century&quot;
+      },
+      &quot;image_process_artifacts&quot;: {
+        &quot;type&quot;: &quot;black and white&quot;,
+        &quot;note&quot;: &quot;the photograph is in black and white, consistent with mid-20th century photography&quot;
+      },
+      &quot;physical_condition&quot;: {
+        &quot;image&quot;: &quot;no visible signs of damage or wear, though the quality suggests it may be a scanned or digitized version of an older photograph&quot;
+      }
+    }
+  }
+}</pre></details></section><section class="card section"><div class="section-head"><h2 class="section-title">Local candidates already available</h2></div><p class="prose">This Mac is an Apple M4 Pro with 48 GiB unified memory. Ollama is running and lists Qwen2.5-VL 7B, Qwen3-VL 32B Instruct and Thinking, Ministral 3 14B, Mistral Small 3.2 24B, and Gemma 3 27B. These are installed candidates, not measured results. Start with Qwen2.5-VL 7B and quantized Ministral 3 14B for a bounded local test; use Qwen3-VL 32B Instruct as a larger quality comparison. Qwen3-VL 8B Instruct is a smaller additional candidate requiring a download.</p><p class="prose">The ai-tools checkout already serves Florence-2, Florence-2-fast, and auto via /v1/responses. Its backend elapsed_ms excludes URL resolution/download, but the first call includes lazy model loading. Warm the backend first and report cold load separately. Florence caption/OCR results have a different contract from the full Observe envelope; evaluate them as preprocessing or a simpler alternative, not a drop-in equivalent.</p><p class="prose">For local benchmarks, fetch images once, verify hashes, warm each model, and measure request wall time plus native load, prompt-evaluation and generation timings. Preserve full end-to-end time separately. No local inference benchmark has yet been run for this report. At 5 seconds/image, 100K images take 5.8 days serially; at 20 seconds/image, 23.1 days. Local token fees are zero, but electricity and machine occupancy are not.</p></section><section class="card section" id="costs"><div class="section-head"><h2 class="section-title">Original baseline: prompt-only JSON, before the correction above</h2></div><p class="prose">Budget approximately <strong>$150 / 100K images</strong> for Gemini 3.5 Flash-Lite, <strong>$46</strong> for GPT-4o mini, or <strong>$24</strong> for Ministral 8B at batch rates, without assuming cache hits. These are sample-based projections, not measured batch invoices. Output quality differs substantially.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Model</th><th>Batch /100K<br>No cache</th><th>Batch /100K<br>Sample cache*</th><th>Standard /100K<br>No cache</th><th>Mean time/image</th><th>Valid JSON</th><th>Includes prose</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td class="sig">$45.95</td><td>$37.79</td><td>$91.90</td><td>4.16s</td><td>3/3</td><td>2/3</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td class="sig">$150.30</td><td>$150.30</td><td>$300.61</td><td>3.74s</td><td>3/3</td><td>3/3</td></tr>
+<tr><td>Ministral 8B 2512</td><td class="sig">$24.14</td><td>$24.14</td><td>$48.28</td><td>7.35s</td><td>1/3</td><td>0/3</td></tr>
+</tbody></table></div><p class="prose">*Sample-cache column halves the observed standard-price estimate. Only OpenAI reported cache hits (2,176 input tokens per image). Cache availability in future batches is not guaranteed; use the no-cache column for budgeting.</p><p class="prose"><strong>Quality caveat:</strong> GPT-4o mini omitted prose on one image despite having no pending observation steps. Ministral emitted invalid JSON on two images, then omitted prose on the third. Gemini returned parseable JSON and prose for all three. This checks structure and presence, not factual accuracy: longer text can introduce unsupported details. Retries and downstream high-resolution tasks would increase costs.</p><p class="prose"><strong>Version matters:</strong> this report uses <code>gemini-3.5-flash-lite</code>. The older 2.5 Flash-Lite compatibility request returned HTTP 404 for this account. Its cheaper rate should not be used to price these results. Your pasted <code>gemini-3.8-flash</code> response is another model, not Flash-Lite.</p></section><div id="outputs"></div>
+<section class="card section"><div class="section-head"><h2 class="section-title">Image 1 · 000105fd2331d7cc</h2></div><img src="images/000105fd2331d7cc.webp" alt="Fortepan comparison photograph 1" width="512" height="504"><p class="prose">512 × 504 WebP · 43,882 bytes · Same SHA-256 verified across all models and this displayed image.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Model</th><th>Time</th><th>Input tokens (cached)</th><th>Output tokens incl. thinking</th><th>Batch /100K at this image’s usage, no cache</th><th>Result</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td>3.14s</td><td>5,052 (2,176)</td><td>143 (0 thinking)</td><td>$42.18</td><td>Missing prose</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td>3.75s</td><td>3,441 (0)</td><td>698 (0 thinking)</td><td>$138.87</td><td>Prose present</td></tr>
+<tr><td>Ministral 8B 2512</td><td>11.06s</td><td>2,638 (0)</td><td>749 (0 thinking)</td><td>$25.40</td><td>Invalid JSON</td></tr>
+</tbody></table></div>
+<details><summary>GPT-4o mini — full output</summary>
+<p class="prose">No usable parsed prose. Full returned text follows.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;image of a street scene featuring people and buildings&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: true,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;The text on signage, vehicles, and buildings may be essential for accurate cataloging and historical context.&quot;
+  }
+}
+```</pre></details></details>
+<details><summary>Gemini 3.5 Flash-Lite — full output</summary>
+<p class="prose">A black-and-white, eye-level street photograph showing a damaged urban environment, likely a European city street following conflict or bombardment. The composition is angled down a wide sidewalk running alongside a heavily damaged multistory apartment building with ornate classical architectural detailing. <br><br>In the foreground and mid-ground, a crowd of pedestrians and bystanders is gathered on the pavement. People are dressed in heavy coats, hats, and scarves, consistent with cold weather. <br><br>From right to left:<br>- Far right: A middle-aged man wearing a dark beret, a long dark leather or heavy fabric coat belted at the waist with hands in pockets, looking downward with a pensive expression.<br>- Just behind him and slightly left: A figure in a dark hat and coat partially silhouetted.<br>- Center-right: A large artillery piece or anti-tank gun is positioned on the street or sidewalk, pointing towards the left foreground. Debris, rubble, and broken wooden beams or branches are piled up in the foreground around the base of the gun.<br>- Center: Several men standing near the gun and storefronts. One man is seen from the back wearing a light-colored trench coat and hat, walking away. Another man stands near a bicycle parked against the building facade. Further back, more figures are silhouetted or partially obscured, including a woman in a dark headscarf.<br>- Left foreground: A man in a dark brimmed hat, dark scarf, and dark overcoat stands near the left edge of the frame, facing slightly right with a neutral expression. <br>- Street furniture and vegetation: A bare, gnarled deciduous tree stands prominently in the foreground left, its branches reaching upward and across the upper half of the frame against a bright, overcast sky. An ornate lamppost stands further back behind the artillery piece.<br><br>Storefronts line the ground floor of the building on the left. Several legible signs are mounted on the facade:<br>- A rectangular sign on the left reads &quot;BUTOR&quot; with smaller text underneath reading &quot;FERENC-KORUT&quot; (or similar).<br>- A smaller sign below it or further along reads &quot;ORAS&quot; and &quot;CIPU&quot; (partially visible).<br><br>The upper floors of the building show visible damage, with shattered windows, blown-out frames, and structural scars. The lighting is diffused and overcast, casting soft shadows.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;Black and white historical street level photograph depicting urban destruction, crowds, military artillery, and signage.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: true,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;fortepan_place&quot;,
+      &quot;generate_title&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: &quot;A black-and-white, eye-level street photograph showing a damaged urban environment, likely a European city street following conflict or bombardment. The composition is angled down a wide sidewalk running alongside a heavily damaged multistory apartment building with ornate classical architectural detailing. \n\nIn the foreground and mid-ground, a crowd of pedestrians and bystanders is gathered on the pavement. People are dressed in heavy coats, hats, and scarves, consistent with cold weather. \n\nFrom right to left:\n- Far right: A middle-aged man wearing a dark beret, a long dark leather or heavy fabric coat belted at the waist with hands in pockets, looking downward with a pensive expression.\n- Just behind him and slightly left: A figure in a dark hat and coat partially silhouetted.\n- Center-right: A large artillery piece or anti-tank gun is positioned on the street or sidewalk, pointing towards the left foreground. Debris, rubble, and broken wooden beams or branches are piled up in the foreground around the base of the gun.\n- Center: Several men standing near the gun and storefronts. One man is seen from the back wearing a light-colored trench coat and hat, walking away. Another man stands near a bicycle parked against the building facade. Further back, more figures are silhouetted or partially obscured, including a woman in a dark headscarf.\n- Left foreground: A man in a dark brimmed hat, dark scarf, and dark overcoat stands near the left edge of the frame, facing slightly right with a neutral expression. \n- Street furniture and vegetation: A bare, gnarled deciduous tree stands prominently in the foreground left, its branches reaching upward and across the upper half of the frame against a bright, overcast sky. An ornate lamppost stands further back behind the artillery piece.\n\nStorefronts line the ground floor of the building on the left. Several legible signs are mounted on the facade:\n- A rectangular sign on the left reads \&quot;BUTOR\&quot; with smaller text underneath reading \&quot;FERENC-KORUT\&quot; (or similar).\n- A smaller sign below it or further along reads \&quot;ORAS\&quot; and \&quot;CIPU\&quot; (partially visible).\n\nThe upper floors of the building show visible damage, with shattered windows, blown-out frames, and structural scars. The lighting is diffused and overcast, casting soft shadows.&quot;
+}
+```</pre></details></details>
+<details><summary>Ministral 8B 2512 — full output</summary>
+<p class="prose">No usable parsed prose. Full returned text follows.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;depicts a wartime urban scene with military presence and destruction&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: true,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;fortepan_place&quot;,
+      &quot;summarize&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: &quot;
+  **People:**
+  - A group of at least seven individuals visible, all men. Estimated ages range from late 20s to mid-50s.
+    - One man in the foreground on the right, wearing a long overcoat, hat, and carrying a briefcase or bag. Appears to be in a leadership or authoritative role, standing near a military vehicle.
+    - Another man in the foreground on the left, wearing a long coat and hat, standing near a damaged area, possibly observing or directing.
+    - A third man in the middle-left, wearing a coat and hat, standing near a bicycle and debris.
+    - Two men near the military vehicle, one standing and one partially visible, both in military or uniform-like attire.
+    - Two more men in the background, one near the &quot;BUTOR&quot; sign and another near the damaged area, both wearing coats and hats.
+
+  **Setting:**
+  - Outdoor urban scene, likely a city street. The architecture suggests a European setting, with multi-story buildings, balconies, and storefronts.
+  - The street is littered with debris, broken branches, and scattered objects, indicating destruction or recent conflict.
+  - A bare tree trunk in the center-left of the image, suggesting winter or a destroyed tree.
+  - A military vehicle, possibly a tank or armored car, is partially visible in the center-right, with a barrel pointing forward.
+  - A bicycle is visible near the center-left, leaning against a pile of debris.
+  - A &quot;BUTOR&quot; storefront sign is visible on the left side, with additional text partially readable (&quot;PÉCS&quot; and &quot;KÉSZÍTŐI RUHÁK&quot; visible, suggesting a clothing store in Pécs, Hungary).
+  - Another sign on the right side of the image reads &quot;LORÁND&quot; with additional text obscured by the destruction.
+
+  **Composition:**
+  - The photograph is taken at street level, with a low-angle perspective looking up slightly at the buildings and people.
+  - The lighting suggests overcast or cloudy conditions, with no strong shadows.
+  - The scene is dominated by the destruction and the military presence, with the camera focusing on the immediate aftermath of an event.
+  - The composition draws attention to the military vehicle and the debris, emphasizing the severity of the damage.
+
+  **Era and condition cues:**
+  - Clothing styles suggest mid-20th century, likely the 1940s or early 1950s.
+  - The military vehicle and style of destruction are consistent with World War II-era conflict.
+  - The photograph appears to be in black and white, consistent with wartime photography.
+  - The image shows signs of aging, with slight grain and fading, but no visible tears or significant damage.
+  &quot;,
+  &quot;transcription&quot;: {}
+}
+```</pre></details></details>
+</section>
+<section class="card section"><div class="section-head"><h2 class="section-title">Image 2 · 00014f72885d7425</h2></div><img src="images/00014f72885d7425.webp" alt="Fortepan comparison photograph 2" width="512" height="359"><p class="prose">512 × 359 WebP · 29,306 bytes · Same SHA-256 verified across all models and this displayed image.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Model</th><th>Time</th><th>Input tokens (cached)</th><th>Output tokens incl. thinking</th><th>Batch /100K at this image’s usage, no cache</th><th>Result</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td>4.86s</td><td>5,052 (2,176)</td><td>380 (0 thinking)</td><td>$49.29</td><td>Prose present</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td>3.67s</td><td>3,444 (0)</td><td>794 (0 thinking)</td><td>$150.91</td><td>Prose present</td></tr>
+<tr><td>Ministral 8B 2512</td><td>9.09s</td><td>2,538 (0)</td><td>1,066 (0 thinking)</td><td>$27.03</td><td>Invalid JSON</td></tr>
+</tbody></table></div>
+<details><summary>GPT-4o mini — full output</summary>
+<p class="prose">The photograph depicts a group of thirteen people standing outdoors in a naturally hilly landscape. They are arranged in two rows. The individuals appear to be dressed in early 20th-century attire. In the front row, from left to right, stand a man in a light suit and dark tie, followed by a woman in a dark dress with a patterned shawl. Next is a man wearing a dark suit and light-colored tie, followed by another man in a dark suit with a pocket square. The fourth person in this row is a man in a light-colored suit. Following that, there is a woman in a white dress, and next to her, a man in a light suit with a dark tie. Another woman in a dark dress stands next. The last individual in the front row is a man in formal attire. The back row features four more people, consisting of a woman in a white hat and dress, a man in a suit, a woman in a cloche hat and coat, and a man in a military uniform. The people are positioned in front of green vegetation and hills in the background, suggesting a gathering in a scenic outdoor location.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;photograph of a group of people outdoors&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;No cataloguing evidence will be lost as the thumbnail provides sufficient detail.&quot;
+  },
+  &quot;prose&quot;: &quot;The photograph depicts a group of thirteen people standing outdoors in a naturally hilly landscape. They are arranged in two rows. The individuals appear to be dressed in early 20th-century attire. In the front row, from left to right, stand a man in a light suit and dark tie, followed by a woman in a dark dress with a patterned shawl. Next is a man wearing a dark suit and light-colored tie, followed by another man in a dark suit with a pocket square. The fourth person in this row is a man in a light-colored suit. Following that, there is a woman in a white dress, and next to her, a man in a light suit with a dark tie. Another woman in a dark dress stands next. The last individual in the front row is a man in formal attire. The back row features four more people, consisting of a woman in a white hat and dress, a man in a suit, a woman in a cloche hat and coat, and a man in a military uniform. The people are positioned in front of green vegetation and hills in the background, suggesting a gathering in a scenic outdoor location.&quot;,
+  &quot;transcription&quot;: {}
+}
+```</pre></details></details>
+<details><summary>Gemini 3.5 Flash-Lite — full output</summary>
+<p class="prose">A group portrait of twelve adults (ten men and two women) standing in a line on a dirt or gravel clearing in an outdoor, hilly landscape. The group is arranged across the frame from left to right. <br><br>From left to right:<br>1. A man in his late 20s or 30s, wearing a dark suit jacket, white trousers, and dark shoes. He stands slightly forward, angled toward the right, with dark hair parted to the side and a neutral expression.<br>2. An elderly man with a bald head and white mustache, wearing a dark three-piece suit and tie.<br>3. A younger man in a dark suit, positioned behind the second man, looking forward.<br>4. An older man with white hair and mustache, wearing a dark jacket, light-coloured trousers, and a tie, turned slightly in profile toward the left.<br>5. A woman wearing a patterned dark dress with a long skirt and dark hat, partially turned toward a man standing next to her.<br>6. A man partially obscured behind the woman (5), wearing a military-style cap and uniform jacket.<br>7. A middle-aged man with dark hair and a mustache, wearing a dark three-piece suit, holding a hat in his right hand down by his side.<br>8. A middle-aged man with short hair and glasses, wearing a light-coloured patterned suit jacket and trousers, and a bow tie.<br>9. A middle-aged man with a mustache, wearing a dark suit and tie, standing slightly forward with hands clasped near his waist.<br>10. A woman wearing a dark, loose-fitting dress with dropped waist and a dark cloche-style hat, standing with arms at her sides.<br>11. A woman wearing a light-coloured dress with dark horizontal stripes or trim near the hem, a white wide-brimmed hat, holding a small dark handbag or gloves. A small dark dog is standing near her feet.<br>12. A woman wearing a light-coloured blouse or tunic over a dark skirt, and a dark cloche hat.<br>13. A man at the far right edge, appearing to be in military uniform with medals or insignia visible on his chest, dark trousers, and dark footwear, standing at attention.<br><br>Setting: An open earthen clearing or plateau, bordered by low brush or grass at the front edge. In the background, rolling hills or low mountains covered with dense trees recede into an overcast or hazy sky. The lighting is bright and diffuse, casting soft shadows beneath the figures.<br><br>Condition: The photographic print shows slight fading, minor creasing or emulsion loss along the top edge, and subtle uneven toning typical of early 20th-century silver gelatin prints. Clothing styles (dropped-waist dresses, cloche hats for women; three-piece suits for men) suggest a date in the 1920s.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;historical group portrait photograph showing twelve people standing outdoors in a hilly landscape&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;generate_title&quot;,
+      &quot;summarize&quot;,
+      &quot;fortepan_place&quot;
+    ]
+  },
+  &quot;prose&quot;: &quot;A group portrait of twelve adults (ten men and two women) standing in a line on a dirt or gravel clearing in an outdoor, hilly landscape. The group is arranged across the frame from left to right. \n\nFrom left to right:\n1. A man in his late 20s or 30s, wearing a dark suit jacket, white trousers, and dark shoes. He stands slightly forward, angled toward the right, with dark hair parted to the side and a neutral expression.\n2. An elderly man with a bald head and white mustache, wearing a dark three-piece suit and tie.\n3. A younger man in a dark suit, positioned behind the second man, looking forward.\n4. An older man with white hair and mustache, wearing a dark jacket, light-coloured trousers, and a tie, turned slightly in profile toward the left.\n5. A woman wearing a patterned dark dress with a long skirt and dark hat, partially turned toward a man standing next to her.\n6. A man partially obscured behind the woman (5), wearing a military-style cap and uniform jacket.\n7. A middle-aged man with dark hair and a mustache, wearing a dark three-piece suit, holding a hat in his right hand down by his side.\n8. A middle-aged man with short hair and glasses, wearing a light-coloured patterned suit jacket and trousers, and a bow tie.\n9. A middle-aged man with a mustache, wearing a dark suit and tie, standing slightly forward with hands clasped near his waist.\n10. A woman wearing a dark, loose-fitting dress with dropped waist and a dark cloche-style hat, standing with arms at her sides.\n11. A woman wearing a light-coloured dress with dark horizontal stripes or trim near the hem, a white wide-brimmed hat, holding a small dark handbag or gloves. A small dark dog is standing near her feet.\n12. A woman wearing a light-coloured blouse or tunic over a dark skirt, and a dark cloche hat.\n13. A man at the far right edge, appearing to be in military uniform with medals or insignia visible on his chest, dark trousers, and dark footwear, standing at attention.\n\nSetting: An open earthen clearing or plateau, bordered by low brush or grass at the front edge. In the background, rolling hills or low mountains covered with dense trees recede into an overcast or hazy sky. The lighting is bright and diffuse, casting soft shadows beneath the figures.\n\nCondition: The photographic print shows slight fading, minor creasing or emulsion loss along the top edge, and subtle uneven toning typical of early 20th-century silver gelatin prints. Clothing styles (dropped-waist dresses, cloche hats for women; three-piece suits for men) suggest a date in the 1920s.&quot;
+}
+```</pre></details></details>
+<details><summary>Ministral 8B 2512 — full output</summary>
+<p class="prose">No usable parsed prose. Full returned text follows.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;group portrait with outdoor setting, no visible text requiring transcription&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;generate_title&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: &quot;
+  **People:**
+  A group of 16 individuals standing outdoors in a line formation. All appear to be adults, with estimated ages ranging from approximately 30 to 60 years old. Apparent genders are evenly distributed between male and female.
+
+  - **Left side (front row):**
+    1. Man in a dark suit, light vest, and tie, standing with hands clasped in front.
+    2. Man in a dark suit, white shirt, and tie, holding a walking stick.
+    3. Man in a dark suit, white shirt, and tie, standing with hands on hips.
+    4. Man in a dark suit, white shirt, and tie, wearing a cap or hat.
+    5. Man in a dark suit, white shirt, and tie, standing with hands behind his back.
+    6. Man in a dark suit, white shirt, and tie, wearing a belt with a visible buckle.
+
+  - **Middle section:**
+    7. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.
+    8. Man in a dark suit, white shirt, and tie, wearing a belt and standing with hands behind his back.
+    9. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.
+    10. Man in a dark suit, white shirt, and tie, wearing a vest and standing with hands behind his back.
+    11. Woman in a long-sleeved dress with a high neckline, possibly a blouse or formal attire, standing with hands clasped in front.
+    12. Woman in a long-sleeved dress with a patterned or striped design, standing with hands clasped in front.
+
+  - **Right side (front row):**
+    13. Woman in a long-sleeved dress with a dark color, standing with hands clasped in front.
+    14. Man in a dark suit, white shirt, and tie, wearing a hat or cap, standing with hands behind his back.
+
+  - **Back row (left to right):**
+    15. Man in a dark suit, white shirt, and tie, standing with hands behind his back.
+    16. Man in a dark suit, white shirt, and tie, wearing a hat or cap, standing with hands behind his back.
+    17. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.
+    18. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.
+    19. Woman in a long-sleeved dress with a high neckline, standing with hands clasped in front.
+    20. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.
+    21. Man in a dark suit, white shirt, and tie, wearing a hat or cap, standing with hands behind his back.
+    22. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.
+
+  **Setting:**
+  The group is standing outdoors on a dirt or gravel path. The background features a hilly or mountainous landscape with sparse vegetation, including trees and shrubs. The lighting suggests it is daytime, possibly late morning or early afternoon, with soft shadows indicating diffused sunlight. The attire of the individuals suggests a formal or semi-formal gathering, possibly from the early 20th century based on clothing styles.
+
+  **Composition:**
+  The photograph is taken from a slightly elevated angle, capturing the group from the front and slightly above. The composition is symmetrical, with the group evenly spaced and aligned in a line. The focus is on the individuals, with the background serving as a neutral backdrop that highlights the group.
+
+  **Era and condition cues:**
+  The clothing styles, particularly the suits, ties, hats, and dresses, suggest the photograph is from the early 20th century, likely between 1910 and 1930. The sepia tone and graininess are consistent with early photographic processes. The image shows signs of aging, including slight fading and minor creases along the edges.
+  &quot;,
+  &quot;transcription&quot;: null
+}
+```</pre></details></details>
+</section>
+<section class="card section"><div class="section-head"><h2 class="section-title">Image 3 · 000154d4d6191521</h2></div><img src="images/000154d4d6191521.webp" alt="Fortepan comparison photograph 3" width="512" height="334"><p class="prose">512 × 334 WebP · 39,716 bytes · Same SHA-256 verified across all models and this displayed image.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Model</th><th>Time</th><th>Input tokens (cached)</th><th>Output tokens incl. thinking</th><th>Batch /100K at this image’s usage, no cache</th><th>Result</th></tr></thead><tbody>
+<tr><td>GPT-4o mini</td><td>4.49s</td><td>5,052 (2,176)</td><td>283 (0 thinking)</td><td>$46.38</td><td>Prose present</td></tr>
+<tr><td>Gemini 3.5 Flash-Lite</td><td>3.79s</td><td>3,459 (0)</td><td>874 (0 thinking)</td><td>$161.13</td><td>Prose present</td></tr>
+<tr><td>Ministral 8B 2512</td><td>1.89s</td><td>2,518 (0)</td><td>147 (0 thinking)</td><td>$19.99</td><td>Missing prose</td></tr>
+</tbody></table></div>
+<details><summary>GPT-4o mini — full output</summary>
+<p class="prose">The photograph depicts a group of approximately twenty people walking in a straight line through a grassy field. The individuals appear to be a mix of young boys and girls, as well as some adults. The boys are dressed in white shirts with shorts, some wearing neckerchiefs or sashes, indicating a uniform or coordinated attire. The girls are similarly dressed, and a few are wearing dresses. The individuals are spaced out evenly and face forward, suggesting they are participating in a march or procession. In the background, there are tall telephone poles and sparse trees, indicating a rural setting. The sky is clear, suggesting a sunny day, and the overall composition has a balanced and orderly appearance.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;group of people walking in a field&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [],
+    &quot;risk_if_skipped&quot;: &quot;No significant cataloguing evidence is lost without a high-res pass.&quot;
+  },
+  &quot;prose&quot;: &quot;The photograph depicts a group of approximately twenty people walking in a straight line through a grassy field. The individuals appear to be a mix of young boys and girls, as well as some adults. The boys are dressed in white shirts with shorts, some wearing neckerchiefs or sashes, indicating a uniform or coordinated attire. The girls are similarly dressed, and a few are wearing dresses. The individuals are spaced out evenly and face forward, suggesting they are participating in a march or procession. In the background, there are tall telephone poles and sparse trees, indicating a rural setting. The sky is clear, suggesting a sunny day, and the overall composition has a balanced and orderly appearance.&quot;,
+  &quot;transcription&quot;: {}
+}
+```</pre></details></details>
+<details><summary>Gemini 3.5 Flash-Lite — full output</summary>
+<p class="prose">A black-and-white outdoor photograph capturing a large group of children and young teenagers—likely scouts or pioneers—walking in a line through an overgrown meadow or grassy field. The camera is positioned at a medium-low angle, looking across the field from left to right as the procession moves diagonally from the middle-left background toward the foreground left. <br><br>There are approximately 15 to 20 individuals visible in the group, predominantly appearing to be children and adolescents around ages 10 to 15. The clothing is remarkably uniform: many wear light-colored (white or pale) short-sleeved or long-sleeved shirts, dark shorts or trousers, and dark neckerchiefs tied around their necks, consistent with scout or pioneer uniforms of the mid-20th century.<br><br>Detailed enumeration of individuals from foreground left to background right:<br>1. Far-left edge: Partial figure of a person wearing a light shirt and dark trousers, turned slightly toward the group.<br>2. Second from left, foreground: A young teenage boy (approx. 13-15 years old) with short dark hair, wearing a light-colored button-down shirt, dark shorts, and a dark neckerchief. He is turned slightly sideways, looking toward the viewer or the leader.<br>3. Behind him/partially obscured: Another youth standing slightly further back.<br>4. Third from left, foreground: A boy (approx. 11-13 years old) with light hair, wearing a white long-sleeved shirt tucked into dark trousers, with a dark neckerchief. His arms are at his sides as he walks forward.<br>5. Fourth from left, mid-ground: A younger boy (approx. 9-11 years old) walking with arms slightly bent, wearing a white short-sleeved shirt, dark shorts, and a neckerchief.<br>6. Fifth from left: A boy similar in age to the previous, wearing a white short-sleeved shirt and dark trousers or shorts with a dark neckerchief.<br>7. Sixth from left: A teenager or older youth wearing a light shirt, dark shorts, and neckerchief.<br>8. Seventh from left: A female youth or young girl wearing a light blouse and dark skirt/shorts with a neckerchief.<br>9. Eighth from left: A youth wearing a light shirt and dark trousers with a neckerchief.<br>10. Ninth from left: A female youth wearing a light blouse and dark skirt with a neckerchief.<br>11. Tenth from left and continuing down the line: Several more children and youths in similar white shirts and dark bottoms stretching away into the distance in a staggered, single-file or loose double-file column.<br><br>The setting is an open, grassy field filled with wildflowers and tall weeds. In the background, telegraph or utility poles line the landscape, running parallel to the path of the group. Further back, rolling hills, distant trees, and a hazy sky are visible under bright, diffused daylight casting soft shadows. The overall aesthetic and clothing styles are consistent with documentary photography from the mid-20th century (approximately 1950s-1970s Eastern European or Central European context).</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;Black and white photograph showing a group of children or youths hiking in a field.&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;generate_title&quot;,
+      &quot;summarize&quot;,
+      &quot;fortepan_place&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  },
+  &quot;prose&quot;: &quot;A black-and-white outdoor photograph capturing a large group of children and young teenagers—likely scouts or pioneers—walking in a line through an overgrown meadow or grassy field. The camera is positioned at a medium-low angle, looking across the field from left to right as the procession moves diagonally from the middle-left background toward the foreground left. \n\nThere are approximately 15 to 20 individuals visible in the group, predominantly appearing to be children and adolescents around ages 10 to 15. The clothing is remarkably uniform: many wear light-colored (white or pale) short-sleeved or long-sleeved shirts, dark shorts or trousers, and dark neckerchiefs tied around their necks, consistent with scout or pioneer uniforms of the mid-20th century.\n\nDetailed enumeration of individuals from foreground left to background right:\n1. Far-left edge: Partial figure of a person wearing a light shirt and dark trousers, turned slightly toward the group.\n2. Second from left, foreground: A young teenage boy (approx. 13-15 years old) with short dark hair, wearing a light-colored button-down shirt, dark shorts, and a dark neckerchief. He is turned slightly sideways, looking toward the viewer or the leader.\n3. Behind him/partially obscured: Another youth standing slightly further back.\n4. Third from left, foreground: A boy (approx. 11-13 years old) with light hair, wearing a white long-sleeved shirt tucked into dark trousers, with a dark neckerchief. His arms are at his sides as he walks forward.\n5. Fourth from left, mid-ground: A younger boy (approx. 9-11 years old) walking with arms slightly bent, wearing a white short-sleeved shirt, dark shorts, and a neckerchief.\n6. Fifth from left: A boy similar in age to the previous, wearing a white short-sleeved shirt and dark trousers or shorts with a dark neckerchief.\n7. Sixth from left: A teenager or older youth wearing a light shirt, dark shorts, and neckerchief.\n8. Seventh from left: A female youth or young girl wearing a light blouse and dark skirt/shorts with a neckerchief.\n9. Eighth from left: A youth wearing a light shirt and dark trousers with a neckerchief.\n10. Ninth from left: A female youth wearing a light blouse and dark skirt with a neckerchief.\n11. Tenth from left and continuing down the line: Several more children and youths in similar white shirts and dark bottoms stretching away into the distance in a staggered, single-file or loose double-file column.\n\nThe setting is an open, grassy field filled with wildflowers and tall weeds. In the background, telegraph or utility poles line the landscape, running parallel to the path of the group. Further back, rolling hills, distant trees, and a hazy sky are visible under bright, diffused daylight casting soft shadows. The overall aesthetic and clothing styles are consistent with documentary photography from the mid-20th century (approximately 1950s-1970s Eastern European or Central European context).&quot;
+}
+```</pre></details></details>
+<details><summary>Ministral 8B 2512 — full output</summary>
+<p class="prose">No usable parsed prose. Full returned text follows.</p>
+<details><summary>Raw response text (including routing)</summary><pre>```json
+{
+  &quot;routing&quot;: {
+    &quot;content_type&quot;: &quot;photograph&quot;,
+    &quot;content_type_confidence&quot;: &quot;high&quot;,
+    &quot;content_type_basis&quot;: &quot;group of people in an outdoor setting, consistent with a historical photograph&quot;,
+    &quot;text_flags&quot;: {
+      &quot;has_text&quot;: false,
+      &quot;typed_text&quot;: false,
+      &quot;handwritten_text&quot;: false,
+      &quot;is_form&quot;: false,
+      &quot;is_filled_form&quot;: false
+    },
+    &quot;needs_high_res&quot;: false,
+    &quot;pending_steps&quot;: [],
+    &quot;analysis_tasks&quot;: [
+      &quot;context_description&quot;,
+      &quot;fortepan_place&quot;
+    ],
+    &quot;risk_if_skipped&quot;: &quot;&quot;
+  }
+}
+```</pre></details></details>
+</section>
+<section class="card section" id="method"><div class="section-head"><h2 class="section-title">What was measured</h2></div><p class="prose">Selected the first three assets by identifier in <code>dataset=mus/fortepan</code> using the reusable <code>media:iterate</code> Symfony command. OpenAI and Ministral came from one sequential run; Gemini was rerun through its native endpoint to expose full usage metadata. Prompts and image hashes were verified identical between runs. Provider defaults were used, with a 4,096 output-token cap and OpenAI’s existing Observe <code>detail=low</code>. Models have different image tokenization; equal bytes do not mean equal token counts.</p><p class="prose"><strong>512 is the application’s Observe preset:</strong> imgproxy fits the image inside 512 × 512, preserving aspect ratio. The three delivered images are 512 × 504, 512 × 359, and 512 × 334. They are not forced square. A 384-pixel threshold from older Gemini image accounting is not a universal preferred image size. Gemini 3.5 reported 1,089 image tokens for each image in this native run.</p><p class="prose">Times are synchronous wall-clock request/response times, excluding shared image download. No batch was submitted. All three providers offer batch processing with a 50% token-price discount. Timing from three sequential requests is only a smoke measurement; it does not forecast batch completion time.</p><p class="prose">Native Gemini cost includes answer plus thinking tokens. These three Flash-Lite calls reported no separate thinking tokens; your Flash 3.8 example reported 10 answer + 370 thinking tokens, so its output cost must use 380, not 10. Raw native usage is preserved in the download.</p><p class="prose"><strong>Formula:</strong> mean(input tokens × input rate + output tokens × output rate) ÷ 1,000,000 × 100,000 images × 0.5 batch discount. Cache-adjusted estimates use the cached-input rate only for reported cached tokens. Estimates include prompt text, image tokens and returned output; exclude retries, storage, network, taxes, and later workflow tasks. This is a small photograph-only sample, not a representative estimate for forms or OCR.</p><div class="evidence-table-scroll"><table class="evidence-table"><thead><tr><th>Model</th><th>Standard input /1M</th><th>Cached input /1M</th><th>Standard output /1M</th><th>Source</th></tr></thead><tbody><tr><td>GPT-4o mini</td><td>$0.15</td><td>$0.075</td><td>$0.60</td><td><a href="https://developers.openai.com/api/docs/models/gpt-4o-mini">OpenAI pricing</a> · <a href="https://developers.openai.com/api/docs/guides/batch">Batch</a></td></tr><tr><td>Gemini 3.5 Flash-Lite</td><td>$0.30</td><td>$0.03</td><td>$2.50</td><td><a href="https://ai.google.dev/gemini-api/docs/pricing">Google standard &amp; batch pricing</a></td></tr><tr><td>Ministral 8B 2512</td><td>$0.15</td><td>$0.015</td><td>$0.15</td><td><a href="https://docs.mistral.ai/inference/pricing">Mistral pricing</a> · <a href="https://docs.mistral.ai/studio/batch-processing">Batch</a></td></tr></tbody></table></div><p class="prose">Rate snapshot: 6 October 2026. <a href="results.json" download>Download full results, usage, prompts and image hashes (JSON)</a>.</p><details><summary>Rerun this comparison</summary><pre>bin/console media:iterate --filter dataset=mus/fortepan --limit 3 --compare   --models openai-mini,gemini-flash-lite-3.5,ministral-8b</pre></details></section><footer class="dev3-footer"><span><strong>Built with dev3 Artifacts</strong> · Observe model comparison</span><span>Measured outputs · projected batch cost</span></footer></main><script src="app.js" data-dev3-artifact-shell></script><script src="report.js"></script></body></html>

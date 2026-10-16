@@ -1,0 +1,849 @@
+[
+  {
+    "at": "2026-10-06T19:18:27+00:00",
+    "entity": "App\\Entity\\Asset",
+    "id": "000105fd2331d7cc",
+    "results": {
+      "ministral-8b-json": {
+        "profile": "ministral-8b-json",
+        "provider": "mistral",
+        "requested_model": "ministral-8b-2512",
+        "status": "ok",
+        "http_status": 200,
+        "model": "ministral-8b-2512",
+        "finish_reason": "stop",
+        "output": "{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"urban street scene with military presence and destruction, consistent with wartime photograph\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": true,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"fortepan_place\",\n      \"summarize\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": {\n    \"people\": [\n      {\n        \"position\": \"far left, standing near the edge of the frame\",\n        \"count\": 1,\n        \"description\": \"Adult male, facing left, wearing a long coat, hat, and carrying a bag or briefcase. Appears to be walking away from the camera.\"\n      },\n      {\n        \"position\": \"center-left, near the damaged vehicle\",\n        \"count\": 1,\n        \"description\": \"Adult male, standing near a military vehicle, wearing a long coat and hat, facing the camera. Appears to be observing the scene.\"\n      },\n      {\n        \"position\": \"center-right, near the military vehicle\",\n        \"count\": 1,\n        \"description\": \"Adult male, standing near the military vehicle, wearing a long coat, hat, and possibly a military or official uniform. Facing the camera, appears to be in a commanding or supervisory role.\"\n      },\n      {\n        \"position\": \"center-left background, near the damaged building\",\n        \"count\": 1,\n        \"description\": \"Adult male, standing near the rubble, wearing a long coat and hat, facing the camera. Appears to be observing the scene.\"\n      },\n      {\n        \"position\": \"center-right background, near the military vehicle\",\n        \"count\": 1,\n        \"description\": \"Adult male, standing near the military vehicle, wearing a long coat and hat, facing the camera. Appears to be part of the military or official group.\"\n      },\n      {\n        \"position\": \"far right, standing near the edge of the frame\",\n        \"count\": 1,\n        \"description\": \"Adult male, wearing a long coat and hat, facing the camera. Appears to be walking or standing near the military vehicle.\"\n      }\n    ],\n    \"total_people\": 6,\n    \"setting\": {\n      \"location\": \"urban street scene, likely in a European city based on architectural style\",\n      \"indoor_outdoor\": \"outdoor\",\n      \"architectural_details\": [\n        {\n          \"description\": \"Multi-story building with balconies on the left side of the image. The building appears to have sustained significant damage, with broken windows and debris.\"\n        },\n        {\n          \"description\": \"Another multi-story building on the right side, also showing signs of damage, including broken windows and exposed interior elements.\"\n        },\n        {\n          \"description\": \"A street lamp visible on the right side of the image, partially intact.\"\n        }\n      ],\n      \"furniture_props\": [\n        {\n          \"description\": \"A military vehicle, possibly a tank or armored car, partially damaged and positioned in the center of the image.\"\n        },\n        {\n          \"description\": \"Rubble and debris scattered on the street, indicating destruction or an explosion.\"\n        },\n        {\n          \"description\": \"A bicycle lying on the ground near the center-left of the image.\"\n        }\n      ],\n      \"background_elements\": [\n        {\n          \"description\": \"A bare tree with no leaves, suggesting it may be winter or the scene is post-war.\"\n        },\n        {\n          \"description\": \"Signage on buildings: 'BUTOR' and 'LODOS MIH.' visible on the left side.\"\n        }\n      ],\n      \"light_source\": {\n        \"description\": \"Overcast or dim lighting, consistent with either early morning, late afternoon, or a cloudy day. The scene appears to be captured in low-light conditions.\"\n      },\n      \"time_of_day_cues\": \"Overcast lighting and lack of distinct shadows suggest it is either early morning, late afternoon, or a cloudy day.\",\n      \"weather\": \"No clear indication of weather, but the bare tree suggests it may be winter or the area is post-war.\"\n    },\n    \"composition\": {\n      \"camera_angle\": \"Street-level perspective, looking down the length of the street.\",\n      \"depth_of_field\": \"Shallow depth of field, with the foreground and mid-ground in focus, while the background appears slightly blurred.\",\n      \"framing\": \"The image is framed to capture the destruction and military presence prominently in the center.\",\n      \"attention_drawer\": \"The military vehicle and the group of people standing around it draw the viewer's attention. The destruction and debris also contribute to the focal point.\"\n    },\n    \"era_and_condition_cues\": {\n      \"clothing_styles\": \"Long coats, hats, and overall attire suggest a mid-20th century setting, likely the 1940s or 1950s.\",\n      \"technology\": \"The military vehicle appears to be from the World War II era, consistent with armored cars or tanks used during that time.\",\n      \"signage\": \"The style of signage and lettering on buildings also suggests a mid-20th century European setting.\",\n      \"image_process_artefacts\": \"The photograph appears to be a black-and-white image, likely taken on film, which is consistent with mid-20th century photography.\",\n      \"physical_condition\": \"The image shows signs of wear and tear, consistent with an archival photograph. The buildings and street are visibly damaged, indicating a wartime or post-war scene.\"\n    },\n    \"objects_and_text\": [\n      {\n        \"description\": \"Sign on the left building: 'BUTOR' with additional text partially visible.\",\n        \"location\": \"Left side of the image, on the building facade.\"\n      },\n      {\n        \"description\": \"Sign on the left building: 'LODOS MIH.'\",\n        \"location\": \"Below 'BUTOR', on the same building facade.\"\n      },\n      {\n        \"description\": \"Military vehicle, likely a tank or armored car, partially damaged.\",\n        \"location\": \"Center of the image.\"\n      },\n      {\n        \"description\": \"Rubble and debris scattered on the street.\",\n        \"location\": \"Center and right side of the image.\"\n      },\n      {\n        \"description\": \"Bicycle lying on the ground.\",\n        \"location\": \"Center-left of the image.\"\n      }\n    ]\n  }\n}",
+        "usage": {
+          "prompt_tokens": 2638,
+          "total_tokens": 4064,
+          "completion_tokens": 1426,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard"
+        },
+        "estimated_cost_usd": 0.0006096000000000001,
+        "hypothetical_batch_cost_usd": 0.00030480000000000004,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.015,
+          "output_per_million": 0.15,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": false,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "urban street scene with military presence and destruction, consistent with wartime photograph",
+            "text_flags": {
+              "has_text": true,
+              "typed_text": true,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "fortepan_place",
+              "summarize"
+            ],
+            "risk_if_skipped": ""
+          },
+          "prose": {
+            "people": [
+              {
+                "position": "far left, standing near the edge of the frame",
+                "count": 1,
+                "description": "Adult male, facing left, wearing a long coat, hat, and carrying a bag or briefcase. Appears to be walking away from the camera."
+              },
+              {
+                "position": "center-left, near the damaged vehicle",
+                "count": 1,
+                "description": "Adult male, standing near a military vehicle, wearing a long coat and hat, facing the camera. Appears to be observing the scene."
+              },
+              {
+                "position": "center-right, near the military vehicle",
+                "count": 1,
+                "description": "Adult male, standing near the military vehicle, wearing a long coat, hat, and possibly a military or official uniform. Facing the camera, appears to be in a commanding or supervisory role."
+              },
+              {
+                "position": "center-left background, near the damaged building",
+                "count": 1,
+                "description": "Adult male, standing near the rubble, wearing a long coat and hat, facing the camera. Appears to be observing the scene."
+              },
+              {
+                "position": "center-right background, near the military vehicle",
+                "count": 1,
+                "description": "Adult male, standing near the military vehicle, wearing a long coat and hat, facing the camera. Appears to be part of the military or official group."
+              },
+              {
+                "position": "far right, standing near the edge of the frame",
+                "count": 1,
+                "description": "Adult male, wearing a long coat and hat, facing the camera. Appears to be walking or standing near the military vehicle."
+              }
+            ],
+            "total_people": 6,
+            "setting": {
+              "location": "urban street scene, likely in a European city based on architectural style",
+              "indoor_outdoor": "outdoor",
+              "architectural_details": [
+                {
+                  "description": "Multi-story building with balconies on the left side of the image. The building appears to have sustained significant damage, with broken windows and debris."
+                },
+                {
+                  "description": "Another multi-story building on the right side, also showing signs of damage, including broken windows and exposed interior elements."
+                },
+                {
+                  "description": "A street lamp visible on the right side of the image, partially intact."
+                }
+              ],
+              "furniture_props": [
+                {
+                  "description": "A military vehicle, possibly a tank or armored car, partially damaged and positioned in the center of the image."
+                },
+                {
+                  "description": "Rubble and debris scattered on the street, indicating destruction or an explosion."
+                },
+                {
+                  "description": "A bicycle lying on the ground near the center-left of the image."
+                }
+              ],
+              "background_elements": [
+                {
+                  "description": "A bare tree with no leaves, suggesting it may be winter or the scene is post-war."
+                },
+                {
+                  "description": "Signage on buildings: 'BUTOR' and 'LODOS MIH.' visible on the left side."
+                }
+              ],
+              "light_source": {
+                "description": "Overcast or dim lighting, consistent with either early morning, late afternoon, or a cloudy day. The scene appears to be captured in low-light conditions."
+              },
+              "time_of_day_cues": "Overcast lighting and lack of distinct shadows suggest it is either early morning, late afternoon, or a cloudy day.",
+              "weather": "No clear indication of weather, but the bare tree suggests it may be winter or the area is post-war."
+            },
+            "composition": {
+              "camera_angle": "Street-level perspective, looking down the length of the street.",
+              "depth_of_field": "Shallow depth of field, with the foreground and mid-ground in focus, while the background appears slightly blurred.",
+              "framing": "The image is framed to capture the destruction and military presence prominently in the center.",
+              "attention_drawer": "The military vehicle and the group of people standing around it draw the viewer's attention. The destruction and debris also contribute to the focal point."
+            },
+            "era_and_condition_cues": {
+              "clothing_styles": "Long coats, hats, and overall attire suggest a mid-20th century setting, likely the 1940s or 1950s.",
+              "technology": "The military vehicle appears to be from the World War II era, consistent with armored cars or tanks used during that time.",
+              "signage": "The style of signage and lettering on buildings also suggests a mid-20th century European setting.",
+              "image_process_artefacts": "The photograph appears to be a black-and-white image, likely taken on film, which is consistent with mid-20th century photography.",
+              "physical_condition": "The image shows signs of wear and tear, consistent with an archival photograph. The buildings and street are visibly damaged, indicating a wartime or post-war scene."
+            },
+            "objects_and_text": [
+              {
+                "description": "Sign on the left building: 'BUTOR' with additional text partially visible.",
+                "location": "Left side of the image, on the building facade."
+              },
+              {
+                "description": "Sign on the left building: 'LODOS MIH.'",
+                "location": "Below 'BUTOR', on the same building facade."
+              },
+              {
+                "description": "Military vehicle, likely a tank or armored car, partially damaged.",
+                "location": "Center of the image."
+              },
+              {
+                "description": "Rubble and debris scattered on the street.",
+                "location": "Center and right side of the image."
+              },
+              {
+                "description": "Bicycle lying on the ground.",
+                "location": "Center-left of the image."
+              }
+            ]
+          }
+        },
+        "elapsed_ms": 12753.95,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6067b07912e96cae3d9e0dbda2ff81b01212b46ac2ad1a532de398ef68952f0e",
+            "width": 512,
+            "height": 504,
+            "mime": "image/webp",
+            "bytes": 43882
+          }
+        ],
+        "image_fetch_ms": 389.92,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` \u2014 always present; machine-consumed by the workflow engine\n2. `prose` \u2014 free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` \u2014 typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** \u2014 one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** \u2014 multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` \u2014 there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` \u2014 printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` \u2014 cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` \u2014 the image is of a form or structured document with labelled fields.\n- `is_filled_form` \u2014 a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** \u2014 set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately \u2014 people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** \u2014 follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** \u2014 analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise \u2014 enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts \u2014 anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions \u2014 those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzs\u00e9bet\" stays \"Erzs\u00e9bet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "at": "2026-10-06T19:18:47+00:00",
+    "entity": "App\\Entity\\Asset",
+    "id": "00014f72885d7425",
+    "results": {
+      "ministral-8b-json": {
+        "profile": "ministral-8b-json",
+        "provider": "mistral",
+        "requested_model": "ministral-8b-2512",
+        "status": "ok",
+        "http_status": 200,
+        "model": "ministral-8b-2512",
+        "finish_reason": "stop",
+        "output": "{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"group portrait with outdoor setting, no text or inscriptions visible\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"generate_title\"\n    ],\n    \"risk_if_skipped\": null\n  },\n  \"prose\": {\n    \"people\": [\n      {\n        \"position\": \"far left\",\n        \"estimated_age\": \"mid-40s to early 50s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, no tie visible\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"watch chain, possibly a pocket watch\"\n        },\n        \"body_language\": \"standing upright, hands clasped in front\",\n        \"role\": \"appears to be a formal group member, possibly a professional or elder\"\n      },\n      {\n        \"position\": \"second from left\",\n        \"estimated_age\": \"late 40s to early 50s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, no tie visible\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, slight smile\"\n      },\n      {\n        \"position\": \"third from left\",\n        \"estimated_age\": \"mid-30s to early 40s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"fourth from left\",\n        \"estimated_age\": \"mid-40s to early 50s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"center-left\",\n        \"estimated_age\": \"mid-50s to early 60s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, slight smile\"\n      },\n      {\n        \"position\": \"center\",\n        \"estimated_age\": \"mid-50s to early 60s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"center-right\",\n        \"estimated_age\": \"mid-40s to early 50s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"sixth from right\",\n        \"estimated_age\": \"mid-30s to early 40s\",\n        \"gender\": \"female\",\n        \"clothing\": {\n          \"top\": \"dark dress with a high collar, possibly a blouse or dress shirt\",\n          \"bottom\": \"light-colored skirt or trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"fifth from right\",\n        \"estimated_age\": \"mid-40s to early 50s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"fourth from right\",\n        \"estimated_age\": \"mid-50s to early 60s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"third from right\",\n        \"estimated_age\": \"mid-40s to early 50s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"second from right\",\n        \"estimated_age\": \"mid-30s to early 40s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"far right\",\n        \"estimated_age\": \"mid-30s to early 40s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark suit jacket, white dress shirt, tie\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      },\n      {\n        \"position\": \"far right, slightly behind group\",\n        \"estimated_age\": \"mid-30s to early 40s\",\n        \"gender\": \"male\",\n        \"clothing\": {\n          \"top\": \"dark jacket, white shirt, tie, possibly a military or formal uniform\",\n          \"bottom\": \"light-colored trousers\",\n          \"footwear\": \"dark shoes\",\n          \"accessories\": \"none visible\"\n        },\n        \"body_language\": \"arms relaxed at sides, neutral expression\"\n      }\n    ],\n    \"total_people\": 13,\n    \"setting\": {\n      \"indoor_outdoor\": \"outdoor\",\n      \"location\": \"appears to be a rural or semi-rural area, possibly a hillside or elevated ground\",\n      \"architectural_details\": \"none visible\",\n      \"furniture_props\": \"none visible\",\n      \"background_elements\": {\n        \"vegetation\": \"trees and shrubs, possibly a wooded area in the background\",\n        \"terrain\": \"slightly elevated ground, possibly a hill or small plateau\",\n        \"light_source\": \"natural daylight, possibly late morning or early afternoon\",\n        \"weather\": \"overcast or cloudy, no visible shadows or strong sunlight\"\n      }\n    },\n    \"composition\": {\n      \"camera_angle\": \"front-facing, slightly elevated angle\",\n      \"depth_of_field\": \"moderate, with most subjects in focus\",\n      \"framing\": \"group is positioned in a line, facing the camera\",\n      \"attention_drawer\": \"the group\u2019s alignment and uniform attire draw the eye, with the slightly elevated ground and natural background providing context\"\n    },\n    \"era_and_condition_cues\": {\n      \"clothing_styles\": \"men are wearing suits with ties, suggesting a formal or professional setting from the early 20th century\",\n      \"technology\": \"no visible technology or modern artifacts\",\n      \"signage\": \"none visible\",\n      \"vehicle_types\": \"none visible\",\n      \"image_process_artefacts\": \"black-and-white, consistent with early 20th-century photography\",\n      \"physical_condition\": \"image appears slightly faded and worn, consistent with aged photographic prints\"\n    }\n  }\n}",
+        "usage": {
+          "prompt_tokens": 2538,
+          "total_tokens": 4522,
+          "completion_tokens": 1984,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard"
+        },
+        "estimated_cost_usd": 0.0006783,
+        "hypothetical_batch_cost_usd": 0.00033915,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.015,
+          "output_per_million": 0.15,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": false,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "group portrait with outdoor setting, no text or inscriptions visible",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "generate_title"
+            ],
+            "risk_if_skipped": null
+          },
+          "prose": {
+            "people": [
+              {
+                "position": "far left",
+                "estimated_age": "mid-40s to early 50s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, no tie visible",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "watch chain, possibly a pocket watch"
+                },
+                "body_language": "standing upright, hands clasped in front",
+                "role": "appears to be a formal group member, possibly a professional or elder"
+              },
+              {
+                "position": "second from left",
+                "estimated_age": "late 40s to early 50s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, no tie visible",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, slight smile"
+              },
+              {
+                "position": "third from left",
+                "estimated_age": "mid-30s to early 40s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "fourth from left",
+                "estimated_age": "mid-40s to early 50s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "center-left",
+                "estimated_age": "mid-50s to early 60s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, slight smile"
+              },
+              {
+                "position": "center",
+                "estimated_age": "mid-50s to early 60s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "center-right",
+                "estimated_age": "mid-40s to early 50s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "sixth from right",
+                "estimated_age": "mid-30s to early 40s",
+                "gender": "female",
+                "clothing": {
+                  "top": "dark dress with a high collar, possibly a blouse or dress shirt",
+                  "bottom": "light-colored skirt or trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "fifth from right",
+                "estimated_age": "mid-40s to early 50s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "fourth from right",
+                "estimated_age": "mid-50s to early 60s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "third from right",
+                "estimated_age": "mid-40s to early 50s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "second from right",
+                "estimated_age": "mid-30s to early 40s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "far right",
+                "estimated_age": "mid-30s to early 40s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark suit jacket, white dress shirt, tie",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              },
+              {
+                "position": "far right, slightly behind group",
+                "estimated_age": "mid-30s to early 40s",
+                "gender": "male",
+                "clothing": {
+                  "top": "dark jacket, white shirt, tie, possibly a military or formal uniform",
+                  "bottom": "light-colored trousers",
+                  "footwear": "dark shoes",
+                  "accessories": "none visible"
+                },
+                "body_language": "arms relaxed at sides, neutral expression"
+              }
+            ],
+            "total_people": 13,
+            "setting": {
+              "indoor_outdoor": "outdoor",
+              "location": "appears to be a rural or semi-rural area, possibly a hillside or elevated ground",
+              "architectural_details": "none visible",
+              "furniture_props": "none visible",
+              "background_elements": {
+                "vegetation": "trees and shrubs, possibly a wooded area in the background",
+                "terrain": "slightly elevated ground, possibly a hill or small plateau",
+                "light_source": "natural daylight, possibly late morning or early afternoon",
+                "weather": "overcast or cloudy, no visible shadows or strong sunlight"
+              }
+            },
+            "composition": {
+              "camera_angle": "front-facing, slightly elevated angle",
+              "depth_of_field": "moderate, with most subjects in focus",
+              "framing": "group is positioned in a line, facing the camera",
+              "attention_drawer": "the group\u2019s alignment and uniform attire draw the eye, with the slightly elevated ground and natural background providing context"
+            },
+            "era_and_condition_cues": {
+              "clothing_styles": "men are wearing suits with ties, suggesting a formal or professional setting from the early 20th century",
+              "technology": "no visible technology or modern artifacts",
+              "signage": "none visible",
+              "vehicle_types": "none visible",
+              "image_process_artefacts": "black-and-white, consistent with early 20th-century photography",
+              "physical_condition": "image appears slightly faded and worn, consistent with aged photographic prints"
+            }
+          }
+        },
+        "elapsed_ms": 19318.8,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6c0ad618b1323bbdd9bd83d3d85778da76a68b3a1421d3c1d9e3033dccb9a80e",
+            "width": 512,
+            "height": 359,
+            "mime": "image/webp",
+            "bytes": 29306
+          }
+        ],
+        "image_fetch_ms": 229.65,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` \u2014 always present; machine-consumed by the workflow engine\n2. `prose` \u2014 free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` \u2014 typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** \u2014 one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** \u2014 multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` \u2014 there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` \u2014 printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` \u2014 cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` \u2014 the image is of a form or structured document with labelled fields.\n- `is_filled_form` \u2014 a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** \u2014 set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately \u2014 people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** \u2014 follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** \u2014 analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise \u2014 enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts \u2014 anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions \u2014 those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzs\u00e9bet\" stays \"Erzs\u00e9bet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "at": "2026-10-06T19:19:14+00:00",
+    "entity": "App\\Entity\\Asset",
+    "id": "000154d4d6191521",
+    "results": {
+      "ministral-8b-json": {
+        "profile": "ministral-8b-json",
+        "provider": "mistral",
+        "requested_model": "ministral-8b-2512",
+        "status": "ok",
+        "http_status": 200,
+        "model": "ministral-8b-2512",
+        "finish_reason": "stop",
+        "output": "{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"group of people in an outdoor setting, consistent with a historical or organized activity\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"fortepan_place\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": {\n    \"people\": [\n      {\n        \"count\": 19,\n        \"description\": [\n          {\n            \"position\": \"front row, leftmost\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\",\n            \"role\": \"appears to be part of a group, possibly in uniform or coordinated attire\"\n          },\n          {\n            \"position\": \"front row, second from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"front row, third from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"front row, fourth from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"front row, fifth from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"second row, leftmost\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"second row, second from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"second row, third from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"second row, fourth from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"second row, fifth from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"third row, leftmost\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"third row, second from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"third row, third from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"fourth row, leftmost\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"fourth row, second from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"fourth row, third from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"fourth row, fourth from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"fourth row, fifth from left\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          },\n          {\n            \"position\": \"fifth row, leftmost\",\n            \"age\": \"appears to be adult\",\n            \"gender\": \"male\",\n            \"clothing\": {\n              \"shirt\": \"short-sleeved, white, with a dark collar\",\n              \"pants\": \"dark, possibly khaki or dark green\",\n              \"footwear\": \"dark, possibly boots or shoes\",\n              \"accessories\": \"none visible\"\n            },\n            \"body_language\": \"walking, facing forward, hands at sides\"\n          }\n        ]\n      }\n    ],\n    \"setting\": {\n      \"location\": \"outdoor, open field with tall grass\",\n      \"background\": {\n        \"elements\": [\n          {\n            \"type\": \"power lines\",\n            \"description\": \"multiple utility poles with overhead power lines, spaced at regular intervals\"\n          },\n          {\n            \"type\": \"trees\",\n            \"description\": \"a few trees visible in the distance, possibly along the horizon\"\n          },\n          {\n            \"type\": \"terrain_features\",\n            \"description\": \"flat terrain with tall grass, possibly a field or meadow\"\n          },\n          {\n            \"type\": \"buildings\",\n            \"description\": \"no visible buildings in the immediate foreground, distant structures possibly visible on the horizon\"\n          }\n        ]\n      },\n      \"lighting\": {\n        \"source\": \"natural daylight\",\n        \"quality\": \"bright, possibly overcast or diffused light\",\n        \"time_of_day\": \"appears to be daytime, possibly mid-morning or afternoon\"\n      }\n    },\n    \"composition\": {\n      \"camera_angle\": \"slightly elevated angle, looking down on the group\",\n      \"depth_of_field\": \"shallow depth of field, with the group in focus and background slightly blurred\",\n      \"framing\": \"group of people walking in a line, filling most of the frame from left to right\",\n      \"attention_drawer\": \"the orderly line of people walking in uniform attire draws the eye, with the open field and power lines providing context\"\n    },\n    \"era_and_condition_cues\": {\n      \"clothing\": {\n        \"style\": \"short-sleeved shirts with dark collars, dark pants, possibly khaki or military-style attire, consistent with mid-20th century\",\n        \"note\": \"the attire suggests a group activity, possibly a school trip, scout group, or military unit\"\n      },\n      \"technology\": {\n        \"power_lines\": \"overhead power lines suggest a developed area, but the style of poles is consistent with mid-20th century\"\n      },\n      \"image_process_artifacts\": {\n        \"type\": \"black and white\",\n        \"note\": \"the photograph is in black and white, consistent with mid-20th century photography\"\n      },\n      \"physical_condition\": {\n        \"image\": \"no visible signs of damage or wear, though the quality suggests it may be a scanned or digitized version of an older photograph\"\n      }\n    }\n  }\n}",
+        "usage": {
+          "prompt_tokens": 2518,
+          "total_tokens": 5378,
+          "completion_tokens": 2860,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard"
+        },
+        "estimated_cost_usd": 0.0008067,
+        "hypothetical_batch_cost_usd": 0.00040335,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.015,
+          "output_per_million": 0.15,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": false,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "group of people in an outdoor setting, consistent with a historical or organized activity",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "fortepan_place"
+            ],
+            "risk_if_skipped": ""
+          },
+          "prose": {
+            "people": [
+              {
+                "count": 19,
+                "description": [
+                  {
+                    "position": "front row, leftmost",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides",
+                    "role": "appears to be part of a group, possibly in uniform or coordinated attire"
+                  },
+                  {
+                    "position": "front row, second from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "front row, third from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "front row, fourth from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "front row, fifth from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "second row, leftmost",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "second row, second from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "second row, third from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "second row, fourth from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "second row, fifth from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "third row, leftmost",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "third row, second from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "third row, third from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "fourth row, leftmost",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "fourth row, second from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "fourth row, third from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "fourth row, fourth from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "fourth row, fifth from left",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  },
+                  {
+                    "position": "fifth row, leftmost",
+                    "age": "appears to be adult",
+                    "gender": "male",
+                    "clothing": {
+                      "shirt": "short-sleeved, white, with a dark collar",
+                      "pants": "dark, possibly khaki or dark green",
+                      "footwear": "dark, possibly boots or shoes",
+                      "accessories": "none visible"
+                    },
+                    "body_language": "walking, facing forward, hands at sides"
+                  }
+                ]
+              }
+            ],
+            "setting": {
+              "location": "outdoor, open field with tall grass",
+              "background": {
+                "elements": [
+                  {
+                    "type": "power lines",
+                    "description": "multiple utility poles with overhead power lines, spaced at regular intervals"
+                  },
+                  {
+                    "type": "trees",
+                    "description": "a few trees visible in the distance, possibly along the horizon"
+                  },
+                  {
+                    "type": "terrain_features",
+                    "description": "flat terrain with tall grass, possibly a field or meadow"
+                  },
+                  {
+                    "type": "buildings",
+                    "description": "no visible buildings in the immediate foreground, distant structures possibly visible on the horizon"
+                  }
+                ]
+              },
+              "lighting": {
+                "source": "natural daylight",
+                "quality": "bright, possibly overcast or diffused light",
+                "time_of_day": "appears to be daytime, possibly mid-morning or afternoon"
+              }
+            },
+            "composition": {
+              "camera_angle": "slightly elevated angle, looking down on the group",
+              "depth_of_field": "shallow depth of field, with the group in focus and background slightly blurred",
+              "framing": "group of people walking in a line, filling most of the frame from left to right",
+              "attention_drawer": "the orderly line of people walking in uniform attire draws the eye, with the open field and power lines providing context"
+            },
+            "era_and_condition_cues": {
+              "clothing": {
+                "style": "short-sleeved shirts with dark collars, dark pants, possibly khaki or military-style attire, consistent with mid-20th century",
+                "note": "the attire suggests a group activity, possibly a school trip, scout group, or military unit"
+              },
+              "technology": {
+                "power_lines": "overhead power lines suggest a developed area, but the style of poles is consistent with mid-20th century"
+              },
+              "image_process_artifacts": {
+                "type": "black and white",
+                "note": "the photograph is in black and white, consistent with mid-20th century photography"
+              },
+              "physical_condition": {
+                "image": "no visible signs of damage or wear, though the quality suggests it may be a scanned or digitized version of an older photograph"
+              }
+            }
+          }
+        },
+        "elapsed_ms": 27514.85,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "36167e3c2524c5b53284fbb178d10052299314da2e6eb83ede93596d48ab90bf",
+            "width": 512,
+            "height": 334,
+            "mime": "image/webp",
+            "bytes": 39716
+          }
+        ],
+        "image_fetch_ms": 230.05,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` \u2014 always present; machine-consumed by the workflow engine\n2. `prose` \u2014 free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` \u2014 typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** \u2014 one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** \u2014 multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` \u2014 there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` \u2014 printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` \u2014 cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` \u2014 the image is of a form or structured document with labelled fields.\n- `is_filled_form` \u2014 a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** \u2014 set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately \u2014 people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** \u2014 follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** \u2014 analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise \u2014 enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts \u2014 anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions \u2014 those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzs\u00e9bet\" stays \"Erzs\u00e9bet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]

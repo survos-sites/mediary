@@ -1,0 +1,18 @@
+[
+  {
+    "name": "same-512",
+    "elapsed_ms": 233.58,
+    "text": "281n Day.\u2014In tbe Senate two resolutions\nwere offered by Messrs, Peffer, of Kansas,\nand Allen, of Nebraska, to the effect that\u201d\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, l\nif go iveued and sold, they will be null and <\nvoid, The resolutions were laid over and {\nwill come up for action next week, The \\\nquesiion was touched upon in connection\nwith a bill appropriating #40,(00 for an\nequestrian statue in Manchester, N. H., to a\nRevolutionary hero, General Jobn Stark,\nMr, Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent, \u2018on a ques-\nHonable use of the statutes.\u201d\n",
+    "command": "tesseract IMAGE stdout -l eng --psm 6",
+    "width": 512,
+    "exit_code": 0
+  },
+  {
+    "name": "original-750",
+    "elapsed_ms": 244.06,
+    "text": "281n Dax.\u2014In the Senate two resolutions \u00bb\nwere offered by Messrs, Peffer, of Kansas.\nand Allen, of Nebraska, to the effect that\nthere is no lawful authority for the issuing\nand eelling of bonds as proposed, and that, |\nif so issued and sold, they will be null and \u201c\nvoid. The resolutions were laid over and \\\nwill come up for action next week, Tho \\\nquestion was touched upon in connection |\nwith a bill appropriating $40,(00 jor an\nequestrian statue in Mancebester, N. H., to a ;\nRevolutionary hero, General Jobn Stark.\nMr. Morgan (Dem.), of Alabama, said that\nthe Government was actually too poor to\nhonor the memory of heroic ancestors when\nit bad to borrow at five per cent. \u2018\u2019on a ques-\ntHonable use of the statutes.\u201d\n",
+    "command": "tesseract IMAGE stdout -l eng --psm 6",
+    "width": 750,
+    "exit_code": 0
+  }
+]

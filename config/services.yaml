@@ -1,6 +1,9 @@
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
 
+imports:
+    - { resource: services/media_comparison.yaml }
+
 parameters:
     # Local addresses never need the dev proxy; going through it turns a
     # same-machine fetch into a 407.

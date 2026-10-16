@@ -1,0 +1,743 @@
+[
+  {
+    "at": "2026-10-06T18:55:32+00:00",
+    "entity": "App\\Entity\\Asset",
+    "id": "000105fd2331d7cc",
+    "results": {
+      "openai-mini": {
+        "profile": "openai-mini",
+        "provider": "openai",
+        "requested_model": "gpt-4o-mini",
+        "status": "ok",
+        "http_status": 200,
+        "model": "gpt-4o-mini-2024-07-18",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"image of a street scene featuring people and buildings\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": true,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": true,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"The text on signage, vehicles, and buildings may be essential for accurate cataloging and historical context.\"\n  }\n}\n```",
+        "usage": {
+          "prompt_tokens": 5052,
+          "completion_tokens": 143,
+          "total_tokens": 5195,
+          "prompt_tokens_details": {
+            "cached_tokens": 2176,
+            "audio_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "estimated_cost_usd": 0.0006803999999999998,
+        "hypothetical_batch_cost_usd": 0.0003401999999999999,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.075,
+          "output_per_million": 0.6,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "image of a street scene featuring people and buildings",
+            "text_flags": {
+              "has_text": true,
+              "typed_text": true,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": true,
+            "pending_steps": [],
+            "analysis_tasks": [],
+            "risk_if_skipped": "The text on signage, vehicles, and buildings may be essential for accurate cataloging and historical context."
+          }
+        },
+        "elapsed_ms": 3143.99,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6067b07912e96cae3d9e0dbda2ff81b01212b46ac2ad1a532de398ef68952f0e",
+            "width": 512,
+            "height": 504,
+            "mime": "image/webp",
+            "bytes": 43882
+          }
+        ],
+        "image_fetch_ms": 1013.48,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      },
+      "gemini-flash-lite-3.5": {
+        "profile": "gemini-flash-lite-3.5",
+        "provider": "gemini",
+        "requested_model": "gemini-3.5-flash-lite",
+        "status": "ok",
+        "http_status": 200,
+        "native_usage": {
+          "promptTokenCount": 3441,
+          "candidatesTokenCount": 698,
+          "totalTokenCount": 4139,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2352
+            },
+            {
+              "modality": "IMAGE",
+              "tokenCount": 1089
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "model": "gemini-3.5-flash-lite",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"Black and white historical street level photograph depicting urban destruction, crowds, military artillery, and signage.\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": true,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"fortepan_place\",\n      \"generate_title\",\n      \"summarize\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": \"A black-and-white, eye-level street photograph showing a damaged urban environment, likely a European city street following conflict or bombardment. The composition is angled down a wide sidewalk running alongside a heavily damaged multistory apartment building with ornate classical architectural detailing. \\n\\nIn the foreground and mid-ground, a crowd of pedestrians and bystanders is gathered on the pavement. People are dressed in heavy coats, hats, and scarves, consistent with cold weather. \\n\\nFrom right to left:\\n- Far right: A middle-aged man wearing a dark beret, a long dark leather or heavy fabric coat belted at the waist with hands in pockets, looking downward with a pensive expression.\\n- Just behind him and slightly left: A figure in a dark hat and coat partially silhouetted.\\n- Center-right: A large artillery piece or anti-tank gun is positioned on the street or sidewalk, pointing towards the left foreground. Debris, rubble, and broken wooden beams or branches are piled up in the foreground around the base of the gun.\\n- Center: Several men standing near the gun and storefronts. One man is seen from the back wearing a light-colored trench coat and hat, walking away. Another man stands near a bicycle parked against the building facade. Further back, more figures are silhouetted or partially obscured, including a woman in a dark headscarf.\\n- Left foreground: A man in a dark brimmed hat, dark scarf, and dark overcoat stands near the left edge of the frame, facing slightly right with a neutral expression. \\n- Street furniture and vegetation: A bare, gnarled deciduous tree stands prominently in the foreground left, its branches reaching upward and across the upper half of the frame against a bright, overcast sky. An ornate lamppost stands further back behind the artillery piece.\\n\\nStorefronts line the ground floor of the building on the left. Several legible signs are mounted on the facade:\\n- A rectangular sign on the left reads \\\"BUTOR\\\" with smaller text underneath reading \\\"FERENC-KORUT\\\" (or similar).\\n- A smaller sign below it or further along reads \\\"ORAS\\\" and \\\"CIPU\\\" (partially visible).\\n\\nThe upper floors of the building show visible damage, with shattered windows, blown-out frames, and structural scars. The lighting is diffused and overcast, casting soft shadows.\"\n}\n```",
+        "usage": {
+          "prompt_tokens": 3441,
+          "completion_tokens": 698,
+          "total_tokens": 4139,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "answer_tokens": 698
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "estimated_cost_usd": 0.0027773000000000003,
+        "hypothetical_batch_cost_usd": 0.0013886500000000002,
+        "pricing": {
+          "input_per_million": 0.3,
+          "cached_input_per_million": 0.03,
+          "output_per_million": 2.5,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "Black and white historical street level photograph depicting urban destruction, crowds, military artillery, and signage.",
+            "text_flags": {
+              "has_text": true,
+              "typed_text": true,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "fortepan_place",
+              "generate_title",
+              "summarize"
+            ],
+            "risk_if_skipped": ""
+          },
+          "prose": "A black-and-white, eye-level street photograph showing a damaged urban environment, likely a European city street following conflict or bombardment. The composition is angled down a wide sidewalk running alongside a heavily damaged multistory apartment building with ornate classical architectural detailing. \n\nIn the foreground and mid-ground, a crowd of pedestrians and bystanders is gathered on the pavement. People are dressed in heavy coats, hats, and scarves, consistent with cold weather. \n\nFrom right to left:\n- Far right: A middle-aged man wearing a dark beret, a long dark leather or heavy fabric coat belted at the waist with hands in pockets, looking downward with a pensive expression.\n- Just behind him and slightly left: A figure in a dark hat and coat partially silhouetted.\n- Center-right: A large artillery piece or anti-tank gun is positioned on the street or sidewalk, pointing towards the left foreground. Debris, rubble, and broken wooden beams or branches are piled up in the foreground around the base of the gun.\n- Center: Several men standing near the gun and storefronts. One man is seen from the back wearing a light-colored trench coat and hat, walking away. Another man stands near a bicycle parked against the building facade. Further back, more figures are silhouetted or partially obscured, including a woman in a dark headscarf.\n- Left foreground: A man in a dark brimmed hat, dark scarf, and dark overcoat stands near the left edge of the frame, facing slightly right with a neutral expression. \n- Street furniture and vegetation: A bare, gnarled deciduous tree stands prominently in the foreground left, its branches reaching upward and across the upper half of the frame against a bright, overcast sky. An ornate lamppost stands further back behind the artillery piece.\n\nStorefronts line the ground floor of the building on the left. Several legible signs are mounted on the facade:\n- A rectangular sign on the left reads \"BUTOR\" with smaller text underneath reading \"FERENC-KORUT\" (or similar).\n- A smaller sign below it or further along reads \"ORAS\" and \"CIPU\" (partially visible).\n\nThe upper floors of the building show visible damage, with shattered windows, blown-out frames, and structural scars. The lighting is diffused and overcast, casting soft shadows."
+        },
+        "elapsed_ms": 3750.34,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6067b07912e96cae3d9e0dbda2ff81b01212b46ac2ad1a532de398ef68952f0e",
+            "width": 512,
+            "height": 504,
+            "mime": "image/webp",
+            "bytes": 43882
+          }
+        ],
+        "image_fetch_ms": 289.95,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      },
+      "ministral-8b": {
+        "profile": "ministral-8b",
+        "provider": "mistral",
+        "requested_model": "ministral-8b-2512",
+        "status": "invalid_output",
+        "http_status": 200,
+        "model": "ministral-8b-2512",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"depicts a wartime urban scene with military presence and destruction\",\n    \"text_flags\": {\n      \"has_text\": true,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"fortepan_place\",\n      \"summarize\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": \"\n  **People:**\n  - A group of at least seven individuals visible, all men. Estimated ages range from late 20s to mid-50s.\n    - One man in the foreground on the right, wearing a long overcoat, hat, and carrying a briefcase or bag. Appears to be in a leadership or authoritative role, standing near a military vehicle.\n    - Another man in the foreground on the left, wearing a long coat and hat, standing near a damaged area, possibly observing or directing.\n    - A third man in the middle-left, wearing a coat and hat, standing near a bicycle and debris.\n    - Two men near the military vehicle, one standing and one partially visible, both in military or uniform-like attire.\n    - Two more men in the background, one near the \"BUTOR\" sign and another near the damaged area, both wearing coats and hats.\n\n  **Setting:**\n  - Outdoor urban scene, likely a city street. The architecture suggests a European setting, with multi-story buildings, balconies, and storefronts.\n  - The street is littered with debris, broken branches, and scattered objects, indicating destruction or recent conflict.\n  - A bare tree trunk in the center-left of the image, suggesting winter or a destroyed tree.\n  - A military vehicle, possibly a tank or armored car, is partially visible in the center-right, with a barrel pointing forward.\n  - A bicycle is visible near the center-left, leaning against a pile of debris.\n  - A \"BUTOR\" storefront sign is visible on the left side, with additional text partially readable (\"PÉCS\" and \"KÉSZÍTŐI RUHÁK\" visible, suggesting a clothing store in Pécs, Hungary).\n  - Another sign on the right side of the image reads \"LORÁND\" with additional text obscured by the destruction.\n\n  **Composition:**\n  - The photograph is taken at street level, with a low-angle perspective looking up slightly at the buildings and people.\n  - The lighting suggests overcast or cloudy conditions, with no strong shadows.\n  - The scene is dominated by the destruction and the military presence, with the camera focusing on the immediate aftermath of an event.\n  - The composition draws attention to the military vehicle and the debris, emphasizing the severity of the damage.\n\n  **Era and condition cues:**\n  - Clothing styles suggest mid-20th century, likely the 1940s or early 1950s.\n  - The military vehicle and style of destruction are consistent with World War II-era conflict.\n  - The photograph appears to be in black and white, consistent with wartime photography.\n  - The image shows signs of aging, with slight grain and fading, but no visible tears or significant damage.\n  \",\n  \"transcription\": {}\n}\n```",
+        "usage": {
+          "prompt_tokens": 2638,
+          "total_tokens": 3387,
+          "completion_tokens": 749,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard"
+        },
+        "estimated_cost_usd": 0.0005080499999999999,
+        "hypothetical_batch_cost_usd": 0.00025402499999999995,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.015,
+          "output_per_million": 0.15,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "elapsed_ms": 11058.38,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6067b07912e96cae3d9e0dbda2ff81b01212b46ac2ad1a532de398ef68952f0e",
+            "width": 512,
+            "height": 504,
+            "mime": "image/webp",
+            "bytes": 43882
+          }
+        ],
+        "image_fetch_ms": 1013.48,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "at": "2026-10-06T18:55:51+00:00",
+    "entity": "App\\Entity\\Asset",
+    "id": "00014f72885d7425",
+    "results": {
+      "openai-mini": {
+        "profile": "openai-mini",
+        "provider": "openai",
+        "requested_model": "gpt-4o-mini",
+        "status": "ok",
+        "http_status": 200,
+        "model": "gpt-4o-mini-2024-07-18",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"photograph of a group of people outdoors\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"No cataloguing evidence will be lost as the thumbnail provides sufficient detail.\"\n  },\n  \"prose\": \"The photograph depicts a group of thirteen people standing outdoors in a naturally hilly landscape. They are arranged in two rows. The individuals appear to be dressed in early 20th-century attire. In the front row, from left to right, stand a man in a light suit and dark tie, followed by a woman in a dark dress with a patterned shawl. Next is a man wearing a dark suit and light-colored tie, followed by another man in a dark suit with a pocket square. The fourth person in this row is a man in a light-colored suit. Following that, there is a woman in a white dress, and next to her, a man in a light suit with a dark tie. Another woman in a dark dress stands next. The last individual in the front row is a man in formal attire. The back row features four more people, consisting of a woman in a white hat and dress, a man in a suit, a woman in a cloche hat and coat, and a man in a military uniform. The people are positioned in front of green vegetation and hills in the background, suggesting a gathering in a scenic outdoor location.\",\n  \"transcription\": {}\n}\n```",
+        "usage": {
+          "prompt_tokens": 5052,
+          "completion_tokens": 380,
+          "total_tokens": 5432,
+          "prompt_tokens_details": {
+            "cached_tokens": 2176,
+            "audio_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "estimated_cost_usd": 0.0008225999999999999,
+        "hypothetical_batch_cost_usd": 0.00041129999999999997,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.075,
+          "output_per_million": 0.6,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "photograph of a group of people outdoors",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [],
+            "risk_if_skipped": "No cataloguing evidence will be lost as the thumbnail provides sufficient detail."
+          },
+          "prose": "The photograph depicts a group of thirteen people standing outdoors in a naturally hilly landscape. They are arranged in two rows. The individuals appear to be dressed in early 20th-century attire. In the front row, from left to right, stand a man in a light suit and dark tie, followed by a woman in a dark dress with a patterned shawl. Next is a man wearing a dark suit and light-colored tie, followed by another man in a dark suit with a pocket square. The fourth person in this row is a man in a light-colored suit. Following that, there is a woman in a white dress, and next to her, a man in a light suit with a dark tie. Another woman in a dark dress stands next. The last individual in the front row is a man in formal attire. The back row features four more people, consisting of a woman in a white hat and dress, a man in a suit, a woman in a cloche hat and coat, and a man in a military uniform. The people are positioned in front of green vegetation and hills in the background, suggesting a gathering in a scenic outdoor location.",
+          "transcription": []
+        },
+        "elapsed_ms": 4857.26,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6c0ad618b1323bbdd9bd83d3d85778da76a68b3a1421d3c1d9e3033dccb9a80e",
+            "width": 512,
+            "height": 359,
+            "mime": "image/webp",
+            "bytes": 29306
+          }
+        ],
+        "image_fetch_ms": 809.32,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      },
+      "gemini-flash-lite-3.5": {
+        "profile": "gemini-flash-lite-3.5",
+        "provider": "gemini",
+        "requested_model": "gemini-3.5-flash-lite",
+        "status": "ok",
+        "http_status": 200,
+        "native_usage": {
+          "promptTokenCount": 3444,
+          "candidatesTokenCount": 794,
+          "totalTokenCount": 4238,
+          "promptTokensDetails": [
+            {
+              "modality": "IMAGE",
+              "tokenCount": 1092
+            },
+            {
+              "modality": "TEXT",
+              "tokenCount": 2352
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "model": "gemini-3.5-flash-lite",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"historical group portrait photograph showing twelve people standing outdoors in a hilly landscape\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"generate_title\",\n      \"summarize\",\n      \"fortepan_place\"\n    ]\n  },\n  \"prose\": \"A group portrait of twelve adults (ten men and two women) standing in a line on a dirt or gravel clearing in an outdoor, hilly landscape. The group is arranged across the frame from left to right. \\n\\nFrom left to right:\\n1. A man in his late 20s or 30s, wearing a dark suit jacket, white trousers, and dark shoes. He stands slightly forward, angled toward the right, with dark hair parted to the side and a neutral expression.\\n2. An elderly man with a bald head and white mustache, wearing a dark three-piece suit and tie.\\n3. A younger man in a dark suit, positioned behind the second man, looking forward.\\n4. An older man with white hair and mustache, wearing a dark jacket, light-coloured trousers, and a tie, turned slightly in profile toward the left.\\n5. A woman wearing a patterned dark dress with a long skirt and dark hat, partially turned toward a man standing next to her.\\n6. A man partially obscured behind the woman (5), wearing a military-style cap and uniform jacket.\\n7. A middle-aged man with dark hair and a mustache, wearing a dark three-piece suit, holding a hat in his right hand down by his side.\\n8. A middle-aged man with short hair and glasses, wearing a light-coloured patterned suit jacket and trousers, and a bow tie.\\n9. A middle-aged man with a mustache, wearing a dark suit and tie, standing slightly forward with hands clasped near his waist.\\n10. A woman wearing a dark, loose-fitting dress with dropped waist and a dark cloche-style hat, standing with arms at her sides.\\n11. A woman wearing a light-coloured dress with dark horizontal stripes or trim near the hem, a white wide-brimmed hat, holding a small dark handbag or gloves. A small dark dog is standing near her feet.\\n12. A woman wearing a light-coloured blouse or tunic over a dark skirt, and a dark cloche hat.\\n13. A man at the far right edge, appearing to be in military uniform with medals or insignia visible on his chest, dark trousers, and dark footwear, standing at attention.\\n\\nSetting: An open earthen clearing or plateau, bordered by low brush or grass at the front edge. In the background, rolling hills or low mountains covered with dense trees recede into an overcast or hazy sky. The lighting is bright and diffuse, casting soft shadows beneath the figures.\\n\\nCondition: The photographic print shows slight fading, minor creasing or emulsion loss along the top edge, and subtle uneven toning typical of early 20th-century silver gelatin prints. Clothing styles (dropped-waist dresses, cloche hats for women; three-piece suits for men) suggest a date in the 1920s.\"\n}\n```",
+        "usage": {
+          "prompt_tokens": 3444,
+          "completion_tokens": 794,
+          "total_tokens": 4238,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "answer_tokens": 794
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "estimated_cost_usd": 0.0030182,
+        "hypothetical_batch_cost_usd": 0.0015091,
+        "pricing": {
+          "input_per_million": 0.3,
+          "cached_input_per_million": 0.03,
+          "output_per_million": 2.5,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "historical group portrait photograph showing twelve people standing outdoors in a hilly landscape",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "generate_title",
+              "summarize",
+              "fortepan_place"
+            ]
+          },
+          "prose": "A group portrait of twelve adults (ten men and two women) standing in a line on a dirt or gravel clearing in an outdoor, hilly landscape. The group is arranged across the frame from left to right. \n\nFrom left to right:\n1. A man in his late 20s or 30s, wearing a dark suit jacket, white trousers, and dark shoes. He stands slightly forward, angled toward the right, with dark hair parted to the side and a neutral expression.\n2. An elderly man with a bald head and white mustache, wearing a dark three-piece suit and tie.\n3. A younger man in a dark suit, positioned behind the second man, looking forward.\n4. An older man with white hair and mustache, wearing a dark jacket, light-coloured trousers, and a tie, turned slightly in profile toward the left.\n5. A woman wearing a patterned dark dress with a long skirt and dark hat, partially turned toward a man standing next to her.\n6. A man partially obscured behind the woman (5), wearing a military-style cap and uniform jacket.\n7. A middle-aged man with dark hair and a mustache, wearing a dark three-piece suit, holding a hat in his right hand down by his side.\n8. A middle-aged man with short hair and glasses, wearing a light-coloured patterned suit jacket and trousers, and a bow tie.\n9. A middle-aged man with a mustache, wearing a dark suit and tie, standing slightly forward with hands clasped near his waist.\n10. A woman wearing a dark, loose-fitting dress with dropped waist and a dark cloche-style hat, standing with arms at her sides.\n11. A woman wearing a light-coloured dress with dark horizontal stripes or trim near the hem, a white wide-brimmed hat, holding a small dark handbag or gloves. A small dark dog is standing near her feet.\n12. A woman wearing a light-coloured blouse or tunic over a dark skirt, and a dark cloche hat.\n13. A man at the far right edge, appearing to be in military uniform with medals or insignia visible on his chest, dark trousers, and dark footwear, standing at attention.\n\nSetting: An open earthen clearing or plateau, bordered by low brush or grass at the front edge. In the background, rolling hills or low mountains covered with dense trees recede into an overcast or hazy sky. The lighting is bright and diffuse, casting soft shadows beneath the figures.\n\nCondition: The photographic print shows slight fading, minor creasing or emulsion loss along the top edge, and subtle uneven toning typical of early 20th-century silver gelatin prints. Clothing styles (dropped-waist dresses, cloche hats for women; three-piece suits for men) suggest a date in the 1920s."
+        },
+        "elapsed_ms": 3671.47,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6c0ad618b1323bbdd9bd83d3d85778da76a68b3a1421d3c1d9e3033dccb9a80e",
+            "width": 512,
+            "height": 359,
+            "mime": "image/webp",
+            "bytes": 29306
+          }
+        ],
+        "image_fetch_ms": 76,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      },
+      "ministral-8b": {
+        "profile": "ministral-8b",
+        "provider": "mistral",
+        "requested_model": "ministral-8b-2512",
+        "status": "invalid_output",
+        "http_status": 200,
+        "model": "ministral-8b-2512",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"group portrait with outdoor setting, no visible text requiring transcription\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"generate_title\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": \"\n  **People:**\n  A group of 16 individuals standing outdoors in a line formation. All appear to be adults, with estimated ages ranging from approximately 30 to 60 years old. Apparent genders are evenly distributed between male and female.\n\n  - **Left side (front row):**\n    1. Man in a dark suit, light vest, and tie, standing with hands clasped in front.\n    2. Man in a dark suit, white shirt, and tie, holding a walking stick.\n    3. Man in a dark suit, white shirt, and tie, standing with hands on hips.\n    4. Man in a dark suit, white shirt, and tie, wearing a cap or hat.\n    5. Man in a dark suit, white shirt, and tie, standing with hands behind his back.\n    6. Man in a dark suit, white shirt, and tie, wearing a belt with a visible buckle.\n\n  - **Middle section:**\n    7. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.\n    8. Man in a dark suit, white shirt, and tie, wearing a belt and standing with hands behind his back.\n    9. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.\n    10. Man in a dark suit, white shirt, and tie, wearing a vest and standing with hands behind his back.\n    11. Woman in a long-sleeved dress with a high neckline, possibly a blouse or formal attire, standing with hands clasped in front.\n    12. Woman in a long-sleeved dress with a patterned or striped design, standing with hands clasped in front.\n\n  - **Right side (front row):**\n    13. Woman in a long-sleeved dress with a dark color, standing with hands clasped in front.\n    14. Man in a dark suit, white shirt, and tie, wearing a hat or cap, standing with hands behind his back.\n\n  - **Back row (left to right):**\n    15. Man in a dark suit, white shirt, and tie, standing with hands behind his back.\n    16. Man in a dark suit, white shirt, and tie, wearing a hat or cap, standing with hands behind his back.\n    17. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.\n    18. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.\n    19. Woman in a long-sleeved dress with a high neckline, standing with hands clasped in front.\n    20. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.\n    21. Man in a dark suit, white shirt, and tie, wearing a hat or cap, standing with hands behind his back.\n    22. Man in a dark suit, white shirt, and tie, wearing a vest, standing with hands behind his back.\n\n  **Setting:**\n  The group is standing outdoors on a dirt or gravel path. The background features a hilly or mountainous landscape with sparse vegetation, including trees and shrubs. The lighting suggests it is daytime, possibly late morning or early afternoon, with soft shadows indicating diffused sunlight. The attire of the individuals suggests a formal or semi-formal gathering, possibly from the early 20th century based on clothing styles.\n\n  **Composition:**\n  The photograph is taken from a slightly elevated angle, capturing the group from the front and slightly above. The composition is symmetrical, with the group evenly spaced and aligned in a line. The focus is on the individuals, with the background serving as a neutral backdrop that highlights the group.\n\n  **Era and condition cues:**\n  The clothing styles, particularly the suits, ties, hats, and dresses, suggest the photograph is from the early 20th century, likely between 1910 and 1930. The sepia tone and graininess are consistent with early photographic processes. The image shows signs of aging, including slight fading and minor creases along the edges.\n  \",\n  \"transcription\": null\n}\n```",
+        "usage": {
+          "prompt_tokens": 2538,
+          "total_tokens": 3604,
+          "completion_tokens": 1066,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard"
+        },
+        "estimated_cost_usd": 0.0005406,
+        "hypothetical_batch_cost_usd": 0.0002703,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.015,
+          "output_per_million": 0.15,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "elapsed_ms": 9091.72,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "6c0ad618b1323bbdd9bd83d3d85778da76a68b3a1421d3c1d9e3033dccb9a80e",
+            "width": 512,
+            "height": 359,
+            "mime": "image/webp",
+            "bytes": 29306
+          }
+        ],
+        "image_fetch_ms": 809.32,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "at": "2026-10-06T18:56:03+00:00",
+    "entity": "App\\Entity\\Asset",
+    "id": "000154d4d6191521",
+    "results": {
+      "openai-mini": {
+        "profile": "openai-mini",
+        "provider": "openai",
+        "requested_model": "gpt-4o-mini",
+        "status": "ok",
+        "http_status": 200,
+        "model": "gpt-4o-mini-2024-07-18",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"group of people walking in a field\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"No significant cataloguing evidence is lost without a high-res pass.\"\n  },\n  \"prose\": \"The photograph depicts a group of approximately twenty people walking in a straight line through a grassy field. The individuals appear to be a mix of young boys and girls, as well as some adults. The boys are dressed in white shirts with shorts, some wearing neckerchiefs or sashes, indicating a uniform or coordinated attire. The girls are similarly dressed, and a few are wearing dresses. The individuals are spaced out evenly and face forward, suggesting they are participating in a march or procession. In the background, there are tall telephone poles and sparse trees, indicating a rural setting. The sky is clear, suggesting a sunny day, and the overall composition has a balanced and orderly appearance.\",\n  \"transcription\": {}\n}\n```",
+        "usage": {
+          "prompt_tokens": 5052,
+          "completion_tokens": 283,
+          "total_tokens": 5335,
+          "prompt_tokens_details": {
+            "cached_tokens": 2176,
+            "audio_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "estimated_cost_usd": 0.0007643999999999998,
+        "hypothetical_batch_cost_usd": 0.0003821999999999999,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.075,
+          "output_per_million": 0.6,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "group of people walking in a field",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [],
+            "risk_if_skipped": "No significant cataloguing evidence is lost without a high-res pass."
+          },
+          "prose": "The photograph depicts a group of approximately twenty people walking in a straight line through a grassy field. The individuals appear to be a mix of young boys and girls, as well as some adults. The boys are dressed in white shirts with shorts, some wearing neckerchiefs or sashes, indicating a uniform or coordinated attire. The girls are similarly dressed, and a few are wearing dresses. The individuals are spaced out evenly and face forward, suggesting they are participating in a march or procession. In the background, there are tall telephone poles and sparse trees, indicating a rural setting. The sky is clear, suggesting a sunny day, and the overall composition has a balanced and orderly appearance.",
+          "transcription": []
+        },
+        "elapsed_ms": 4489.59,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "36167e3c2524c5b53284fbb178d10052299314da2e6eb83ede93596d48ab90bf",
+            "width": 512,
+            "height": 334,
+            "mime": "image/webp",
+            "bytes": 39716
+          }
+        ],
+        "image_fetch_ms": 1117.41,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      },
+      "gemini-flash-lite-3.5": {
+        "profile": "gemini-flash-lite-3.5",
+        "provider": "gemini",
+        "requested_model": "gemini-3.5-flash-lite",
+        "status": "ok",
+        "http_status": 200,
+        "native_usage": {
+          "promptTokenCount": 3459,
+          "candidatesTokenCount": 874,
+          "totalTokenCount": 4333,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2352
+            },
+            {
+              "modality": "IMAGE",
+              "tokenCount": 1107
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "model": "gemini-3.5-flash-lite",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"Black and white photograph showing a group of children or youths hiking in a field.\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"generate_title\",\n      \"summarize\",\n      \"fortepan_place\"\n    ],\n    \"risk_if_skipped\": \"\"\n  },\n  \"prose\": \"A black-and-white outdoor photograph capturing a large group of children and young teenagers—likely scouts or pioneers—walking in a line through an overgrown meadow or grassy field. The camera is positioned at a medium-low angle, looking across the field from left to right as the procession moves diagonally from the middle-left background toward the foreground left. \\n\\nThere are approximately 15 to 20 individuals visible in the group, predominantly appearing to be children and adolescents around ages 10 to 15. The clothing is remarkably uniform: many wear light-colored (white or pale) short-sleeved or long-sleeved shirts, dark shorts or trousers, and dark neckerchiefs tied around their necks, consistent with scout or pioneer uniforms of the mid-20th century.\\n\\nDetailed enumeration of individuals from foreground left to background right:\\n1. Far-left edge: Partial figure of a person wearing a light shirt and dark trousers, turned slightly toward the group.\\n2. Second from left, foreground: A young teenage boy (approx. 13-15 years old) with short dark hair, wearing a light-colored button-down shirt, dark shorts, and a dark neckerchief. He is turned slightly sideways, looking toward the viewer or the leader.\\n3. Behind him/partially obscured: Another youth standing slightly further back.\\n4. Third from left, foreground: A boy (approx. 11-13 years old) with light hair, wearing a white long-sleeved shirt tucked into dark trousers, with a dark neckerchief. His arms are at his sides as he walks forward.\\n5. Fourth from left, mid-ground: A younger boy (approx. 9-11 years old) walking with arms slightly bent, wearing a white short-sleeved shirt, dark shorts, and a neckerchief.\\n6. Fifth from left: A boy similar in age to the previous, wearing a white short-sleeved shirt and dark trousers or shorts with a dark neckerchief.\\n7. Sixth from left: A teenager or older youth wearing a light shirt, dark shorts, and neckerchief.\\n8. Seventh from left: A female youth or young girl wearing a light blouse and dark skirt/shorts with a neckerchief.\\n9. Eighth from left: A youth wearing a light shirt and dark trousers with a neckerchief.\\n10. Ninth from left: A female youth wearing a light blouse and dark skirt with a neckerchief.\\n11. Tenth from left and continuing down the line: Several more children and youths in similar white shirts and dark bottoms stretching away into the distance in a staggered, single-file or loose double-file column.\\n\\nThe setting is an open, grassy field filled with wildflowers and tall weeds. In the background, telegraph or utility poles line the landscape, running parallel to the path of the group. Further back, rolling hills, distant trees, and a hazy sky are visible under bright, diffused daylight casting soft shadows. The overall aesthetic and clothing styles are consistent with documentary photography from the mid-20th century (approximately 1950s-1970s Eastern European or Central European context).\"\n}\n```",
+        "usage": {
+          "prompt_tokens": 3459,
+          "completion_tokens": 874,
+          "total_tokens": 4333,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "answer_tokens": 874
+          },
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "estimated_cost_usd": 0.0032227,
+        "hypothetical_batch_cost_usd": 0.00161135,
+        "pricing": {
+          "input_per_million": 0.3,
+          "cached_input_per_million": 0.03,
+          "output_per_million": 2.5,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "Black and white photograph showing a group of children or youths hiking in a field.",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "generate_title",
+              "summarize",
+              "fortepan_place"
+            ],
+            "risk_if_skipped": ""
+          },
+          "prose": "A black-and-white outdoor photograph capturing a large group of children and young teenagers—likely scouts or pioneers—walking in a line through an overgrown meadow or grassy field. The camera is positioned at a medium-low angle, looking across the field from left to right as the procession moves diagonally from the middle-left background toward the foreground left. \n\nThere are approximately 15 to 20 individuals visible in the group, predominantly appearing to be children and adolescents around ages 10 to 15. The clothing is remarkably uniform: many wear light-colored (white or pale) short-sleeved or long-sleeved shirts, dark shorts or trousers, and dark neckerchiefs tied around their necks, consistent with scout or pioneer uniforms of the mid-20th century.\n\nDetailed enumeration of individuals from foreground left to background right:\n1. Far-left edge: Partial figure of a person wearing a light shirt and dark trousers, turned slightly toward the group.\n2. Second from left, foreground: A young teenage boy (approx. 13-15 years old) with short dark hair, wearing a light-colored button-down shirt, dark shorts, and a dark neckerchief. He is turned slightly sideways, looking toward the viewer or the leader.\n3. Behind him/partially obscured: Another youth standing slightly further back.\n4. Third from left, foreground: A boy (approx. 11-13 years old) with light hair, wearing a white long-sleeved shirt tucked into dark trousers, with a dark neckerchief. His arms are at his sides as he walks forward.\n5. Fourth from left, mid-ground: A younger boy (approx. 9-11 years old) walking with arms slightly bent, wearing a white short-sleeved shirt, dark shorts, and a neckerchief.\n6. Fifth from left: A boy similar in age to the previous, wearing a white short-sleeved shirt and dark trousers or shorts with a dark neckerchief.\n7. Sixth from left: A teenager or older youth wearing a light shirt, dark shorts, and neckerchief.\n8. Seventh from left: A female youth or young girl wearing a light blouse and dark skirt/shorts with a neckerchief.\n9. Eighth from left: A youth wearing a light shirt and dark trousers with a neckerchief.\n10. Ninth from left: A female youth wearing a light blouse and dark skirt with a neckerchief.\n11. Tenth from left and continuing down the line: Several more children and youths in similar white shirts and dark bottoms stretching away into the distance in a staggered, single-file or loose double-file column.\n\nThe setting is an open, grassy field filled with wildflowers and tall weeds. In the background, telegraph or utility poles line the landscape, running parallel to the path of the group. Further back, rolling hills, distant trees, and a hazy sky are visible under bright, diffused daylight casting soft shadows. The overall aesthetic and clothing styles are consistent with documentary photography from the mid-20th century (approximately 1950s-1970s Eastern European or Central European context)."
+        },
+        "elapsed_ms": 3790.08,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "36167e3c2524c5b53284fbb178d10052299314da2e6eb83ede93596d48ab90bf",
+            "width": 512,
+            "height": 334,
+            "mime": "image/webp",
+            "bytes": 39716
+          }
+        ],
+        "image_fetch_ms": 87.7,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      },
+      "ministral-8b": {
+        "profile": "ministral-8b",
+        "provider": "mistral",
+        "requested_model": "ministral-8b-2512",
+        "status": "ok",
+        "http_status": 200,
+        "model": "ministral-8b-2512",
+        "finish_reason": "stop",
+        "output": "```json\n{\n  \"routing\": {\n    \"content_type\": \"photograph\",\n    \"content_type_confidence\": \"high\",\n    \"content_type_basis\": \"group of people in an outdoor setting, consistent with a historical photograph\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [\n      \"context_description\",\n      \"fortepan_place\"\n    ],\n    \"risk_if_skipped\": \"\"\n  }\n}\n```",
+        "usage": {
+          "prompt_tokens": 2518,
+          "total_tokens": 2665,
+          "completion_tokens": 147,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          },
+          "service_tier": "standard"
+        },
+        "estimated_cost_usd": 0.00039975,
+        "hypothetical_batch_cost_usd": 0.000199875,
+        "pricing": {
+          "input_per_million": 0.15,
+          "cached_input_per_million": 0.015,
+          "output_per_million": 0.15,
+          "pricing_date": "2026-10-06"
+        },
+        "markdown_envelope": true,
+        "json_output": {
+          "routing": {
+            "content_type": "photograph",
+            "content_type_confidence": "high",
+            "content_type_basis": "group of people in an outdoor setting, consistent with a historical photograph",
+            "text_flags": {
+              "has_text": false,
+              "typed_text": false,
+              "handwritten_text": false,
+              "is_form": false,
+              "is_filled_form": false
+            },
+            "needs_high_res": false,
+            "pending_steps": [],
+            "analysis_tasks": [
+              "context_description",
+              "fortepan_place"
+            ],
+            "risk_if_skipped": ""
+          }
+        },
+        "elapsed_ms": 1892.44,
+        "task": "observe",
+        "images": [
+          {
+            "sha256": "36167e3c2524c5b53284fbb178d10052299314da2e6eb83ede93596d48ab90bf",
+            "width": 512,
+            "height": 334,
+            "mime": "image/webp",
+            "bytes": 39716
+          }
+        ],
+        "image_fetch_ms": 1117.41,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a museum cataloguer producing neutral visual evidence from an archival image.\n\nYour output is consumed by a downstream text-only analysis step that will produce subject headings, keywords, controlled-vocabulary terms, dates, and summaries. That step will never re-open this image. Your job is to give it everything it needs.\n\n## What you produce\n\nEmit JSON with up to three top-level keys, always in this order:\n\n1. `routing` — always present; machine-consumed by the workflow engine\n2. `prose` — free-text visual description; present when no follow-up image tasks are needed\n3. `transcription` — typed JSON for structured text content; present when warranted\n\n## 1. Routing block\n\n```json\n{\n  \"routing\": {\n    \"content_type\": \"...\",\n    \"content_type_confidence\": \"high|medium|low\",\n    \"content_type_basis\": \"short evidence string\",\n    \"text_flags\": {\n      \"has_text\": false,\n      \"typed_text\": false,\n      \"handwritten_text\": false,\n      \"is_form\": false,\n      \"is_filled_form\": false\n    },\n    \"needs_high_res\": false,\n    \"pending_steps\": [],\n    \"analysis_tasks\": [],\n    \"risk_if_skipped\": \"what cataloguing evidence is lost without a high-res pass\"\n  }\n}\n```\n\n**`content_type`** — one of: `photograph`, `postcard_front`, `postcard_back`, `negative`, `map`, `manuscript`, `letter`, `form`, `newspaper`, `clipping`, `object`, `coin`, `patch`, `drawing`, `print`, `painting`, `unknown`.\n\n**`text_flags`** — multiple may be true. All default to `false`. Only set `true` for text that is **legible and catalogue-relevant** at the current resolution.\n\n- `has_text` — there is readable text somewhere in the image. Do **not** set true for illegible distant signs, blurry architectural lettering, or text too small to read. If you cannot actually read the words, it is not legible.\n- `typed_text` — printed/typeset text that can be read. Street signs at 30 metres, building inscriptions too small to resolve, background shop fronts: `false`. A printed caption, postmark, headline, or form label you can actually read: `true`.\n- `handwritten_text` — cursive or manuscript text that can be read or transcribed. A vague impression of writing in the background: `false`.\n- `is_form` — the image is of a form or structured document with labelled fields.\n- `is_filled_form` — a form with visible filled-in entries.\n\nA girl in a First Communion dress standing in front of a building: all flags `false`. A postcard back with a handwritten message: `handwritten_text + typed_text` (printed postmark). A filled pension form: `typed_text + handwritten_text + is_form + is_filled_form`.\n\n**`needs_high_res`** — set `true` only when the thumbnail is the bottleneck: the content cannot be adequately described without a higher-resolution pass. Specifically:\n- Handwriting, manuscript text, or form fields that need to be read or transcribed\n- Inscriptions, stamps, accession numbers, or captions that are primary catalogue evidence and are illegible at thumbnail scale\n- Objects where markings are the main subject (coins, patches, seals, ceramics with text)\n- Maps or technical drawings where place names or legend text must be read\n\nSet `false` when:\n- The subject is a scene or portrait and the thumbnail captures it adequately — people, clothing, setting, and composition are legible even if background signs are not\n- Text is incidental background (street signs, distant storefronts, window lettering) rather than primary catalogue content\n- The image is a photograph of people or places where no text needs to be transcribed\n\nWhen in doubt, prefer `false`. The quality bar is \"would a cataloguer reject this description as incomplete without seeing the full image?\"\n\n**`pending_steps`** — follow-up observation task names (image processing) to run before analysis. Choose only from the available observation tasks provided in the user message. Leave empty (`[]`) when the thumbnail is sufficient.\n\n**`analysis_tasks`** — analysis task names to queue once all image tasks complete. Choose from the available analysis tasks provided in the user message based on content type. Omit if unsure; a default pipeline will run.\n\nWhen `needs_high_res` is `true` and `pending_steps` is non-empty: **emit only the routing block**. Omit `prose` and `transcription`. The high-res tasks will produce those.\n\nSet `risk_if_skipped` only when `needs_high_res` is `true`; explain what cataloguing evidence is lost without the high-res pass.\n\n## 2. Prose observation\n\nPresent only when `pending_steps` is empty (no follow-up image tasks needed).\n\nThis is the **only time the image is seen**. The downstream analysis step will never re-open it. Write as if you are dictating a complete inventory to someone who cannot see the image and must be able to answer any question about it from your description alone.\n\nBe exhaustive. Write as much as the image contains. Do not summarise — enumerate.\n\n**People:** Account for every visible person individually, in reading order (left to right, front to back). For each: estimated age, apparent gender, clothing (colour, pattern, fabric, cut), accessories, hairstyle, expression, body language, position in frame, role or apparent relationship. State total count explicitly.\n\n**Setting:** Indoor/outdoor, architectural details, furniture, props, background elements, light source and quality, time of day cues, weather if visible.\n\n**Composition:** Camera angle, depth of field, framing, what draws the eye and why.\n\n**Era and condition cues:** Clothing styles, technology, signage, vehicle types, image process artefacts — anything dating the image. Note physical condition of the object: fading, tears, writing on verso if visible at edges.\n\n**Objects and text:** Every visible object, inscription, printed word, caption, stamp, or marking.\n\nHedging is welcome and expected: \"appears to be,\" \"consistent with,\" \"possibly 1940s based on collar style.\" The analysis step decides what to do with uncertainty.\n\n**Do not include:** subject headings, keyword tags, a summary sentence, controlled-vocabulary terms, or synthesised conclusions — those belong to the analysis step.\n\n## 3. Structured transcription\n\nPresent when the image contains structured text: forms, postcard backs, manuscripts, tables, newspapers, coins, patches, certificates.\n\n**Transcribe faithfully, not normalized.** Hungarian labels stay Hungarian. \"1947. III. 12.\" stays as written. \"Erzsébet\" stays \"Erzsébet\". Note language (`\"language\": \"hu\"`) but do not translate or normalise. The analysis step handles interpretation.\n\nUse `transcription_type` to identify the variant: `form_fields`, `postcard_back`, `manuscript`, `table`, `newspaper`, `coin`, `other`.\n\nFor `form_fields`: include `label`, `label_source`, `value`, `value_source`, `confidence`, and `note` for any uncertainty.\nFor `postcard_back`: include `address_block`, `message_block`, `postmark`, `stamp`, `layout`.\nFor `manuscript` / `letter`: include `language`, `date_inscribed`, `salutation`, `body`, `signature`, `confidence`, `note`.\nFor `table`: include `caption`, `headers`, `rows` (each with `cells` and `cell_sources`).\nFor `newspaper`: include `masthead`, `date`, `page`, `headline`, `byline`, `body`.\nFor `coin` / `patch`: include `obverse`, `reverse`, `edge`, `mint_mark` as applicable.\n\nOmit `transcription` entirely for pure scene photographs, uninscribed objects, or when `pending_steps` is non-empty.\n\n## Content-type guidance\n\n**Photograph / negative:** Count people, note age/clothing/roles. Describe setting, light, composition, era cues. Text flags usually false unless caption or stamp is on the print.\n\n**Postcard front:** Describe scene. Transcribe printed caption if present. Note publisher mark and era cues.\n\n**Postcard back:** Transcribe address and message blocks as written. Note postmark and stamp. Note divided-back vs undivided layout.\n\n**Manuscript / letter:** Note language and handwriting era cues. Note paper and letterhead. Transcribe visible date, sender, recipient. `handwritten_text` always true; `typed_text` true if letterhead present.\n\n**Form:** Identify form purpose. List visible field labels explicitly. Note whether fields are filled. `is_form` always true; add `is_filled_form` and `handwritten_text` when entries are present.\n\n**Newspaper / clipping:** Note masthead, date, headlines. Describe column layout. `typed_text` true; `handwritten_text` only if annotated.\n\n**Map:** Note region, era cues, hand-drawn vs printed, legend, title cartouche. `typed_text` usually true.\n\n**Object / coin / patch / artifact:** Note type, material, period. Record all markings and inscriptions. Note condition.\n\n**Drawing / print / painting:** Note medium, subject matter, signature, date, edition number, visible title caption.\n\n## Operator hint handling\n\nThe operator hint shapes your attention but is not authoritative. If the image clearly contradicts the hint, follow the image and explain the disagreement in `content_type_basis` or a relevant `note` field.\n\n## Return JSON only\n\nNo preamble, no Markdown fences, no commentary. If you cannot determine a field, omit it rather than emitting `\"unknown\"` or `null`."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "<available_observation_tasks>\nFollow-up image tasks you may add to `pending_steps` if high-res processing is warranted:\n- htr_annotate\n- enrich_from_thumbnail\n- florence\n- merit_score\n- observe_hires\n- ocr_mistral\n- ocr_tesseract\n- htr\n- triage\n</available_observation_tasks>\n\n<available_analysis_tasks>\nAnalysis tasks you may add to `analysis_tasks` based on content type:\n- extract_census\n- context_description\n- extract_metadata\n- fortepan_place\n- generate_title\n- summarize\n</available_analysis_tasks>\n\n\n\n\nObserve the image and return the JSON envelope described in your instructions."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]
